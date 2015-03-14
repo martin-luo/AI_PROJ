@@ -51,10 +51,12 @@ public class Board
 	
 	public void doParseInput()
 	{
-		int col=0,row=0,rowCount=0;
-		initializeBoardBody(boardDimension);
+		//first line is dimension
+		int rowCount=-1;
+		
 		ArrayList<String> tempStringArray=new ArrayList<String>();
 		String[] parts=null;
+		//transform everything into a 1d array .
 		try
 		{
 	         // FileReader inputFile = new FileReader("file name");
@@ -67,8 +69,8 @@ public class Board
 	            for(int i=0 ;i<parts.length;i++)
 	            {
 	            	tempStringArray.add(parts[i]);
-	            	rowCount++;
 	            }
+	            rowCount++;
 	          }
 
 	          bufferReader.close();
@@ -78,13 +80,24 @@ public class Board
 	          System.out.println("Error while reading file line by line:" + e.getMessage());                      
 	    }
 		
-		checkRowNumber(rowCount);
-		
-		
-		
+		//set Dimension to first line of input and remove it from arraylist
 		boardDimension=Integer.parseInt(tempStringArray.remove(0));
+		//if dimension not match exit
+		System.out.println("Dimension" + boardDimension +" rowCount "+rowCount);
+		checkRowNumber(rowCount);
 		initializeBoardBody(boardDimension);
+		fillboardBody(tempStringArray);
 		
+		
+		
+
+		printBoardBody(boardBody);
+	}
+	
+	//transform 1D array of 'signs' to 2d array
+	public void fillboardBody(ArrayList<String> tempStringArray)
+	{
+		int row=0,col=0;
 		for(String tempString : tempStringArray)
 		{
 			boardBody[row][col++]=tempString;
@@ -94,7 +107,6 @@ public class Board
 				col=0;
 			}
 		}
-		printBoardBody(boardBody);
 	}
 	
 	public void printBoardBody(String boardBody[][])
