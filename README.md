@@ -41,5 +41,5 @@
 
 ### Have Fun and Jiayou !
 
-![Image of Yaktocat](http://img.qqday.com/allimg/120627/0921062E3-0.jpg)
+![Image of YAO](http://img.qqday.com/allimg/120627/0921062E3-0.jpg)
 
