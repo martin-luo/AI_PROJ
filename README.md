@@ -1,8 +1,8 @@
 # AI_PROJ
 
 ## Project Members
-- An luo
-- Bingfeng liu
+- An Luo
+- Bingfeng Liu
 
 # Project Description
 
