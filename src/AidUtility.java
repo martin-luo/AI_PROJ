@@ -22,16 +22,44 @@ public class AidUtility
 		return max;
 	}
 	
-	static public void sortByRowthenCol(int[] rowPointArray,int[] colPointArray)
+	static public void sortByRowandCol(int[] rowPointArray,int[] colPointArray)
 	{
 		int tempRowPoint;
 		int tempColPoint;
-		
+		int length=rowPointArray.length;
 		if(rowPointArray.length!=colPointArray.length)
 		{
 			System.out.println("X.X ---> Error: sortByRowthenCol got invalid array");
 			System.exit(0);
 		}
+		
+		for(int i=0;i<length;i++)
+		{
+			tempRowPoint=rowPointArray[i];
+			tempColPoint=colPointArray[i];
+			for(int j=i-1,tempI=i;j>=0&&j<length&&tempI>=0;j--)
+			{
+				if(tempRowPoint > rowPointArray[j])
+				{
+					continue;
+				}
+				else if(tempRowPoint < rowPointArray[j])
+				{
+					swapPoint(rowPointArray,colPointArray,tempI--,j);
+				}
+				else //x is equal compare y
+				{
+					// want most upper left ... 
+					if (tempColPoint < colPointArray[j])
+					{
+						swapPoint(rowPointArray,colPointArray,tempI--,j);
+					}
+				}
+				//System.out.println("----");
+				//printPositionArray(rowPointArray,colPointArray);
+			}
+		}
+		
 		
 	}
 	

@@ -133,9 +133,9 @@ public class Board
 	//index 0 = row = x, 1= col = y
 	//cycles are sorted by x first then by y , so first point is the most top left of cycle
 
-	public void markCapturedCellInCycle(int[] cycleRowArray,int[] cycleColArray,String whoesCycle)
+	public void countCapturedCell(BoardDataCycleStructure cycleOne)
 	{
-
+		
 	}
 	
 	//use a hash map to declear which cycle is for which player ?

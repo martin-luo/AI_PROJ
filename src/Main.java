@@ -13,13 +13,15 @@ public class Main
 	{
 		System.out.println("hello world 12312");
 	    Board newBoard = new Board();
-	    /*
-	    int[] row=new int[]{1,2,3};
-	    int[] col=new int[]{3,2,1};
-	    AidUtility.printPositionArray(row,col);
-	    AidUtility.swapPoint(row, col, 0, 1);
-	    AidUtility.printPositionArray(row,col);
-	    */
+	    
+	    //int[] row=new int[]{3,2,2,3};
+	    //int[] col=new int[]{3,2,0,4};
+	    //AidUtility.printPositionArray(row,col);
+	    //AidUtility.swapPoint(row, col, 0, 1);
+	    //AidUtility.printPositionArray(row,col);
+	    //System.out.println("After sort");
+	    //AidUtility.sortByRowandCol(row, col);
+	    //AidUtility.printPositionArray(row,col);
 	}
 
 }

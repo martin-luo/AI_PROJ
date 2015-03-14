@@ -3,6 +3,7 @@ public class BoardDataCycleStructure
 {
 	public String cycleOwner="";
 	int capturedCellNumber=0;
+	int ciyclePointsNumber=0;
 	//used to stored points which formed the cycle
 	public int[] rowPointArray=null;
 	public int[] colPointArray=null;
@@ -13,6 +14,7 @@ public class BoardDataCycleStructure
 	BoardDataCycleStructure(String cycleOwner,int []rowPointArray,int []colPointArray)
 	{
 		this.cycleOwner = cycleOwner;
-		
+		this.rowPointArray = rowPointArray;
+		this.colPointArray= colPointArray;
 	}
 }
