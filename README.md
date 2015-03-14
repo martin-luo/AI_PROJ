@@ -13,8 +13,8 @@
 -Board has a size of N*N which N is greater than 5 (i.e. N > 5)
 -Top left corner is (0,0) , Bottom right coner is (N-1,N-1)
 -Edges does not count as part of captured territory
-    -Only free cells and opponent's cells count as captured cell
-    -Pieces can't be placed in
+  -Only free cells and opponent's cells count as captured cell
+  -Pieces can't be placed in
 -Board is read from stdin (i.e. java Main < input)
 
 ## Input Data Format
