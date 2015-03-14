@@ -55,6 +55,8 @@ target/
 
 # Java
 *.class
+*.classpath
+*.project
 
 # Mac .DS_Store
 .DS_Store
