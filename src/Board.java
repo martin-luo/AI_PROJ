@@ -12,6 +12,8 @@ public class Board
 	String inputFileName;
 	int boardDimension=0;
 	int freeCell=0;
+	int whiteCaptured=0;
+	int blackCaptured=0;
 	String[][] boardBody=null;
 	Board()
 	{
@@ -126,52 +128,18 @@ public class Board
 	{
 		return boardBody[row][col].equals(FREE);
 	}
-	//data structure for cycle is a hash map ,which key is cycle's owner
-	// inside items is two arrays ,one for row, one for col
-	//this function will return all the adjcent cells of inputed cell
-	//no matter how big is the board the max sounding is 8 which is 8 directions 
-	//in out in out in means in cycle .
+	//no matter how big is the board the max surrounding is 8 which is 8 directions 
 	//haha worst case is 2N^2
 	//index 0 = row = x, 1= col = y
 	//cycles are sorted by x first then by y , so first point is the most top left of cycle
-	//in out in == captured 
-	public boolean isInCircle(int row,int col,int[] cycleRowArray,int[] cycleColArray,String whoesCycle)
+
+	public void markCapturedCellInCycle(int[] cycleRowArray,int[] cycleColArray,String whoesCycle)
 	{
-		//whoseCycle will pass in 'W' or 'B'
-		//top left point
-		int startRow = cycleRowArray[0];
-		int startCol = cycleColArray[0];
-		// lowest y position
-		int maxCol = 0;
-		// <maxCol to minimize cost by not going out cycle's max y 
-		while(startCol<maxCol && startCol < boardDimension)
-		{
-			
-		}
-		return true;
+
 	}
 	
 	//use a hash map to declear which cycle is for which player ?
 	
-	public int getMaxPoint(int[] pointArray)
-	{
-		int max=0;
-		
-		if(pointArray.length==0)
-		{
-			System.out.println ("X.X --->Error: getMaxRow received an empty array .");
-		}
-		
-		max= pointArray[0];
-		
-		for (int i : pointArray)
-		{
-			if (i>max)
-			{	
-				max=i;
-			}
-		}
-		return max;
-	}
+
 	
 }

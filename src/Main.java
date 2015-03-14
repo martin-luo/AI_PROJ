@@ -13,9 +13,13 @@ public class Main
 	{
 		System.out.println("hello world 12312");
 	    Board newBoard = new Board();
-	    int[] testInt= new int[]{3,2,1,99,0,12,-123,13333,0};
-	    System.out.println("hello world");
-	    System.out.println("haha"+newBoard.getMaxPoint(testInt));
+	    /*
+	    int[] row=new int[]{1,2,3};
+	    int[] col=new int[]{3,2,1};
+	    AidUtility.printPositionArray(row,col);
+	    AidUtility.swapPoint(row, col, 0, 1);
+	    AidUtility.printPositionArray(row,col);
+	    */
 	}
 
 }
