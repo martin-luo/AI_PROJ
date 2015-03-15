@@ -16,6 +16,11 @@ public class BoardDataCycleStructure
 	//cast to int[]
 	public Object[][] cycleLevel =null; 
 	
+	BoardDataCycleStructure()
+	{
+		
+	}
+	
 	BoardDataCycleStructure(String cycleOwner,int []xPointArray,int []yPointArray)
 	{
 		this.cycleOwner = cycleOwner;
@@ -29,10 +34,12 @@ public class BoardDataCycleStructure
 		int[] tempLevelPointY= AidUtility.getUniquePointInArray(yPointArray);
 		ArrayList<Integer> tempX = new ArrayList<Integer>();
 		ArrayList<Integer> tempY = new ArrayList<Integer>();
+		//System.out.println("tempLevel:");
+		AidUtility.printPointArray(tempLevelPointY);
 		cycleLevel = new Object[tempLevelPointY.length][2];
 		for (int i =0;i<tempLevelPointY.length;i++)
 		{
-			for(int j = 0 ; i<yPointArray.length;j++)
+			for(int j = 0 ; j<yPointArray.length;j++)
 			{
 				if(tempLevelPointY[i]==yPointArray[j])
 				{
@@ -41,13 +48,22 @@ public class BoardDataCycleStructure
 				}
 			}
 			//0 = level x array, 1= y array,  need to be casted 
-			cycleLevel[i][0]=AidUtility.parseIntArrayList(tempY);
+			cycleLevel[i][0]=AidUtility.parseIntArrayList(tempX);
 			cycleLevel[i][1]=AidUtility.parseIntArrayList(tempY);
+			tempX.clear();
+			tempY.clear();
 		}
 		
-		
-		
-		
 	}
+	
+	public void printCycleLevel()
+	{
+		for (int i =0;i<cycleLevel.length;i++)
+		{
+			AidUtility.printPositionArray((int[])cycleLevel[i][0],(int[])cycleLevel[i][1]);
+			//System.out.println("----");
+		}
+	}
+	
 	
 }

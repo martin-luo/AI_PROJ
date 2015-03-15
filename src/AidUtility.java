@@ -137,19 +137,21 @@ public class AidUtility
 		int tempPoint;
 		int repetition;
 		ArrayList<Integer> tempArrayList=new ArrayList<Integer>();
+		tempArrayList.add(point[0]);
 		for(int i=0;i<point.length;i++)
 		{
 			tempPoint=point[i];
 			repetition=0;
-			for (int j=0 ;j<point.length;j++)
+			for (int j : tempArrayList)
 			{
-				if (tempPoint==point[j])
+				if (tempPoint==j)
 				{
-					repetition+=1;
+					//System.out.println("inside "+tempPoint);
+					repetition=1;
+					break;
 				}
 			}
-			
-			if(repetition==1)
+			if(repetition==0)
 			{
 				tempArrayList.add(tempPoint);
 			}
@@ -157,7 +159,7 @@ public class AidUtility
 		}
 		
 		uniquePointArray= convertArrayListToIntArray(tempArrayList);
-		
+		//System.out.println(tempArrayList.size());
 		return uniquePointArray;
 	}
 	
