@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 //used to store cycle data
 public class BoardDataCycleStructure 
 {
@@ -11,6 +13,7 @@ public class BoardDataCycleStructure
 	//usede to store points which captured within this cycle
 	public int[] capturedxPointArray=null;
 	public int[] capturedyPointArray=null;
+	public ArrayList<Integer[]> cycleLevel =null; 
 	
 	BoardDataCycleStructure(String cycleOwner,int []xPointArray,int []yPointArray)
 	{

@@ -9,7 +9,7 @@ public class AidUtility
 		
 		if(pointArray.length==0)
 		{
-			System.out.println ("X.X --->Error: getMaxRow received an empty array .");
+			System.out.println ("X.X --->Error: getMaxx received an empty array .");
 		}
 		
 		max= pointArray[0];
@@ -24,76 +24,77 @@ public class AidUtility
 		return max;
 	}
 	
-	static public void sortByRowandCol(int[] rowPointArray,int[] colPointArray)
+	static public void sortByxandy(int[] xPointArray,int[] yPointArray)
 	{
-		int tempRowPoint;
-		int tempColPoint;
-		int length=rowPointArray.length;
-		if(rowPointArray.length!=colPointArray.length)
+		int tempxPoint;
+		int tempyPoint;
+		int length=xPointArray.length;
+		if(xPointArray.length!=yPointArray.length)
 		{
-			System.out.println("X.X ---> Error: sortByRowthenCol got invalid array");
+			System.out.println("X.X ---> Error: sortByxtheny got invalid array");
 			System.exit(0);
 		}
 		
 		for(int i=0;i<length;i++)
 		{
-			tempRowPoint=rowPointArray[i];
-			tempColPoint=colPointArray[i];
+			tempxPoint=xPointArray[i];
+			tempyPoint=yPointArray[i];
 			for(int j=i-1,tempI=i;j>=0&&j<length&&tempI>=0;j--)
 			{
-				if(tempRowPoint > rowPointArray[j])
+				if(tempxPoint > xPointArray[j])
 				{
 					continue;
 				}
-				else if(tempRowPoint < rowPointArray[j])
+				else if(tempxPoint < xPointArray[j])
 				{
-					swapPoint(rowPointArray,colPointArray,tempI--,j);
+					swapPoint(xPointArray,yPointArray,tempI--,j);
 				}
 				else //x is equal compare y
 				{
 					// want most upper left ... 
-					if (tempColPoint < colPointArray[j])
+					if (tempyPoint < yPointArray[j])
 					{
-						swapPoint(rowPointArray,colPointArray,tempI--,j);
+						swapPoint(xPointArray,yPointArray,tempI--,j);
 					}
 				}
 				//System.out.println("----");
-				//printPositionArray(rowPointArray,colPointArray);
+				//printPositionArray(xPointArray,yPointArray);
 			}
 		}
 		
 		
 	}
 	
-	static public void swapPoint(int[] rowPointArray,int[] colPointArray,int fromIndex,int toIndex)
+	static public void swapPoint(int[] xPointArray,int[] yPointArray,int fromIndex,int toIndex)
 	{
-		int tempRowPoint = rowPointArray[fromIndex];
-		int tempColPoint = colPointArray[fromIndex];
-		rowPointArray[fromIndex]=rowPointArray[toIndex];
-		colPointArray[fromIndex]=colPointArray[toIndex];
-		rowPointArray[toIndex]=tempRowPoint;
-		colPointArray[toIndex]=tempColPoint;
+		int tempxPoint = xPointArray[fromIndex];
+		int tempyPoint = yPointArray[fromIndex];
+		xPointArray[fromIndex]=xPointArray[toIndex];
+		yPointArray[fromIndex]=yPointArray[toIndex];
+		xPointArray[toIndex]=tempxPoint;
+		yPointArray[toIndex]=tempyPoint;
 	}
 	
 	static public void printPointArray(int[] pointArray)
 	{
 		for(int i:pointArray)
 		{
-			System.out.println(i);
+			System.out.print(i+" ");
 		}
+		System.out.println();
 	}
 	
-	static public void printPositionArray(int[] rowPointArray, int[] colPointArray)
+	static public void printPositionArray(int[] xPointArray, int[] yPointArray)
 	{
-		if(rowPointArray.length!=colPointArray.length)
+		if(xPointArray.length!=yPointArray.length)
 		{
 			System.out.println("X.X ---> Error: printPositionArray got invalid array");
 			System.exit(0);
 		}
 		
-		for(int i=0;i<rowPointArray.length;i++)
+		for(int i=0;i<xPointArray.length;i++)
 		{
-			System.out.println("row:"+rowPointArray[i] + "  col:" +colPointArray[i]);
+			System.out.println("x:"+xPointArray[i] + "  y:" +yPointArray[i]);
 		}
 		
 	}
@@ -108,11 +109,11 @@ public class AidUtility
 		return tempList;
 	}
 	
-	static public boolean checkPointInPositionArray(int rowPoint,int colPoint,int[] rowPointArray,int[] colPointArray)
+	static public boolean checkPointInPositionArray(int xPoint,int yPoint,int[] xPointArray,int[] yPointArray)
 	{
-		for(int i=0;i<rowPointArray.length;i++)
+		for(int i=0;i<xPointArray.length;i++)
 		{
-			if(rowPoint==rowPointArray[i]&&colPoint==colPointArray[i])
+			if(xPoint==xPointArray[i]&&yPoint==yPointArray[i])
 			{
 				return true;
 			}
@@ -128,6 +129,68 @@ public class AidUtility
 				return true;
 		}
 		return false;
+	}
+	//return unique index in that array back 
+	static public int[] findUniquePointInArray(int[] point)
+	{
+		int[] uniquePointArray=null;
+		int tempPoint;
+		int repetition;
+		ArrayList<Integer> tempArrayList=new ArrayList<Integer>();
+		for(int i=0;i<point.length;i++)
+		{
+			tempPoint=point[i];
+			repetition=0;
+			for (int j=0 ;j<point.length;j++)
+			{
+				if (tempPoint==point[j])
+				{
+					repetition+=1;
+				}
+			}
+			
+			if(repetition==1)
+			{
+				tempArrayList.add(tempPoint);
+			}
+			
+		}
+		
+		uniquePointArray= convertArrayListToIntArray(tempArrayList);
+		
+		return uniquePointArray;
+	}
+	
+	static public int[] convertArrayListToIntArray(ArrayList<Integer> arrayList)
+	{
+		int[] result=new int[arrayList.size()];
+		
+		for (int i =0;i<arrayList.size();i++)
+		{
+			result[i]=arrayList.get(i);
+		}
+		
+		return result;
+		
+	}
+	
+	static public int[] mergeIntArray(int[] arrayA,int[] arrayB)
+	{
+		int[] mergedIntArray = new int[arrayA.length+arrayB.length];
+		
+		int indexOfMergedIntArray=0;
+		
+		for(int i=0;i<arrayA.length;i++)
+		{
+			mergedIntArray[indexOfMergedIntArray++]=arrayA[i];
+		}
+		
+		for(int i=0;i<arrayB.length;i++)
+		{
+			mergedIntArray[indexOfMergedIntArray++]=arrayB[i];
+		}
+		
+		return mergedIntArray;
 	}
 	
 	

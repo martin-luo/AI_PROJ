@@ -12,7 +12,7 @@ public class Main
 	public static void main(String[] args) 
 	{
 		System.out.println("hello world 12312");
-	    Board newBoard = new Board();
+	    //Board newBoard = new Board();
 	    
 	    //int[] row=new int[]{3,2,2,3};
 	    //int[] col=new int[]{3,2,0,4};
@@ -22,6 +22,8 @@ public class Main
 	    //System.out.println("After sort");
 	    //AidUtility.sortByRowandCol(row, col);
 	    //AidUtility.printPositionArray(row,col);
+		
+		//AidUtility.printPointArray(AidUtility.mergeIntArray(new int[]{1,2,3},new int[]{3,3,3}));
 	}
 
 }

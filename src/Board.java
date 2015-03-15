@@ -17,7 +17,7 @@ public class Board
 	String[][] boardBody=null;
 	Board()
 	{
-		doParseInput();
+		//doParseInput();
 	}
 
 	public void initializeBoardBody(int boardDimension)
