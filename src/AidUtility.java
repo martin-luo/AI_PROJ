@@ -24,7 +24,7 @@ public class AidUtility
 		return max;
 	}
 	
-	static public void sortByxandy(int[] xPointArray,int[] yPointArray)
+	static public void sortByYandX(int[] xPointArray,int[] yPointArray)
 	{
 		int tempxPoint;
 		int tempyPoint;
@@ -41,18 +41,18 @@ public class AidUtility
 			tempyPoint=yPointArray[i];
 			for(int j=i-1,tempI=i;j>=0&&j<length&&tempI>=0;j--)
 			{
-				if(tempxPoint > xPointArray[j])
+				if(tempyPoint > yPointArray[j])
 				{
 					continue;
 				}
-				else if(tempxPoint < xPointArray[j])
+				else if(tempyPoint < yPointArray[j])
 				{
 					swapPoint(xPointArray,yPointArray,tempI--,j);
 				}
 				else //x is equal compare y
 				{
 					// want most upper left ... 
-					if (tempyPoint < yPointArray[j])
+					if (tempxPoint < xPointArray[j])
 					{
 						swapPoint(xPointArray,yPointArray,tempI--,j);
 					}
@@ -131,7 +131,7 @@ public class AidUtility
 		return false;
 	}
 	//return unique index in that array back 
-	static public int[] findUniquePointInArray(int[] point)
+	static public int[] getUniquePointInArray(int[] point)
 	{
 		int[] uniquePointArray=null;
 		int tempPoint;

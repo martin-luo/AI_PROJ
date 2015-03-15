@@ -13,7 +13,8 @@ public class BoardDataCycleStructure
 	//usede to store points which captured within this cycle
 	public int[] capturedxPointArray=null;
 	public int[] capturedyPointArray=null;
-	public ArrayList<Integer[]> cycleLevel =null; 
+	//cast to int[]
+	public Object[][] cycleLevel =null; 
 	
 	BoardDataCycleStructure(String cycleOwner,int []xPointArray,int []yPointArray)
 	{
@@ -21,4 +22,32 @@ public class BoardDataCycleStructure
 		this.xPointArray = xPointArray;
 		this.yPointArray= yPointArray;
 	}
+	
+	public void constructLevel()
+	{
+		
+		int[] tempLevelPointY= AidUtility.getUniquePointInArray(yPointArray);
+		ArrayList<Integer> tempX = new ArrayList<Integer>();
+		ArrayList<Integer> tempY = new ArrayList<Integer>();
+		cycleLevel = new Object[tempLevelPointY.length][2];
+		for (int i =0;i<tempLevelPointY.length;i++)
+		{
+			for(int j = 0 ; i<yPointArray.length;j++)
+			{
+				if(tempLevelPointY[i]==yPointArray[j])
+				{
+					tempX.add(xPointArray[j]);
+					tempY.add(yPointArray[j]);
+				}
+			}
+			//0 = level x array, 1= y array,  need to be casted 
+			cycleLevel[i][0]=AidUtility.parseIntArrayList(tempY);
+			cycleLevel[i][1]=AidUtility.parseIntArrayList(tempY);
+		}
+		
+		
+		
+		
+	}
+	
 }

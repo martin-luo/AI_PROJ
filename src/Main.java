@@ -14,15 +14,15 @@ public class Main
 		System.out.println("hello world 12312");
 	    //Board newBoard = new Board();
 	    
-	    //int[] row=new int[]{3,2,2,3};
-	    //int[] col=new int[]{3,2,0,4};
+	    //int[] x=new int[]{3,2,2,3,1,0};
+	    //int[] y=new int[]{3,2,0,4,99,0};
 	    //AidUtility.printPositionArray(row,col);
 	    //AidUtility.swapPoint(row, col, 0, 1);
-	    //AidUtility.printPositionArray(row,col);
+	    //AidUtility.printPositionArray(x,y);
 	    //System.out.println("After sort");
-	    //AidUtility.sortByRowandCol(row, col);
-	    //AidUtility.printPositionArray(row,col);
-		
+	    //AidUtility.sortByYandX(x, y);
+	    //AidUtility.printPositionArray(x,y);
+	
 		//AidUtility.printPointArray(AidUtility.mergeIntArray(new int[]{1,2,3},new int[]{3,3,3}));
 	}
 
