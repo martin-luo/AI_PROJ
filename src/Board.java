@@ -133,7 +133,8 @@ public class Board
 	//index 0 = x = x, 1= y = y
 	//cycles are sorted by x first then by y , so first point is the most top left of cycle
 
-	public void countCapturedCell(BoardDataCycleStructure cycleOne)
+	@SuppressWarnings("unchecked")
+	public int countCapturedCell(BoardDataCycleStructure cycleOne)
 	{
 		//assumed they are all sorted by x and y
 		int numberOflevel=cycleOne.cycleLevel.length;
@@ -146,7 +147,7 @@ public class Board
 		int minY=0;
 		int maxX=0;
 		int maxY=0;
-		int capturedNumber=0
+		int capturedNumber=0;
 		//first level.
 		AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[0][0],ceilingX);
 		AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[0][1],ceilingY);
@@ -159,6 +160,7 @@ public class Board
 			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][1],tempCeilingY);
 			//same level if it is sorted by y and x , lowest x and y will be on left most 
 			//and vise versa
+			//temp ceiling is for current level , we use previse level ceiling to count captured
 			minX=tempCeilingX.get(0);
 			maxX=tempCeilingX.get(tempCeilingX.size()-1);
 			minY=tempCeilingY.get(0);
@@ -166,27 +168,41 @@ public class Board
 			//moving horizontally at this level
 			for (int moveX=minX,moveY =minY;moveX<maxX&&moveY<maxY;moveX++,moveY++)
 			{
-				if (checkCellCaptured(boardBody[moveX][moveY]),ceilingX,ceilingY)
+				if (checkCellCaptured(moveX,boardBody[moveX][moveY],cycleOne.cycleOwner,ceilingX))
 				{
 					tempCeilingX.add(moveX);
 					tempCeilingY.add(moveY);
+					capturedNumber++;
 				}
 			}
-			ceilingX=tempCeilingX.clone();
-			ceilingY=tempCeilingY.clone();
+			ceilingX=(ArrayList<Integer>) tempCeilingX.clone();
+			ceilingY=(ArrayList<Integer>) tempCeilingY.clone();
 			tempCeilingX.clear();
-			tempCeilingY.clear();
-			
+			tempCeilingY.clear(); 
 		}
-		
+		return capturedNumber;
 		
 		
 	}
 	
-	
-	public boolean checkCellInCeiling()
+	//if x matched previous ceiling's x then everything is good
+	//every level from cycle x should be unique ...
+	public boolean checkCellCaptured(int moveX,String signOnCell,String playerSign,ArrayList<Integer>ceilingX)
 	{
-		
+		//if not equal to free, or it is equal to owner's sign false
+		if ((!signOnCell.equals(FREE))||(playerSign.equals(signOnCell)))
+		{
+			return false;
+		}
+		//if current cell level within circle has same x with previous ceiling X them BINGO!
+		for(int oneCeilingX:ceilingX)
+		{
+			if(moveX==oneCeilingX)
+			{
+				return true;
+			}
+		}
+		return true;
 	}
 	
 	//remember to write 8 directions

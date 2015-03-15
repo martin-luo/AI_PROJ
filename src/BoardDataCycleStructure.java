@@ -3,6 +3,7 @@ import java.util.ArrayList;
 //used to store cycle data
 public class BoardDataCycleStructure 
 {
+	//black or white
 	public String cycleOwner="";
 	int capturedCellNumber=0;
 	int ciyclePointsNumber=0;
