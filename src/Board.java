@@ -136,17 +136,21 @@ public class Board
 	public void countCapturedCell(BoardDataCycleStructure cycleOne)
 	{
 		//assumed they are all sorted by x and y
-		int numberxs=cycleOne.xPointArray[cycleOne.xPointArray.length] -cycleOne.xPointArray[0];
+		int numberOflevel=cycleOne.cycleLevel.length;
 		//CeilingDataStructure ceiling = new CeilingDataStructure();
-		while(numberxs>0)
+		ArrayList<Integer> tempX = new ArrayList<Integer>();
+		ArrayList<Integer> tempY = new ArrayList<Integer>();
+		//first level.
+		
+		for(int i=0;i<numberOflevel;i++)
 		{
-			
-			numberxs--;
+			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][0],tempX);
+			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][0],tempX);
 		}
 		
 		
 	}
-	
+	//remember to write 8 directions
 	//use a hash map to declear which cycle is for which player ?
 	
 

@@ -195,5 +195,12 @@ public class AidUtility
 		return mergedIntArray;
 	}
 	
+	static public void insertIntListToArrayList(int[] from,ArrayList<Integer> to)
+	{
+		for(int i : from)
+		{
+			to.add(i);
+		}
+	}
 	
 }
