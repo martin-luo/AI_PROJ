@@ -138,18 +138,57 @@ public class Board
 		//assumed they are all sorted by x and y
 		int numberOflevel=cycleOne.cycleLevel.length;
 		//CeilingDataStructure ceiling = new CeilingDataStructure();
-		ArrayList<Integer> tempX = new ArrayList<Integer>();
-		ArrayList<Integer> tempY = new ArrayList<Integer>();
+		ArrayList<Integer> ceilingX = new ArrayList<Integer>();
+		ArrayList<Integer> ceilingY = new ArrayList<Integer>();
+		ArrayList<Integer> tempCeilingX = new ArrayList<Integer>();
+		ArrayList<Integer> tempCeilingY = new ArrayList<Integer>();
+		int minX=0;
+		int minY=0;
+		int maxX=0;
+		int maxY=0;
+		int capturedNumber=0
 		//first level.
+		AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[0][0],ceilingX);
+		AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[0][1],ceilingY);
 		
-		for(int i=0;i<numberOflevel;i++)
+		//start from second level
+		for(int i=1;i<numberOflevel;i++)
 		{
-			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][0],tempX);
-			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][0],tempX);
+			//assuming sorted properly
+			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][0],tempCeilingX);
+			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][1],tempCeilingY);
+			//same level if it is sorted by y and x , lowest x and y will be on left most 
+			//and vise versa
+			minX=tempCeilingX.get(0);
+			maxX=tempCeilingX.get(tempCeilingX.size()-1);
+			minY=tempCeilingY.get(0);
+			maxY=tempCeilingY.get(tempCeilingY.size()-1);
+			//moving horizontally at this level
+			for (int moveX=minX,moveY =minY;moveX<maxX&&moveY<maxY;moveX++,moveY++)
+			{
+				if (checkCellCaptured(boardBody[moveX][moveY]),ceilingX,ceilingY)
+				{
+					tempCeilingX.add(moveX);
+					tempCeilingY.add(moveY);
+				}
+			}
+			ceilingX=tempCeilingX.clone();
+			ceilingY=tempCeilingY.clone();
+			tempCeilingX.clear();
+			tempCeilingY.clear();
+			
 		}
 		
 		
+		
 	}
+	
+	
+	public boolean checkCellInCeiling()
+	{
+		
+	}
+	
 	//remember to write 8 directions
 	//use a hash map to declear which cycle is for which player ?
 	
