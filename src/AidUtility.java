@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public class AidUtility
 {
@@ -95,5 +97,38 @@ public class AidUtility
 		}
 		
 	}
-
+	
+	static public int[] parseIntArrayList(ArrayList<Integer> intArrayList)
+	{
+		int[] tempList=new int[intArrayList.size()];
+		for (int i=0;i<intArrayList.size();i++)
+		{
+			tempList[i]=intArrayList.get(i);
+		}
+		return tempList;
+	}
+	
+	static public boolean checkPointInPositionArray(int rowPoint,int colPoint,int[] rowPointArray,int[] colPointArray)
+	{
+		for(int i=0;i<rowPointArray.length;i++)
+		{
+			if(rowPoint==rowPointArray[i]&&colPoint==colPointArray[i])
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	static public boolean checkPointInPointArray(int point,int[] pointArray)
+	{
+		for(int i:pointArray)
+		{
+			if(i==point)
+				return true;
+		}
+		return false;
+	}
+	
+	
 }

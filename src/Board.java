@@ -17,7 +17,7 @@ public class Board
 	String[][] boardBody=null;
 	Board()
 	{
-		//doParseInput();
+		doParseInput();
 	}
 
 	public void initializeBoardBody(int boardDimension)
@@ -26,26 +26,26 @@ public class Board
 		
 	}
 	
-	public String getBoardCell(int row,int col)
+	public String getBoardCell(int x,int y)
 	{
-		return boardBody[row][col];
+		return boardBody[x][y];
 	}
 	
-	public void setBoardCell(int row,int col,String sign)
+	public void setBoardCell(int x,int y,String sign)
 	{
-		boardBody[row][col]=sign;
+		boardBody[x][y]=sign;
 	}
 	
-	public void checkRowNumber(int rowCount)
+	public void checkxNumber(int xCount)
 	{
-		if (rowCount==boardDimension)
+		if (xCount==boardDimension)
 		{
 			return;
 		}
 		
 		else
 		{
-			System.out.println ("X.X ---> Error:Actual Rows and Board Dimension Mismatched.");
+			System.out.println ("X.X ---> Error:Actual xs and Board Dimension Mismatched.");
 			System.exit(0);
 		}
 		
@@ -55,7 +55,7 @@ public class Board
 	public void doParseInput()
 	{
 		//first line is dimension
-		int rowCount=-1;
+		int xCount=-1;
 		
 		ArrayList<String> tempStringArray=new ArrayList<String>();
 		String[] parts=null;
@@ -73,7 +73,7 @@ public class Board
 	            {
 	            	tempStringArray.add(parts[i]);
 	            }
-	            rowCount++;
+	            xCount++;
 	          }
 
 	          bufferReader.close();
@@ -86,8 +86,8 @@ public class Board
 		//set Dimension to first line of input and remove it from arraylist
 		boardDimension=Integer.parseInt(tempStringArray.remove(0));
 		//if dimension not match exit
-		System.out.println("Dimension" + boardDimension +" rowCount "+rowCount);
-		checkRowNumber(rowCount);
+		System.out.println("Dimension" + boardDimension +" xCount "+xCount);
+		checkxNumber(xCount);
 		initializeBoardBody(boardDimension);
 		fillboardBody(tempStringArray);
 		
@@ -100,14 +100,14 @@ public class Board
 	//transform 1D array of 'signs' to 2d array
 	public void fillboardBody(ArrayList<String> tempStringArray)
 	{
-		int row=0,col=0;
+		int x=0,y=0;
 		for(String tempString : tempStringArray)
 		{
-			boardBody[row][col++]=tempString;
-			if (col>=boardDimension)
+			boardBody[x][y++]=tempString;
+			if (y>=boardDimension)
 			{
-				row++;
-				col=0;
+				x++;
+				y=0;
 			}
 		}
 	}
@@ -124,17 +124,26 @@ public class Board
 		}
 	}
 	
-	public boolean isFreeCell(int row,int col)
+	public boolean isFreeCell(int x,int y)
 	{
-		return boardBody[row][col].equals(FREE);
+		return boardBody[y][y].equals(FREE);
 	}
 	//no matter how big is the board the max surrounding is 8 which is 8 directions 
 	//haha worst case is 2N^2
-	//index 0 = row = x, 1= col = y
+	//index 0 = x = x, 1= y = y
 	//cycles are sorted by x first then by y , so first point is the most top left of cycle
 
 	public void countCapturedCell(BoardDataCycleStructure cycleOne)
 	{
+		//assumed they are all sorted by x and y
+		int numberxs=cycleOne.xPointArray[cycleOne.xPointArray.length] -cycleOne.xPointArray[0];
+		//CeilingDataStructure ceiling = new CeilingDataStructure();
+		while(numberxs>0)
+		{
+			
+			numberxs--;
+		}
+		
 		
 	}
 	

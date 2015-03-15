@@ -5,16 +5,17 @@ public class BoardDataCycleStructure
 	int capturedCellNumber=0;
 	int ciyclePointsNumber=0;
 	//used to stored points which formed the cycle
-	public int[] rowPointArray=null;
-	public int[] colPointArray=null;
+	//they are all sorted
+	public int[] xPointArray=null;
+	public int[] yPointArray=null;
 	//usede to store points which captured within this cycle
-	public int[] capturedRowPointArray=null;
-	public int[] capturedColPointArray=null;
+	public int[] capturedxPointArray=null;
+	public int[] capturedyPointArray=null;
 	
-	BoardDataCycleStructure(String cycleOwner,int []rowPointArray,int []colPointArray)
+	BoardDataCycleStructure(String cycleOwner,int []xPointArray,int []yPointArray)
 	{
 		this.cycleOwner = cycleOwner;
-		this.rowPointArray = rowPointArray;
-		this.colPointArray= colPointArray;
+		this.xPointArray = xPointArray;
+		this.yPointArray= yPointArray;
 	}
 }
