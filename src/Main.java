@@ -11,7 +11,7 @@ public class Main
 	public static void main(String[] args) 
 	{
 		System.out.println("hello world 12312");
-	    //Board newBoard = new Board();
+	    Board newBoard = new Board();
 	    
 	    //int[] x=new int[]{3,2,2,3,1,0};
 	    //int[] y=new int[]{3,2,0,4,99,0};
@@ -34,6 +34,7 @@ public class Main
 //		System.out.println("cycle level : " + test1.cycleLevel.length);
 //		
 //		test1.printCycleLevel();
+		//testing capture function
 		
 		
 	}
