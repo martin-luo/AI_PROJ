@@ -99,6 +99,31 @@ public class AidUtility
 		
 	}
 	
+	static public void printPointArrayList(ArrayList<Integer> pointArrayList)
+	{
+		for(int i : pointArrayList)
+		{
+			System.out.print(i+" ");
+		}
+		System.out.println();
+		
+		
+	}
+	
+	static public void printPositionArrayList(ArrayList<Integer> xPointArrayList , ArrayList<Integer> yPointArrayList)
+	{
+		if(xPointArrayList.size()!=yPointArrayList.size())
+		{
+			System.out.println("X.X ---> Error: printPositionArray got invalid array");
+			System.exit(0);
+		}
+		
+		for(int i=0;i<xPointArrayList.size();i++)
+		{
+			System.out.println("x:"+xPointArrayList.get(i) + "  y:" +yPointArrayList.get(i));
+		}
+	}
+	
 	static public int[] parseIntArrayList(ArrayList<Integer> intArrayList)
 	{
 		int[] tempList=new int[intArrayList.size()];
@@ -170,6 +195,18 @@ public class AidUtility
 		for (int i =0;i<arrayList.size();i++)
 		{
 			result[i]=arrayList.get(i);
+		}
+		
+		return result;
+		
+	}
+	
+	static public ArrayList<Integer> parseIntListToArrayList(int[] intList)
+	{
+		ArrayList<Integer> result= new ArrayList<Integer>();
+		for (int i:intList)
+		{
+			result.add(i);
 		}
 		
 		return result;

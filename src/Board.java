@@ -14,6 +14,7 @@ public class Board
 	int freeCell=0;
 	int whiteCaptured=0;
 	int blackCaptured=0;
+	//remember boardBodu[y][x]
 	String[][] boardBody=null;
 	Board()
 	{
@@ -96,18 +97,18 @@ public class Board
 
 		printBoardBody(boardBody);
 	}
-	
+	//remembe bo
 	//transform 1D array of 'signs' to 2d array
 	public void fillboardBody(ArrayList<String> tempStringArray)
 	{
 		int x=0,y=0;
 		for(String tempString : tempStringArray)
 		{
-			boardBody[x][y++]=tempString;
-			if (y>=boardDimension)
+			boardBody[y][x++]=tempString;
+			if (x>=boardDimension)
 			{
-				x++;
-				y=0;
+				y++;
+				x=0;
 			}
 		}
 	}
@@ -118,7 +119,7 @@ public class Board
 		{
 			for(int j=0;j<boardDimension;j++)
 			{
-				System.out.print(boardBody[i][j]+" ");
+				System.out.print(boardBody[i][j]+"(x:"+j+" y:"+i+")");
 			}
 			System.out.println();
 		}
@@ -126,7 +127,7 @@ public class Board
 	
 	public boolean isFreeCell(int x,int y)
 	{
-		return boardBody[y][y].equals(FREE);
+		return boardBody[y][x].equals(FREE);
 	}
 	//no matter how big is the board the max surrounding is 8 which is 8 directions 
 	//haha worst case is 2N^2
@@ -140,21 +141,29 @@ public class Board
 		int numberOflevel=cycleOne.cycleLevel.length;
 		//CeilingDataStructure ceiling = new CeilingDataStructure();
 		ArrayList<Integer> ceilingX = new ArrayList<Integer>();
+		int[] ceilingXtempIntArray=null;
+		int[] ceilingYtempIntArray=null;
 		ArrayList<Integer> ceilingY = new ArrayList<Integer>();
 		ArrayList<Integer> tempCeilingX = new ArrayList<Integer>();
 		ArrayList<Integer> tempCeilingY = new ArrayList<Integer>();
 		int minX=0;
-		int minY=0;
 		int maxX=0;
-		int maxY=0;
+		int minY=0;
+		int moveY=0;
 		int capturedNumber=0;
+		int signalNum=-1;
 		//first level.
 		AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[0][0],ceilingX);
 		AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[0][1],ceilingY);
+		//test
+//		System.out.println("ceiling :");
+//		AidUtility.printPositionArrayList(ceilingX,ceilingY);
+//		System.out.println("ceiling end");
 		
 		//start from second level
 		for(int i=1;i<numberOflevel;i++)
 		{
+			System.out.println("hello i am here");
 			//assuming sorted properly
 			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][0],tempCeilingX);
 			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][1],tempCeilingY);
@@ -163,20 +172,32 @@ public class Board
 			//temp ceiling is for current level , we use previse level ceiling to count captured
 			minX=tempCeilingX.get(0);
 			maxX=tempCeilingX.get(tempCeilingX.size()-1);
-			minY=tempCeilingY.get(0);
-			maxY=tempCeilingY.get(tempCeilingY.size()-1);
+			//all y are same in this level can use any of them
+			moveY=tempCeilingY.get(0);
 			//moving horizontally at this level
-			for (int moveX=minX,moveY =minY;moveX<maxX&&moveY<maxY;moveX++,moveY++)
+			for (int moveX=minX;moveX<=maxX;moveX++)
 			{
-				if (checkCellCaptured(moveX,boardBody[moveX][moveY],cycleOne.cycleOwner,ceilingX))
+				System.out.println("check moveX: "+moveX+"check MoveY"+moveY+" signal"+boardBody[moveY][moveX]);
+				signalNum=checkCellCaptured(moveX,moveY,boardBody[moveY][moveX],cycleOne.cycleOwner,ceilingX,tempCeilingX,tempCeilingY);
+				if (signalNum>0)
 				{
 					tempCeilingX.add(moveX);
 					tempCeilingY.add(moveY);
-					capturedNumber++;
+					if(signalNum==1)
+						capturedNumber++;
 				}
+				System.out.println("above signal num :" +signalNum);
 			}
-			ceilingX=(ArrayList<Integer>) tempCeilingX.clone();
-			ceilingY=(ArrayList<Integer>) tempCeilingY.clone();
+			ceilingXtempIntArray=AidUtility.parseIntArrayList(tempCeilingX);
+			ceilingYtempIntArray=AidUtility.parseIntArrayList(tempCeilingY);
+			
+			AidUtility.sortByYandX(ceilingXtempIntArray, ceilingYtempIntArray);
+			
+			
+			
+			ceilingX=AidUtility.parseIntListToArrayList(ceilingXtempIntArray);
+			ceilingY=AidUtility.parseIntListToArrayList(ceilingYtempIntArray);
+			signalNum=-1;
 			tempCeilingX.clear();
 			tempCeilingY.clear(); 
 		}
@@ -187,22 +208,57 @@ public class Board
 	
 	//if x matched previous ceiling's x then everything is good
 	//every level from cycle x should be unique ...
-	public boolean checkCellCaptured(int moveX,String signOnCell,String playerSign,ArrayList<Integer>ceilingX)
+	public int checkCellCaptured(int moveX,int moveY,String signOnCell,String playerSign,ArrayList<Integer>ceilingX,ArrayList<Integer>tempCeilingX,ArrayList<Integer>tempCeilingY)
 	{
-		//if not equal to free, or it is equal to owner's sign false
-		if ((!signOnCell.equals(FREE))||(playerSign.equals(signOnCell)))
+		System.out.println("here singOncell: "+signOnCell+" playerSign:"+playerSign+" moveX:"+moveX);
+		AidUtility.printPointArrayList(ceilingX);
+		System.out.println("sign ? : "+signOnCell.equals(playerSign));
+		//if not equal to captured, or it is equal to owner's sign false
+		// -1 = captured 
+		//basically we want all cell under  last ceiling
+		// 1 means cell under ceiling and can be count as captured
+		// 2 mean
+		// -1 means nothing to add
+		//if free means no who captured
+		if (signOnCell.equals(FREE))
 		{
-			return false;
+			System.out.println("abort in here");
+			return -1;
 		}
-		//if current cell level within circle has same x with previous ceiling X them BINGO!
-		for(int oneCeilingX:ceilingX)
+		
+		for(int i =0 ; i<tempCeilingX.size();i++)
 		{
-			if(moveX==oneCeilingX)
+			//already in temp ceiling.
+			if(moveX==tempCeilingX.get(i)&&moveY==tempCeilingY.get(i))
 			{
-				return true;
+				return -2;
 			}
 		}
-		return true;
+		
+		//if current cell level within circle has same x with previous ceiling X them BINGO!
+		// only FREE or W or B come here
+		for(int oneCeilingX:ceilingX)
+		{
+			// under ceiling and it is free so tell captured up one and add it to new ceiling
+			if(moveX==oneCeilingX&&signOnCell.equals(CAPTURED))
+			{
+				return 1;
+			}
+			
+			if(moveX==oneCeilingX&&(!signOnCell.equals(playerSign)))
+			{
+				return 1;
+			}
+			
+			// under ceiling but captured does not up one, add it to new ceiling
+			if(moveX==oneCeilingX&&signOnCell.equals(playerSign))
+			{
+				return 2;
+			}
+			
+		}
+		System.out.println("true in checkCellCaptured");
+		return -3;
 	}
 	
 	//remember to write 8 directions

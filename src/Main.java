@@ -23,19 +23,21 @@ public class Main
 	    //AidUtility.printPositionArray(x,y);
 	
 		//AidUtility.printPointArray(AidUtility.mergeIntArray(new int[]{1,2,3},new int[]{3,3,3}));
-//		BoardDataCycleStructure test1 = new BoardDataCycleStructure();
+		BoardDataCycleStructure test1 = new BoardDataCycleStructure();
 //		
-//		test1.xPointArray =new int[]{1,2,3,4,5,1,5,1,5,1,2,3,4,5};
-//		test1.yPointArray =new int[]{1,1,1,1,1,2,2,3,3,4,4,4,4,4};
-//		AidUtility.sortByYandX(test1.xPointArray, test1.yPointArray);
-//		AidUtility.printPositionArray(test1.xPointArray,test1.yPointArray);
+		test1.cycleOwner=Board.WHITE;
+		System.out.println("testing sign "+test1.cycleOwner.equals(Board.WHITE));
+		test1.xPointArray =new int[]{1,2,3,4,5,1,5,1,5,1,2,3,4,5};
+		test1.yPointArray =new int[]{1,1,1,1,1,2,2,3,3,4,4,4,4,4};
+		AidUtility.sortByYandX(test1.xPointArray, test1.yPointArray);
+		AidUtility.printPositionArray(test1.xPointArray,test1.yPointArray);
 //		
-//		test1.constructLevel();
+		test1.constructLevel();
 //		System.out.println("cycle level : " + test1.cycleLevel.length);
 //		
-//		test1.printCycleLevel();
+		test1.printCycleLevel();
 		//testing capture function
-		
+		System.out.println(newBoard.countCapturedCell(test1));
 		
 	}
 
