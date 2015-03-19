@@ -16,6 +16,9 @@ public class Board
 	int blackCaptured=0;
 	//remember boardBodu[y][x]
 	String[][] boardBody=null;
+	BoardDataCircleStructure collectionsOfCircle[] = null;
+	
+	
 	Board()
 	{
 		doParseInput();
@@ -90,16 +93,13 @@ public class Board
 		System.out.println("Dimension" + boardDimension +" xCount "+xCount);
 		checkxNumber(xCount);
 		initializeBoardBody(boardDimension);
-		fillboardBody(tempStringArray);
+		fillBoardBody(tempStringArray);
 		
-		
-		
-
 		printBoardBody(boardBody);
 	}
 	//remembe bo
 	//transform 1D array of 'signs' to 2d array
-	public void fillboardBody(ArrayList<String> tempStringArray)
+	public void fillBoardBody(ArrayList<String> tempStringArray)
 	{
 		int x=0,y=0;
 		for(String tempString : tempStringArray)
@@ -144,6 +144,74 @@ public class Board
 	{
 		return boardBody[y][x].equals(WHITE);
 	}
+	
+	public int[][] countTopDown(BoardDataCircleStructure circleOne)
+	{
+		int[][] levelValidation = initializeLevelValidation();
+		int numberOfCircleLevel = circleOne.circleLevel.length;
+		//assume x and y array sorted properly by y and x
+		//circleLevel[level][0] ----> x array , circleLevel[level][1] ----> y array
+		//skip first level by just put first level path info in
+		int tempXlevelArray[]=(int [])circleOne.circleLevel[0][0];
+		//this temp Y level array will contain same value ....
+		int tempYlevelArray[]=(int [])circleOne.circleLevel[0][1];
+		
+		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray);
+		
+		for(int i=1;i<numberOfCircleLevel-1;i++)
+		{
+			tempXlevelArray=(int [])circleOne.circleLevel[i][0];
+			tempYlevelArray=(int [])circleOne.circleLevel[i][1];
+			fillLevelIntoValidationWithCondition(levelValidation,tempYlevelArray[0],tempXlevelArray);
+			
+		}
+		//put last level in 
+		tempXlevelArray=(int [])circleOne.circleLevel[circleOne.circleLevel.length-1][0];
+		tempYlevelArray=(int [])circleOne.circleLevel[circleOne.circleLevel.length-1][1];
+		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray);
+		
+		//skip last level by just put last level path info in
+		
+		return levelValidation;
+		
+	}
+	//following only for reading in board ... so we only determine 'captured' cells .
+	
+	public void fillLevelIntoValidation(int[][] levelValidation,int levelIndex,int[] xPointArray,int conditionNumber)
+	{
+		if (conditionNumber==0)
+		{
+			for(int i=0;i<xPointArray.length;i++)
+			{
+				levelValidation[levelIndex][xPointArray[i]]=1;
+			}
+		}
+		
+		if (conditionNumber==1)
+		{
+			for(int i=0;i<xPointArray.length;i++)
+			{
+				if(levelValidation[levelIndex-1][xPointArray[i]]==1&&boardBody[levelIndex][xPointArray[i]]==CAPTURED)
+				{
+					levelValidation[levelIndex][xPointArray[i]]=1;
+				}
+			}
+		}
+	}
+	
+	public int[][] initializeLevelValidation()
+	{
+		int levelValidation[][]=new int[boardDimension][boardDimension];
+		for (int i=0;i<boardDimension;i++)
+		{
+			for(int j=0;j<boardDimension;j++)
+			{
+				levelValidation[i][j]=0;
+			}
+		}
+		return levelValidation;
+	}
+	
 	
 	
 	//no matter how big is the board the max surrounding is 8 which is 8 directions 
