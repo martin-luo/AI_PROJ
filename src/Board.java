@@ -125,141 +125,158 @@ public class Board
 		}
 	}
 	
-	public boolean isFreeCell(int x,int y)
+	public boolean isFreeCell(int y,int x)
 	{
 		return boardBody[y][x].equals(FREE);
 	}
+	
+	public boolean isCapturedCell(int y,int x)
+	{
+		return boardBody[y][x].equals(CAPTURED);
+	}
+	
+	public boolean isBlackCell(int y,int x)
+	{
+		return boardBody[y][x].equals(BLACK);
+	}
+	
+	public boolean isWhiteCell(int y,int x)
+	{
+		return boardBody[y][x].equals(WHITE);
+	}
+	
+	
 	//no matter how big is the board the max surrounding is 8 which is 8 directions 
 	//haha worst case is 2N^2
 	//index 0 = x = x, 1= y = y
 	//cycles are sorted by x first then by y , so first point is the most top left of cycle
-
-	@SuppressWarnings("unchecked")
-	public int countCapturedCell(BoardDataCycleStructure cycleOne)
-	{
-		//assumed they are all sorted by x and y
-		int numberOflevel=cycleOne.cycleLevel.length;
-		//CeilingDataStructure ceiling = new CeilingDataStructure();
-		ArrayList<Integer> ceilingX = new ArrayList<Integer>();
-		int[] ceilingXtempIntArray=null;
-		int[] ceilingYtempIntArray=null;
-		ArrayList<Integer> ceilingY = new ArrayList<Integer>();
-		ArrayList<Integer> tempCeilingX = new ArrayList<Integer>();
-		ArrayList<Integer> tempCeilingY = new ArrayList<Integer>();
-		int minX=0;
-		int maxX=0;
-		int minY=0;
-		int moveY=0;
-		int capturedNumber=0;
-		int signalNum=-1;
-		//first level.
-		AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[0][0],ceilingX);
-		AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[0][1],ceilingY);
-		//test
-//		System.out.println("ceiling :");
-//		AidUtility.printPositionArrayList(ceilingX,ceilingY);
-//		System.out.println("ceiling end");
-		
-		//start from second level
-		for(int i=1;i<numberOflevel;i++)
-		{
-			System.out.println("hello i am here");
-			//assuming sorted properly
-			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][0],tempCeilingX);
-			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][1],tempCeilingY);
-			//same level if it is sorted by y and x , lowest x and y will be on left most 
-			//and vise versa
-			//temp ceiling is for current level , we use previse level ceiling to count captured
-			minX=tempCeilingX.get(0);
-			maxX=tempCeilingX.get(tempCeilingX.size()-1);
-			//all y are same in this level can use any of them
-			moveY=tempCeilingY.get(0);
-			//moving horizontally at this level
-			for (int moveX=minX;moveX<=maxX;moveX++)
-			{
-				System.out.println("check moveX: "+moveX+"check MoveY"+moveY+" signal"+boardBody[moveY][moveX]);
-				signalNum=checkCellCaptured(moveX,moveY,boardBody[moveY][moveX],cycleOne.cycleOwner,ceilingX,tempCeilingX,tempCeilingY);
-				if (signalNum>0)
-				{
-					tempCeilingX.add(moveX);
-					tempCeilingY.add(moveY);
-					if(signalNum==1)
-						capturedNumber++;
-				}
-				System.out.println("above signal num :" +signalNum);
-			}
-			ceilingXtempIntArray=AidUtility.parseIntArrayList(tempCeilingX);
-			ceilingYtempIntArray=AidUtility.parseIntArrayList(tempCeilingY);
-			
-			AidUtility.sortByYandX(ceilingXtempIntArray, ceilingYtempIntArray);
-			
-			
-			
-			ceilingX=AidUtility.parseIntListToArrayList(ceilingXtempIntArray);
-			ceilingY=AidUtility.parseIntListToArrayList(ceilingYtempIntArray);
-			signalNum=-1;
-			tempCeilingX.clear();
-			tempCeilingY.clear(); 
-		}
-		return capturedNumber;
-		
-		
-	}
-	
-	//if x matched previous ceiling's x then everything is good
-	//every level from cycle x should be unique ...
-	public int checkCellCaptured(int moveX,int moveY,String signOnCell,String playerSign,ArrayList<Integer>ceilingX,ArrayList<Integer>tempCeilingX,ArrayList<Integer>tempCeilingY)
-	{
-		System.out.println("here singOncell: "+signOnCell+" playerSign:"+playerSign+" moveX:"+moveX);
-		AidUtility.printPointArrayList(ceilingX);
-		System.out.println("sign ? : "+signOnCell.equals(playerSign));
-		//if not equal to captured, or it is equal to owner's sign false
-		// -1 = captured 
-		//basically we want all cell under  last ceiling
-		// 1 means cell under ceiling and can be count as captured
-		// 2 mean
-		// -1 means nothing to add
-		//if free means no who captured
-		if (signOnCell.equals(FREE))
-		{
-			System.out.println("abort in here");
-			return -1;
-		}
-		
-		for(int i =0 ; i<tempCeilingX.size();i++)
-		{
-			//already in temp ceiling.
-			if(moveX==tempCeilingX.get(i)&&moveY==tempCeilingY.get(i))
-			{
-				return -2;
-			}
-		}
-		
-		//if current cell level within circle has same x with previous ceiling X them BINGO!
-		// only FREE or W or B come here
-		for(int oneCeilingX:ceilingX)
-		{
-			// under ceiling and it is free so tell captured up one and add it to new ceiling
-			if(moveX==oneCeilingX&&signOnCell.equals(CAPTURED))
-			{
-				return 1;
-			}
-			
-			if(moveX==oneCeilingX&&(!signOnCell.equals(playerSign)))
-			{
-				return 1;
-			}
-			
-			// under ceiling but captured does not up one, add it to new ceiling
-			if(moveX==oneCeilingX&&signOnCell.equals(playerSign))
-			{
-				return 2;
-			}
-			
-		}
-		System.out.println("true in checkCellCaptured");
-		return -3;
-	}
+//
+//	@SuppressWarnings("unchecked")
+//	public int countCapturedCell(BoardDataCycleStructure cycleOne)
+//	{
+//		//assumed they are all sorted by x and y
+//		int numberOflevel=cycleOne.cycleLevel.length;
+//		//CeilingDataStructure ceiling = new CeilingDataStructure();
+//		ArrayList<Integer> ceilingX = new ArrayList<Integer>();
+//		int[] ceilingXtempIntArray=null;
+//		int[] ceilingYtempIntArray=null;
+//		ArrayList<Integer> ceilingY = new ArrayList<Integer>();
+//		ArrayList<Integer> tempCeilingX = new ArrayList<Integer>();
+//		ArrayList<Integer> tempCeilingY = new ArrayList<Integer>();
+//		int minX=0;
+//		int maxX=0;
+//		int minY=0;
+//		int moveY=0;
+//		int capturedNumber=0;
+//		int signalNum=-1;
+//		//first level.
+//		AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[0][0],ceilingX);
+//		AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[0][1],ceilingY);
+//		//test
+////		System.out.println("ceiling :");
+////		AidUtility.printPositionArrayList(ceilingX,ceilingY);
+////		System.out.println("ceiling end");
+//		
+//		//start from second level
+//		for(int i=1;i<numberOflevel;i++)
+//		{
+//			System.out.println("hello i am here");
+//			//assuming sorted properly
+//			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][0],tempCeilingX);
+//			AidUtility.insertIntListToArrayList((int[])cycleOne.cycleLevel[i][1],tempCeilingY);
+//			//same level if it is sorted by y and x , lowest x and y will be on left most 
+//			//and vise versa
+//			//temp ceiling is for current level , we use previse level ceiling to count captured
+//			minX=tempCeilingX.get(0);
+//			maxX=tempCeilingX.get(tempCeilingX.size()-1);
+//			//all y are same in this level can use any of them
+//			moveY=tempCeilingY.get(0);
+//			//moving horizontally at this level
+//			for (int moveX=minX;moveX<=maxX;moveX++)
+//			{
+//				//System.out.println("check moveX: "+moveX+"check MoveY"+moveY+" signal"+boardBody[moveY][moveX]);
+//				signalNum=checkCellCaptured(moveX,moveY,boardBody[moveY][moveX],cycleOne.cycleOwner,ceilingX,tempCeilingX,tempCeilingY);
+//				if (signalNum>0)
+//				{
+//					tempCeilingX.add(moveX);
+//					tempCeilingY.add(moveY);
+//					if(signalNum==1)
+//						capturedNumber++;
+//				}
+//				//System.out.println("above signal num :" +signalNum);
+//			}
+//			ceilingXtempIntArray=AidUtility.parseIntArrayList(tempCeilingX);
+//			ceilingYtempIntArray=AidUtility.parseIntArrayList(tempCeilingY);
+//			
+//			AidUtility.sortByYandX(ceilingXtempIntArray, ceilingYtempIntArray);
+//			
+//			
+//			
+//			ceilingX=AidUtility.parseIntListToArrayList(ceilingXtempIntArray);
+//			ceilingY=AidUtility.parseIntListToArrayList(ceilingYtempIntArray);
+//			signalNum=-1;
+//			tempCeilingX.clear();
+//			tempCeilingY.clear(); 
+//		}
+//		return capturedNumber;
+//		
+//		
+//	}
+//	
+//	//if x matched previous ceiling's x then everything is good
+//	//every level from cycle x should be unique ...
+//	public int checkCellCaptured(int moveX,int moveY,String signOnCell,String playerSign,ArrayList<Integer>ceilingX,ArrayList<Integer>tempCeilingX,ArrayList<Integer>tempCeilingY)
+//	{
+//		//System.out.println("here singOncell: "+signOnCell+" playerSign:"+playerSign+" moveX:"+moveX);
+//		//AidUtility.printPointArrayList(ceilingX);
+//		//System.out.println("sign ? : "+signOnCell.equals(playerSign));
+//		//if not equal to captured, or it is equal to owner's sign false
+//		// -1 = captured 
+//		//basically we want all cell under  last ceiling
+//		// 1 means cell under ceiling and can be count as captured
+//		// 2 mean
+//		// -1 means nothing to add
+//		//if free means no who captured
+//		if (signOnCell.equals(FREE))
+//		{
+//			System.out.println("abort in here");
+//			return -1;
+//		}
+//		
+//		for(int i =0 ; i<tempCeilingX.size();i++)
+//		{
+//			//already in temp ceiling.
+//			if(moveX==tempCeilingX.get(i)&&moveY==tempCeilingY.get(i))
+//			{
+//				return -2;
+//			}
+//		}
+//		
+//		//if current cell level within circle has same x with previous ceiling X them BINGO!
+//		// only FREE or W or B come here
+//		for(int oneCeilingX:ceilingX)
+//		{
+//			// under ceiling and it is free so tell captured up one and add it to new ceiling
+//			if(moveX==oneCeilingX&&signOnCell.equals(CAPTURED))
+//			{
+//				return 1;
+//			}
+//			
+//			if(moveX==oneCeilingX&&(!signOnCell.equals(playerSign)))
+//			{
+//				return 1;
+//			}
+//			
+//			// under ceiling but captured does not up one, add it to new ceiling
+//			if(moveX==oneCeilingX&&signOnCell.equals(playerSign))
+//			{
+//				return 2;
+//			}
+//			
+//		}
+//		System.out.println("true in checkCellCaptured");
+//		return -3;
+//	}
 	
 	//remember to write 8 directions
 	//use a hash map to declear which cycle is for which player ?
