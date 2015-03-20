@@ -124,6 +124,23 @@ public class AidUtility
 		}
 	}
 	
+	static public void print2DintArray(int[][] temp,int breakLine)
+	{
+		for (int i=0;i<temp.length;i++)
+		{
+			for(int j=0;j<temp[i].length;j++)
+			{
+				System.out.print(""+temp[i][j]+" ");
+				if(j==breakLine-1)
+				{
+					System.out.println("");
+				}
+			}
+		}
+		System.out.println("");
+		
+	}
+	
 	static public int[] parseIntArrayList(ArrayList<Integer> intArrayList)
 	{
 		int[] tempList=new int[intArrayList.size()];

@@ -144,6 +144,37 @@ public class Board
 	{
 		return boardBody[y][x].equals(WHITE);
 	}
+	////////////////////////////Count Capture Algorithm//////////////////////////////////
+	public int countCapturedCell(BoardDataCircleStructure circleOne)
+	{
+		return countCapturedNumber(circleOne,mergeCountBottomUpAndTopDown(countTopDown(circleOne),countBottomUp(circleOne)));
+	}
+	
+	public int countCapturedNumber(BoardDataCircleStructure circleOne,int[][] mergedLevelValidation)
+	{
+		int count=0;
+		int level=0;
+		//iterate number of levels,skip first and last level 
+		int[] tempX=null;
+		int[] tempY=null;
+		for(int i=1;i<circleOne.circleLevel.length-1;i++)
+		{
+			tempX=(int[])circleOne.circleLevel[i][0];
+			tempY=(int[])circleOne.circleLevel[i][1];
+			//from left to right but skip boarder
+			level=tempY[0];
+			for(int j=tempX[0]+1;j<tempX[tempX.length-1];j++)
+			{	//boardBody[y][x]
+				if(boardBody[level][j].equals(CAPTURED) &&mergedLevelValidation[level][j]==1)
+				{
+					count++;
+				}
+			}
+		}
+		
+		return count;
+		
+	}
 	
 	public int[][] countTopDown(BoardDataCircleStructure circleOne)
 	{
@@ -156,28 +187,80 @@ public class Board
 		//this temp Y level array will contain same value ....
 		int tempYlevelArray[]=(int [])circleOne.circleLevel[0][1];
 		
-		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray);
+		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
 		
 		for(int i=1;i<numberOfCircleLevel-1;i++)
 		{
 			tempXlevelArray=(int [])circleOne.circleLevel[i][0];
 			tempYlevelArray=(int [])circleOne.circleLevel[i][1];
-			fillLevelIntoValidationWithCondition(levelValidation,tempYlevelArray[0],tempXlevelArray);
+			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
+			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,1,circleOne.cycleOwner);
 			
 		}
 		//put last level in 
 		tempXlevelArray=(int [])circleOne.circleLevel[circleOne.circleLevel.length-1][0];
 		tempYlevelArray=(int [])circleOne.circleLevel[circleOne.circleLevel.length-1][1];
-		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray);
-		
+		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
 		//skip last level by just put last level path info in
-		
+		System.out.println("TopDown Degbug: ");
+		AidUtility.print2DintArray(levelValidation,6);
 		return levelValidation;
-		
 	}
+	
+	public int[][] countBottomUp(BoardDataCircleStructure circleOne)
+	{
+		//1 means free, 0 means not valid , 2 means self cell,in future we mark opponent as 3 and change it to '-' after merge
+		int[][] levelValidation = initializeLevelValidation();
+		int numberOfCircleLevel = circleOne.circleLevel.length;
+		//assume x and y array sorted properly by y and x
+		//circleLevel[level][0] ----> x array , circleLevel[level][1] ----> y array
+		//skip last level by just put first level path info in
+		int tempXlevelArray[]=(int [])circleOne.circleLevel[numberOfCircleLevel-1][0];
+		//this temp Y level array will contain same value ....
+		int tempYlevelArray[]=(int [])circleOne.circleLevel[numberOfCircleLevel-1][1];
+		fillLevelIntoValidation(levelValidation,tempYlevelArray[numberOfCircleLevel-1],tempXlevelArray,0,circleOne.cycleOwner);
+		for(int i=numberOfCircleLevel-2;i>0;i--)
+		{
+			tempXlevelArray=(int [])circleOne.circleLevel[i][0];
+			tempYlevelArray=(int [])circleOne.circleLevel[i][1];
+			//put in boundary points of this level first 
+			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
+			//tempYlevelArray[0] == current level's y value
+			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,2,circleOne.cycleOwner);
+		}
+		//put last level in 
+		tempXlevelArray=(int [])circleOne.circleLevel[0][0];
+		tempYlevelArray=(int [])circleOne.circleLevel[0][1];
+		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
+		//skip last level by just put last level path info in
+		System.out.println("BottomUp Degbug: ");
+		AidUtility.print2DintArray(levelValidation,6);
+		return levelValidation;
+	}
+	
+	public int[][] mergeCountBottomUpAndTopDown(int[][] countTopDown,int[][]countBottomUp)
+	{
+		int[][] resultCountValidation=initializeLevelValidation();
+		
+		for(int i=0;i<boardDimension;i++)
+		{
+			for(int j=0;j<boardDimension;j++)
+			{
+				//one not valid == all not valid .
+				if(countTopDown[i][j]==0||countBottomUp[i][j]==0)
+				{
+					continue;
+				}
+				resultCountValidation[i][j]=1;
+			}
+		}
+		return resultCountValidation;
+	}
+	
+	
 	//following only for reading in board ... so we only determine 'captured' cells .
 	
-	public void fillLevelIntoValidation(int[][] levelValidation,int levelIndex,int[] xPointArray,int conditionNumber)
+	public void fillLevelIntoValidation(int[][] levelValidation,int levelIndex,int[] xPointArray,int conditionNumber,String whoseCircle)
 	{
 		if (conditionNumber==0)
 		{
@@ -186,16 +269,45 @@ public class Board
 				levelValidation[levelIndex][xPointArray[i]]=1;
 			}
 		}
-		
+		//top down
 		if (conditionNumber==1)
-		{
-			for(int i=0;i<xPointArray.length;i++)
+		{	//only go between this level's max and min x-boundary .
+			System.out.println("topdown in here");
+			for(int i=xPointArray[0]+1;i<xPointArray[xPointArray.length-1];i++)
 			{
-				if(levelValidation[levelIndex-1][xPointArray[i]]==1&&boardBody[levelIndex][xPointArray[i]]==CAPTURED)
+				//skip this level's boundary x and if above x is ==1 and this board position marked captured ==> good 
+				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex-1][i]!=0&&boardBody[levelIndex][i].equals(CAPTURED))
 				{
-					levelValidation[levelIndex][xPointArray[i]]=1;
+					levelValidation[levelIndex][i]=1;
+					
 				}
+				//meet self cell inside circle under ceiling ..still include it to ceiling but mark it as 2 
+				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex-1][i]!=0&&boardBody[levelIndex][i].equals(whoseCircle))
+				{
+					levelValidation[levelIndex][i]=2;
+				}
+				System.out.println (" sign : "+boardBody[levelIndex][i]);
 			}
+			System.out.println();
+		}
+		//bottom up
+		if (conditionNumber==2)
+		{	//only go between this level's max and min x-boundary .
+			System.out.println("bottomup in here");
+			for(int i=xPointArray[0]+1;i<xPointArray[xPointArray.length-1];i++)
+			{
+				//skip this level's boundary x and if above x is ==1 and this board position marked captured ==> good 
+				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex+1][i]!=0&&boardBody[levelIndex][i].equals(CAPTURED))
+				{
+					levelValidation[levelIndex][i]=1;
+				}
+				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex+1][i]!=0&&boardBody[levelIndex][i].equals(whoseCircle))
+				{
+					levelValidation[levelIndex][i]=2;
+				}
+				System.out.println (" sign : "+boardBody[levelIndex][i]);
+			}
+			System.out.println();
 		}
 	}
 	
@@ -212,6 +324,8 @@ public class Board
 		return levelValidation;
 	}
 	
+	
+	////////////////////////////Count Capture Algorithm//////////////////////////////////
 	
 	
 	//no matter how big is the board the max surrounding is 8 which is 8 directions 
