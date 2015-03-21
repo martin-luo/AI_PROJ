@@ -15,7 +15,7 @@ public class Board
 	int whiteCaptured=0;
 	int blackCaptured=0;
 	//remember boardBodu[y][x]
-	String[][] boardBody=null;
+	public static String[][] BOARDBORDY=null;
 	BoardDataCircleStructure collectionsOfCircle[] = null;
 	
 	
@@ -26,18 +26,18 @@ public class Board
 
 	public void initializeBoardBody(int boardDimension)
 	{
-		boardBody=new String[boardDimension][boardDimension];
+		BOARDBORDY=new String[boardDimension][boardDimension];
 		
 	}
 	
 	public String getBoardCell(int x,int y)
 	{
-		return boardBody[x][y];
+		return BOARDBORDY[x][y];
 	}
 	
 	public void setBoardCell(int x,int y,String sign)
 	{
-		boardBody[x][y]=sign;
+		BOARDBORDY[x][y]=sign;
 	}
 	
 	public void checkxNumber(int xCount)
@@ -95,7 +95,7 @@ public class Board
 		initializeBoardBody(boardDimension);
 		fillBoardBody(tempStringArray);
 		
-		printBoardBody(boardBody);
+		printBoardBody(BOARDBORDY);
 	}
 	//remembe bo
 	//transform 1D array of 'signs' to 2d array
@@ -104,7 +104,7 @@ public class Board
 		int x=0,y=0;
 		for(String tempString : tempStringArray)
 		{
-			boardBody[y][x++]=tempString;
+			BOARDBORDY[y][x++]=tempString;
 			if (x>=boardDimension)
 			{
 				y++;
@@ -127,22 +127,22 @@ public class Board
 	
 	public boolean isFreeCell(int y,int x)
 	{
-		return boardBody[y][x].equals(FREE);
+		return BOARDBORDY[y][x].equals(FREE);
 	}
 	
 	public boolean isCapturedCell(int y,int x)
 	{
-		return boardBody[y][x].equals(CAPTURED);
+		return BOARDBORDY[y][x].equals(CAPTURED);
 	}
 	
 	public boolean isBlackCell(int y,int x)
 	{
-		return boardBody[y][x].equals(BLACK);
+		return BOARDBORDY[y][x].equals(BLACK);
 	}
 	
 	public boolean isWhiteCell(int y,int x)
 	{
-		return boardBody[y][x].equals(WHITE);
+		return BOARDBORDY[y][x].equals(WHITE);
 	}
 	////////////////////////////Count Capture Algorithm//////////////////////////////////
 	public int countCapturedCell(BoardDataCircleStructure circleOne)
@@ -165,7 +165,7 @@ public class Board
 			level=tempY[0];
 			for(int j=tempX[0]+1;j<tempX[tempX.length-1];j++)
 			{	//boardBody[y][x]
-				if(boardBody[level][j].equals(CAPTURED) &&mergedLevelValidation[level][j]==1)
+				if(BOARDBORDY[level][j].equals(CAPTURED) &&mergedLevelValidation[level][j]==1)
 				{
 					count++;
 				}
@@ -202,8 +202,8 @@ public class Board
 		tempYlevelArray=(int [])circleOne.circleLevel[circleOne.circleLevel.length-1][1];
 		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
 		//skip last level by just put last level path info in
-		System.out.println("TopDown Degbug: ");
-		AidUtility.print2DintArray(levelValidation,6);
+		//System.out.println("TopDown Degbug: ");
+		//AidUtility.print2DintArray(levelValidation,6);
 		return levelValidation;
 	}
 	
@@ -233,8 +233,8 @@ public class Board
 		tempYlevelArray=(int [])circleOne.circleLevel[0][1];
 		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
 		//skip last level by just put last level path info in
-		System.out.println("BottomUp Degbug: ");
-		AidUtility.print2DintArray(levelValidation,6);
+		//System.out.println("BottomUp Degbug: ");
+		//AidUtility.print2DintArray(levelValidation,6);
 		return levelValidation;
 	}
 	
@@ -272,42 +272,42 @@ public class Board
 		//top down
 		if (conditionNumber==1)
 		{	//only go between this level's max and min x-boundary .
-			System.out.println("topdown in here");
+			//System.out.println("topdown in here");
 			for(int i=xPointArray[0]+1;i<xPointArray[xPointArray.length-1];i++)
 			{
 				//skip this level's boundary x and if above x is ==1 and this board position marked captured ==> good 
-				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex-1][i]!=0&&boardBody[levelIndex][i].equals(CAPTURED))
+				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex-1][i]!=0&&BOARDBORDY[levelIndex][i].equals(CAPTURED))
 				{
 					levelValidation[levelIndex][i]=1;
 					
 				}
 				//meet self cell inside circle under ceiling ..still include it to ceiling but mark it as 2 
-				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex-1][i]!=0&&boardBody[levelIndex][i].equals(whoseCircle))
+				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex-1][i]!=0&&BOARDBORDY[levelIndex][i].equals(whoseCircle))
 				{
 					levelValidation[levelIndex][i]=2;
 				}
-				System.out.println (" sign : "+boardBody[levelIndex][i]);
+				//System.out.println (" sign : "+boardBody[levelIndex][i]);
 			}
-			System.out.println();
+			//System.out.println();
 		}
 		//bottom up
 		if (conditionNumber==2)
 		{	//only go between this level's max and min x-boundary .
-			System.out.println("bottomup in here");
+			//System.out.println("bottomup in here");
 			for(int i=xPointArray[0]+1;i<xPointArray[xPointArray.length-1];i++)
 			{
 				//skip this level's boundary x and if above x is ==1 and this board position marked captured ==> good 
-				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex+1][i]!=0&&boardBody[levelIndex][i].equals(CAPTURED))
+				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex+1][i]!=0&&BOARDBORDY[levelIndex][i].equals(CAPTURED))
 				{
 					levelValidation[levelIndex][i]=1;
 				}
-				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex+1][i]!=0&&boardBody[levelIndex][i].equals(whoseCircle))
+				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex+1][i]!=0&&BOARDBORDY[levelIndex][i].equals(whoseCircle))
 				{
 					levelValidation[levelIndex][i]=2;
 				}
-				System.out.println (" sign : "+boardBody[levelIndex][i]);
+				//System.out.println (" sign : "+boardBody[levelIndex][i]);
 			}
-			System.out.println();
+			//System.out.println();
 		}
 	}
 	
