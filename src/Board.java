@@ -10,7 +10,7 @@ public class Board
 	public static String CAPTURED="-";
 	public static String FREE="+";
 	String inputFileName;
-	int boardDimension=0;
+	public static int BOARDDIMENSION=0;
 	int freeCell=0;
 	int whiteCaptured=0;
 	int blackCaptured=0;
@@ -42,7 +42,7 @@ public class Board
 	
 	public void checkxNumber(int xCount)
 	{
-		if (xCount==boardDimension)
+		if (xCount==BOARDDIMENSION)
 		{
 			return;
 		}
@@ -88,11 +88,11 @@ public class Board
 	    }
 		
 		//set Dimension to first line of input and remove it from arraylist
-		boardDimension=Integer.parseInt(tempStringArray.remove(0));
+		BOARDDIMENSION=Integer.parseInt(tempStringArray.remove(0));
 		//if dimension not match exit
-		System.out.println("Dimension" + boardDimension +" xCount "+xCount);
+		System.out.println("Dimension" + BOARDDIMENSION +" xCount "+xCount);
 		checkxNumber(xCount);
-		initializeBoardBody(boardDimension);
+		initializeBoardBody(BOARDDIMENSION);
 		fillBoardBody(tempStringArray);
 		
 		printBoardBody(BOARDBORDY);
@@ -105,7 +105,7 @@ public class Board
 		for(String tempString : tempStringArray)
 		{
 			BOARDBORDY[y][x++]=tempString;
-			if (x>=boardDimension)
+			if (x>=BOARDDIMENSION)
 			{
 				y++;
 				x=0;
@@ -115,9 +115,9 @@ public class Board
 	
 	public void printBoardBody(String boardBody[][])
 	{
-		for (int i=0 ;i<boardDimension;i++)
+		for (int i=0 ;i<BOARDDIMENSION;i++)
 		{
-			for(int j=0;j<boardDimension;j++)
+			for(int j=0;j<BOARDDIMENSION;j++)
 			{
 				System.out.print(boardBody[i][j]+"(x:"+j+" y:"+i+")");
 			}
@@ -242,9 +242,9 @@ public class Board
 	{
 		int[][] resultCountValidation=initializeLevelValidation();
 		
-		for(int i=0;i<boardDimension;i++)
+		for(int i=0;i<BOARDDIMENSION;i++)
 		{
-			for(int j=0;j<boardDimension;j++)
+			for(int j=0;j<BOARDDIMENSION;j++)
 			{
 				//one not valid == all not valid .
 				if(countTopDown[i][j]==0||countBottomUp[i][j]==0)
@@ -313,10 +313,10 @@ public class Board
 	
 	public int[][] initializeLevelValidation()
 	{
-		int levelValidation[][]=new int[boardDimension][boardDimension];
-		for (int i=0;i<boardDimension;i++)
+		int levelValidation[][]=new int[BOARDDIMENSION][BOARDDIMENSION];
+		for (int i=0;i<BOARDDIMENSION;i++)
 		{
-			for(int j=0;j<boardDimension;j++)
+			for(int j=0;j<BOARDDIMENSION;j++)
 			{
 				levelValidation[i][j]=0;
 			}
