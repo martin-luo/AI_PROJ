@@ -257,4 +257,17 @@ public class AidUtility
 		}
 	}
 	
+	static public BoardDataCircleStructure slicingCellNodeCollectionToBoardDataCircleStructure(int from,int to, String circleOwner,ArrayList<CellNode> arrayListOfCellNodes)
+	{
+		BoardDataCircleStructure oneCircle = null;
+		int tempX[]=new int[to-from];
+		int tempY[]=new int[to-from];
+		for(int i=from;i<to;i++)
+		{
+			tempX[i]=arrayListOfCellNodes.get(i).currentNodeX;
+			tempY[i]=arrayListOfCellNodes.get(i).currentNodeY;
+		}
+		oneCircle= new BoardDataCircleStructure(circleOwner,tempX,tempY);
+		return oneCircle;
+	}
 }

@@ -64,6 +64,7 @@ public class BoardDataCircleStructure
 		
 	}
 	
+	
 	public void printCycleLevel()
 	{
 		for (int i =0;i<circleLevel.length;i++)

@@ -144,6 +144,37 @@ public class Board
 	{
 		return BOARDBORDY[y][x].equals(WHITE);
 	}
+	////////////////////////////find circle Algorithm/////////////////////////////////////
+	
+	public void doFindCircle(int startX,int startY, String whoseCircle)
+	{
+		ArrayList<CellNode> arrayListOfCellNodes=new ArrayList<CellNode>();
+		CellNode tempValidCell = null;
+		//-1 ---> original , 0 --> not visited, 1 ---> visited, 3--->  already in path
+		int[][] trackingBoard=new int[BOARDDIMENSION][BOARDDIMENSION];
+		int[] tempClockwiseXY=null;
+		trackingBoard[startY][startX]=-1;
+		//-1,-1 means starting cell does not have prev x and prev y
+		arrayListOfCellNodes.add(new CellNode(startX,startY,-1,-1,whoseCircle));
+		while (arrayListOfCellNodes.size()!=0)
+		{
+			tempClockwiseXY=arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).mostClockwisedCellIndex();
+			//means no next cell can be found
+			if(tempClockwiseXY[0]==startX &&tempClockwiseXY[1]==startY)
+			{
+				
+			}
+			
+			if(tempClockwiseXY==null)
+			{
+				arrayListOfCellNodes.remove(arrayListOfCellNodes.size()-1);
+			}
+			
+		}
+		
+		
+		
+	}
 	////////////////////////////Count Capture Algorithm//////////////////////////////////
 	public int countCapturedCell(BoardDataCircleStructure circleOne)
 	{

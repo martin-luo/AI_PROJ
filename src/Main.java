@@ -39,6 +39,9 @@ public class Main
 		//test1.printCycleLevel();
 		//testing capture function
 		//System.out.println(newBoard.countCapturedCell(test1));
+		//testting CellNode
+		//current x ,current y, prev x, prev y, 
+		CellNode testCellNode= new CellNode(1,1,1,0,Board.WHITE);
 		
 	}
 

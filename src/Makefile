@@ -1,2 +1,2 @@
-AI:Main.java Board.java BoardDataCircleStructure.java AidUtility.java CeilingDataStructure.java
-	javac Main.java Board.java BoardDataCircleStructure.java AidUtility.java CeilingDataStructure.java
+AI:Main.java Board.java BoardDataCircleStructure.java AidUtility.java CeilingDataStructure.java CellNode.java
+	javac Main.java Board.java BoardDataCircleStructure.java AidUtility.java CeilingDataStructure.java CellNode.java
