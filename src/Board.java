@@ -16,7 +16,7 @@ public class Board
 	int blackCaptured=0;
 	//remember boardBodu[y][x]
 	public static String[][] BOARDBORDY=null;
-	BoardDataCircleStructure collectionsOfCircle[] = null;
+	ArrayList<BoardDataCircleStructure> collectionOfCircle = new ArrayList<BoardDataCircleStructure>();
 	
 	
 	Board()
@@ -150,9 +150,16 @@ public class Board
 	{
 		ArrayList<CellNode> arrayListOfCellNodes=new ArrayList<CellNode>();
 		CellNode tempValidCell = null;
-		//-1 ---> original , 0 --> not visited, 1 ---> visited, 3--->  already in path
-		int[][] trackingBoard=new int[BOARDDIMENSION][BOARDDIMENSION];
+		//-1 ---> original , 0 --> not visited, 1 ---> visited
+		int[][] trackingBoard=initialize2Darray(0);
+		//initial value is all -1 which means it is not in queue
+		int[][] trackingIndex=initialize2Darray(-1);
+
 		int[] tempClockwiseXY=null;
+		int currentTempX;
+		int currentTempY;
+		int prevTempX;
+		int prevTempY;
 		trackingBoard[startY][startX]=-1;
 		//-1,-1 means starting cell does not have prev x and prev y
 		arrayListOfCellNodes.add(new CellNode(startX,startY,-1,-1,whoseCircle));
@@ -160,15 +167,38 @@ public class Board
 		{
 			tempClockwiseXY=arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).mostClockwisedCellIndex();
 			//means no next cell can be found
-			if(tempClockwiseXY[0]==startX &&tempClockwiseXY[1]==startY)
-			{
-				
-			}
-			
 			if(tempClockwiseXY==null)
 			{
+				//set index to -1 means it is not in the queue.
+				trackingIndex[arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).currentNodeX][arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).currentNodeY]=-1;
 				arrayListOfCellNodes.remove(arrayListOfCellNodes.size()-1);
 			}
+			currentTempX=tempClockwiseXY[0];
+			currentTempY=tempClockwiseXY[1];
+			
+			if(currentTempX==startX &&currentTempY==startY)
+			{
+				//slicing and remove them from arrayListOfCellNodes.
+				collectionOfCircle.add(AidUtility.slicingCellNodeCollectionToBoardDataCircleStructure(0,arrayListOfCellNodes.size(),whoseCircle,arrayListOfCellNodes));
+				AidUtility.arrayListOfCellNodesRemove(0,arrayListOfCellNodes.size(),arrayListOfCellNodes);
+				continue;
+			}
+			//find a circle before returning to original 
+			if(trackingBoard[currentTempY][currentTempX]==1&&trackingIndex[currentTempX][currentTempY]!=-1)
+			{
+				collectionOfCircle.add(AidUtility.slicingCellNodeCollectionToBoardDataCircleStructure(trackingIndex[currentTempY][currentTempX],arrayListOfCellNodes.size(),whoseCircle,arrayListOfCellNodes));
+				AidUtility.arrayListOfCellNodesRemove(trackingIndex[currentTempY][currentTempX]+1,arrayListOfCellNodes.size(),arrayListOfCellNodes);
+			}
+			//make new next node visited m
+			trackingBoard[currentTempY][currentTempX]=1;
+			//track current cellnodes index in array 
+			trackingIndex[currentTempY][currentTempx]=arrayListOfCellNodes.size();
+			prevTempX=arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).currentNodeX;
+			prevTempY=arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).currentNodeX;
+			arrayListOfCellNodes.add(new CellNode(currentTempX,currentTempY,prevTempX,prevTempY,whoseCircle));
+			//returned valid next cell won't be the current cell's prev cell 
+			//so if returned something that is already in the path ....
+			//we can confirm that there will be another circle .
 			
 		}
 		
@@ -350,6 +380,19 @@ public class Board
 			for(int j=0;j<BOARDDIMENSION;j++)
 			{
 				levelValidation[i][j]=0;
+			}
+		}
+		return levelValidation;
+	}
+	
+	public int[][] initialize2Darray(int initialValue)
+	{
+		int levelValidation[][]=new int[BOARDDIMENSION][BOARDDIMENSION];
+		for (int i=0;i<BOARDDIMENSION;i++)
+		{
+			for(int j=0;j<BOARDDIMENSION;j++)
+			{
+				levelValidation[i][j]=initialValue;
 			}
 		}
 		return levelValidation;

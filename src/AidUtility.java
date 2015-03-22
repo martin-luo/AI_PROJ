@@ -262,12 +262,27 @@ public class AidUtility
 		BoardDataCircleStructure oneCircle = null;
 		int tempX[]=new int[to-from];
 		int tempY[]=new int[to-from];
+		int index=0;
+		
 		for(int i=from;i<to;i++)
 		{
-			tempX[i]=arrayListOfCellNodes.get(i).currentNodeX;
-			tempY[i]=arrayListOfCellNodes.get(i).currentNodeY;
+			tempX[index]=arrayListOfCellNodes.get(i).currentNodeX;
+			tempY[index]=arrayListOfCellNodes.get(i).currentNodeY;
+			
+			index++;
 		}
+		//removed circle path/CellNodes from the original path collection .
+		
 		oneCircle= new BoardDataCircleStructure(circleOwner,tempX,tempY);
 		return oneCircle;
+	}
+	static public void arrayListOfCellNodesRemove(int from,int to,ArrayList<CellNode> arrayListOfCellNodes)
+	{
+		ArrayList<CellNode> removeTemp=new ArrayList<CellNode>();
+		for (int i=from;i<to;i++)
+		{
+			removeTemp.add(arrayListOfCellNodes.get(i));
+		}
+		arrayListOfCellNodes.removeAll(removeTemp);
 	}
 }
