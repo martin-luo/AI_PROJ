@@ -14,6 +14,8 @@ public class Board
 	int freeCell=0;
 	int whiteCaptured=0;
 	int blackCaptured=0;
+	//used to keep tracking of point which is in circle 0 === not in circle , 1== in circle 
+	public int[][] positionInCircle=null;
 	//remember boardBodu[y][x]
 	public static String[][] BOARDBORDY=null;
 	ArrayList<BoardDataCircleStructure> collectionOfCircle = new ArrayList<BoardDataCircleStructure>();
@@ -21,6 +23,7 @@ public class Board
 	
 	Board()
 	{
+		positionInCircle=initialize2Darray(0);
 		doParseInput();
 	}
 
@@ -149,18 +152,20 @@ public class Board
 	public void doFindCircle(int startX,int startY, String whoseCircle)
 	{
 		ArrayList<CellNode> arrayListOfCellNodes=new ArrayList<CellNode>();
-		CellNode tempValidCell = null;
+		//CellNode tempValidCell = null;
 		//-1 ---> original , 0 --> not visited, 1 ---> visited
 		int[][] trackingBoard=initialize2Darray(0);
 		//initial value is all -1 which means it is not in queue
 		int[][] trackingIndex=initialize2Darray(-1);
-
 		int[] tempClockwiseXY=null;
+		ArrayList<Integer> circleRangeFrom=new ArrayList<Integer>();
+		ArrayList<Integer> circleRangeTo=new ArrayList<Integer>();
 		int currentTempX;
 		int currentTempY;
 		int prevTempX;
 		int prevTempY;
 		trackingBoard[startY][startX]=-1;
+		trackingIndex[startY][startX]=0;
 		//-1,-1 means starting cell does not have prev x and prev y
 		arrayListOfCellNodes.add(new CellNode(startX,startY,-1,-1,whoseCircle));
 		while (arrayListOfCellNodes.size()!=0)
@@ -171,6 +176,7 @@ public class Board
 			{
 				//set index to -1 means it is not in the queue.
 				trackingIndex[arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).currentNodeX][arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).currentNodeY]=-1;
+				positionInCircle[arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).currentNodeX][arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).currentNodeY]=-1;
 				arrayListOfCellNodes.remove(arrayListOfCellNodes.size()-1);
 			}
 			currentTempX=tempClockwiseXY[0];
@@ -181,29 +187,26 @@ public class Board
 				//slicing and remove them from arrayListOfCellNodes.
 				collectionOfCircle.add(AidUtility.slicingCellNodeCollectionToBoardDataCircleStructure(0,arrayListOfCellNodes.size(),whoseCircle,arrayListOfCellNodes));
 				AidUtility.arrayListOfCellNodesRemove(0,arrayListOfCellNodes.size(),arrayListOfCellNodes);
-				continue;
+				break;
 			}
 			//find a circle before returning to original 
 			if(trackingBoard[currentTempY][currentTempX]==1&&trackingIndex[currentTempX][currentTempY]!=-1)
 			{
 				collectionOfCircle.add(AidUtility.slicingCellNodeCollectionToBoardDataCircleStructure(trackingIndex[currentTempY][currentTempX],arrayListOfCellNodes.size(),whoseCircle,arrayListOfCellNodes));
 				AidUtility.arrayListOfCellNodesRemove(trackingIndex[currentTempY][currentTempX]+1,arrayListOfCellNodes.size(),arrayListOfCellNodes);
+				
 			}
 			//make new next node visited m
 			trackingBoard[currentTempY][currentTempX]=1;
-			//track current cellnodes index in array 
-			trackingIndex[currentTempY][currentTempx]=arrayListOfCellNodes.size();
+			//track current cellnodes index in array
+			trackingIndex[currentTempY][currentTempX]=arrayListOfCellNodes.size();
 			prevTempX=arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).currentNodeX;
 			prevTempY=arrayListOfCellNodes.get(arrayListOfCellNodes.size()-1).currentNodeX;
 			arrayListOfCellNodes.add(new CellNode(currentTempX,currentTempY,prevTempX,prevTempY,whoseCircle));
 			//returned valid next cell won't be the current cell's prev cell 
 			//so if returned something that is already in the path ....
-			//we can confirm that there will be another circle .
-			
+			//we can confirm that there will be another circle .	
 		}
-		
-		
-		
 	}
 	////////////////////////////Count Capture Algorithm//////////////////////////////////
 	public int countCapturedCell(BoardDataCircleStructure circleOne)
