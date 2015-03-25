@@ -4,13 +4,14 @@ import java.util.ArrayList;
 public class BoardDataCircleStructure 
 {
 	//black or white
-	public String cycleOwner="";
+	public String circleOwner="";
 	int capturedCellNumber=0;
 	int circlePointsNumber=0;
 	//used to stored points which formed the cycle
 	//they are all sorted
 	public int[] xPointArray=null;
 	public int[] yPointArray=null;
+	public ArrayList<CellNode> positionCells=new ArrayList<CellNode>();
 	//usede to store points which captured within this cycle
 	public int[] capturedxPointArray=null;
 	public int[] capturedyPointArray=null;
@@ -22,16 +23,23 @@ public class BoardDataCircleStructure
 		
 	}
 	
-	BoardDataCircleStructure(String cycleOwner,int []xPointArray,int []yPointArray)
+	
+	BoardDataCircleStructure(String circleOwner)
 	{
-		this.cycleOwner = cycleOwner;
+		this.circleOwner=circleOwner;
+	}
+
+	
+	BoardDataCircleStructure(String circleOwner,int []xPointArray,int []yPointArray)
+	{
+		this.circleOwner = circleOwner;
 		this.xPointArray = xPointArray;
 		this.yPointArray= yPointArray;
 	}
 	
 	BoardDataCircleStructure(String cycleOwner,ArrayList<Integer>xPointArrayList,ArrayList<Integer> yPointArrayList)
 	{
-		this.cycleOwner = cycleOwner;
+		this.circleOwner = cycleOwner;
 		this.xPointArray = xPointArray;
 		this.yPointArray= yPointArray;
 	}
