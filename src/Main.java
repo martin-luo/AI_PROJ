@@ -25,11 +25,11 @@ public class Main
 		//AidUtility.printPointArray(AidUtility.mergeIntArray(new int[]{1,2,3},new int[]{3,3,3}));
 		BoardDataCircleStructure test1 = new BoardDataCircleStructure();
 //		
-		test1.cycleOwner=Board.WHITE;
+		test1.circleOwner=Board.WHITE;
 		System.out.println("testing sign "+test1.cycleOwner.equals(Board.WHITE));
 		test1.xPointArray =new int[]{1,2,3,4,5,1,5,1,5,1,2,3,4,5};
 		test1.yPointArray =new int[]{1,1,1,1,1,2,2,3,3,4,4,4,4,4};
-		AidUtility.sortByYandX(test1.xPointArray, test1.yPointArray);
+		//AidUtility.sortByYandX(test1.xPointArray, test1.yPointArray);
 		AidUtility.printPositionArray(test1.xPointArray,test1.yPointArray);
 //		
 		test1.constructLevel();

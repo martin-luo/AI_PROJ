@@ -18,7 +18,9 @@ public class Board
 	public int[][] positionInCircle=null;
 	//remember boardBodu[y][x]
 	public static String[][] BOARDBORDY=null;
-	ArrayList<BoardDataCircleStructure> collectionOfCircle = new ArrayList<BoardDataCircleStructure>();
+	//tracking point is already in one circle path or not.
+	public int[][] trackingInCirclePath=null;
+	ArrayList<BoardDataCircleStructure> collectionOfCircle =null;
 	
 	
 	Board()
@@ -152,14 +154,16 @@ public class Board
 	public void chekcBoard()
 	{
 		BoardDataCircleStructure tempOneCircle = null; 
+		collectionOfCircle = new ArrayList<BoardDataCircleStructure>();
 		//y
 		for(int y =0;y<BOARDDIMENSION;y++)
 		{
 			//x
 			for(int x=0;x<BOARDDIMENSION;x++)
 			{
-				
-				if(BOARDBORDY[y][x].equals(WHITE)||BOARDBORDY[y][x].equals(BLACK))
+				//if encounter a cell which is belong to white or black , and it is not currently in the part of any circle .. we use it 
+				//as start point to find cirlce 
+				if((BOARDBORDY[y][x].equals(WHITE)||BOARDBORDY[y][x].equals(BLACK))&&trackingInCirclePath[y][x]==0)
 				{
 					tempOneCircle = new BoardDataCircleStructure(); 
 					doFindCircle(tempOneCircle,x,y,BOARDBORDY[y][x]);
@@ -170,6 +174,16 @@ public class Board
 				}
 			}
 		}
+		
+		for(int i=0;i<collectionOfCircle.size();i++)
+		{
+			tempOneCircle = collectionOfCircle.get(i);
+			tempOneCircle.transformCellNodeToIntArray();
+			tempOneCircle.constructLevel();
+			countCapturedCell(tempOneCircle);
+		}
+		
+		
 	}
 	
 	
@@ -178,9 +192,11 @@ public class Board
 		//ArrayList<CellNode> arrayListOfCellNodes=new ArrayList<CellNode>();
 		//CellNode tempValidCell = null;
 		//-1 ---> original , 0 --> not visited, 1 ---> visited
-		int[][] trackingBoard=initialize2Darray(0);
+		int [][]trackingVistiedBoard=initialize2Darray(0);
 		//initial value is all -1 which means it is not in queue
 		//int[][] trackingIndex=initialize2Darray(-1);
+		//keep track whether if a point is already in circle or not .
+		trackingInCirclePath=initialize2Darray(0);
 		int[] tempClockwiseXY=null;
 		
 		//ArrayList<Integer> circleRangeFrom=new ArrayList<Integer>();
@@ -189,10 +205,11 @@ public class Board
 		int currentTempY;
 		int prevTempX;
 		int prevTempY;
-		trackingBoard[startY][startX]=-1;
+		trackingInCirclePath[startY][startX]=1;
+		trackingVistiedBoard[startY][startX]=-1;
 		//trackingIndex[startY][startX]=0;
 		//-1,-1 means starting cell does not have prev x and prev y
-		oneCircle.positionCells.add(new CellNode(startX,startY,-1,-1,whoseCircle,trackingBoard));
+		oneCircle.positionCells.add(new CellNode(startX,startY,-1,-1,whoseCircle,trackingVistiedBoard));
 		while (oneCircle.positionCells.size()!=0)
 		{
 			tempClockwiseXY=oneCircle.positionCells.get(oneCircle.positionCells.size()-1).mostClockwisedCellIndex();
@@ -202,6 +219,7 @@ public class Board
 				//set index to -1 means it is not in the queue.
 				//trackingIndex[oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeX][oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeY]=-1;
 				//positionInCircle[oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeX][oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeY]=-1;
+				trackingInCirclePath[oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeY][oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeX]=0;
 				oneCircle.positionCells.remove(oneCircle.positionCells.size()-1);
 			}
 			currentTempX=tempClockwiseXY[0];
@@ -221,12 +239,13 @@ public class Board
 				//AidUtility.arrayListOfCellNodesRemove(trackingIndex[currentTempY][currentTempX]+1,arrayListOfCellNodes.size(),arrayListOfCellNodes);
 			//}
 			//make new next node visited m
-			trackingBoard[currentTempY][currentTempX]=1;
+			trackingVistiedBoard[currentTempY][currentTempX]=1;
+			trackingInCirclePath[currentTempY][currentTempX]=1;
 			//track current cellnodes index in array
 			//trackingIndex[currentTempY][currentTempX]=oneCircle.positionCells.size();
 			prevTempX=oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeX;
 			prevTempY=oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeX;
-			oneCircle.positionCells.add(new CellNode(currentTempX,currentTempY,prevTempX,prevTempY,whoseCircle,trackingBoard));
+			oneCircle.positionCells.add(new CellNode(currentTempX,currentTempY,prevTempX,prevTempY,whoseCircle,trackingVistiedBoard));
 			//returned valid next cell won't be the current cell's prev cell 
 			//so if returned something that is already in the path ....
 			//we can confirm that there will be another circle .	
@@ -275,20 +294,20 @@ public class Board
 		//this temp Y level array will contain same value ....
 		int tempYlevelArray[]=(int [])circleOne.circleLevel[0][1];
 		
-		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
+		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.circleOwner);
 		
 		for(int i=1;i<numberOfCircleLevel-1;i++)
 		{
 			tempXlevelArray=(int [])circleOne.circleLevel[i][0];
 			tempYlevelArray=(int [])circleOne.circleLevel[i][1];
-			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
-			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,1,circleOne.cycleOwner);
+			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.circleOwner);
+			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,1,circleOne.circleOwner);
 			
 		}
 		//put last level in 
 		tempXlevelArray=(int [])circleOne.circleLevel[circleOne.circleLevel.length-1][0];
 		tempYlevelArray=(int [])circleOne.circleLevel[circleOne.circleLevel.length-1][1];
-		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
+		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.circleOwner);
 		//skip last level by just put last level path info in
 		//System.out.println("TopDown Degbug: ");
 		//AidUtility.print2DintArray(levelValidation,6);
@@ -306,20 +325,20 @@ public class Board
 		int tempXlevelArray[]=(int [])circleOne.circleLevel[numberOfCircleLevel-1][0];
 		//this temp Y level array will contain same value ....
 		int tempYlevelArray[]=(int [])circleOne.circleLevel[numberOfCircleLevel-1][1];
-		fillLevelIntoValidation(levelValidation,tempYlevelArray[numberOfCircleLevel-1],tempXlevelArray,0,circleOne.cycleOwner);
+		fillLevelIntoValidation(levelValidation,tempYlevelArray[numberOfCircleLevel-1],tempXlevelArray,0,circleOne.circleOwner);
 		for(int i=numberOfCircleLevel-2;i>0;i--)
 		{
 			tempXlevelArray=(int [])circleOne.circleLevel[i][0];
 			tempYlevelArray=(int [])circleOne.circleLevel[i][1];
 			//put in boundary points of this level first 
-			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
+			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.circleOwner);
 			//tempYlevelArray[0] == current level's y value
-			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,2,circleOne.cycleOwner);
+			fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,2,circleOne.circleOwner);
 		}
 		//put last level in 
 		tempXlevelArray=(int [])circleOne.circleLevel[0][0];
 		tempYlevelArray=(int [])circleOne.circleLevel[0][1];
-		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.cycleOwner);
+		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.circleOwner);
 		//skip last level by just put last level path info in
 		//System.out.println("BottomUp Degbug: ");
 		//AidUtility.print2DintArray(levelValidation,6);

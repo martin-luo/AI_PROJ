@@ -46,7 +46,7 @@ public class BoardDataCircleStructure
 	
 	public void constructLevel()
 	{
-		
+		AidUtility.sortByYandX(xPointArray, yPointArray);
 		int[] tempLevelPointY= AidUtility.getUniquePointInArray(yPointArray);
 		ArrayList<Integer> tempX = new ArrayList<Integer>();
 		ArrayList<Integer> tempY = new ArrayList<Integer>();
@@ -79,6 +79,20 @@ public class BoardDataCircleStructure
 		{
 			AidUtility.printPositionArray((int[])circleLevel[i][0],(int[])circleLevel[i][1]);
 			//System.out.println("----");
+		}
+	}
+	
+	
+	void transformCellNodeToIntArray()
+	{
+		CellNode tempCellNode = null;
+		xPointArray=new int[positionCells.size()];
+		yPointArray=new int[positionCells.size()];
+		for(int i=0;i<positionCells.size();i++)
+		{
+			tempCellNode=positionCells.get(i);
+			xPointArray[i]=tempCellNode.currentNodeX;
+			yPointArray[i]=tempCellNode.currentNodeY;
 		}
 	}
 	
