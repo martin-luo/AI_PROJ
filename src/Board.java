@@ -155,6 +155,7 @@ public class Board
 	{
 		BoardDataCircleStructure tempOneCircle = null; 
 		collectionOfCircle = new ArrayList<BoardDataCircleStructure>();
+		freeCell=0;
 		//y
 		for(int y =0;y<BOARDDIMENSION;y++)
 		{
@@ -172,15 +173,29 @@ public class Board
 						collectionOfCircle.add(tempOneCircle);
 					}
 				}
+				else if (BOARDBORDY[y][x].equals(FREE))
+				{
+					freeCell+=1;
+				}
 			}
 		}
+		whiteCaptured=0;
+		blackCaptured=0;
 		
 		for(int i=0;i<collectionOfCircle.size();i++)
 		{
 			tempOneCircle = collectionOfCircle.get(i);
 			tempOneCircle.transformCellNodeToIntArray();
 			tempOneCircle.constructLevel();
-			countCapturedCell(tempOneCircle);
+			if (tempOneCircle.circleOwner.equals(WHITE))
+			{
+				whiteCaptured+=countCapturedCell(tempOneCircle);
+			}
+			
+			else if (tempOneCircle.circleOwner.equals(BLACK))
+			{
+				blackCaptured+=countCapturedCell(tempOneCircle);
+			}
 		}
 		
 		
