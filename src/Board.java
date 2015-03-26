@@ -191,6 +191,7 @@ public class Board
 		
 		for(int i=0;i<collectionOfCircle.size();i++)
 		{
+			System.out.println("----start finding capture ------");
 			tempOneCircle = collectionOfCircle.get(i);
 			tempOneCircle.transformCellNodeToIntArray();
 			tempOneCircle.constructLevel();
@@ -363,8 +364,8 @@ public class Board
 		tempYlevelArray=(int [])circleOne.circleLevel[circleOne.circleLevel.length-1][1];
 		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.circleOwner);
 		//skip last level by just put last level path info in
-		//System.out.println("TopDown Degbug: ");
-		//AidUtility.print2DintArray(levelValidation,6);
+		System.out.println("TopDown Degbug: ");
+		AidUtility.print2DintArray(levelValidation,6);
 		return levelValidation;
 	}
 	
@@ -379,7 +380,9 @@ public class Board
 		int tempXlevelArray[]=(int [])circleOne.circleLevel[numberOfCircleLevel-1][0];
 		//this temp Y level array will contain same value ....
 		int tempYlevelArray[]=(int [])circleOne.circleLevel[numberOfCircleLevel-1][1];
-		fillLevelIntoValidation(levelValidation,tempYlevelArray[numberOfCircleLevel-1],tempXlevelArray,0,circleOne.circleOwner);
+		System.out.println("out index?");
+		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.circleOwner);
+		System.out.println("out index?");
 		for(int i=numberOfCircleLevel-2;i>0;i--)
 		{
 			tempXlevelArray=(int [])circleOne.circleLevel[i][0];
@@ -394,8 +397,8 @@ public class Board
 		tempYlevelArray=(int [])circleOne.circleLevel[0][1];
 		fillLevelIntoValidation(levelValidation,tempYlevelArray[0],tempXlevelArray,0,circleOne.circleOwner);
 		//skip last level by just put last level path info in
-		//System.out.println("BottomUp Degbug: ");
-		//AidUtility.print2DintArray(levelValidation,6);
+		System.out.println("BottomUp Degbug: ");
+		AidUtility.print2DintArray(levelValidation,6);
 		return levelValidation;
 	}
 	
@@ -433,7 +436,7 @@ public class Board
 		//top down
 		if (conditionNumber==1)
 		{	//only go between this level's max and min x-boundary .
-			//System.out.println("topdown in here");
+			System.out.println("topdown in here");
 			for(int i=xPointArray[0]+1;i<xPointArray[xPointArray.length-1];i++)
 			{
 				//skip this level's boundary x and if above x is ==1 and this board position marked captured ==> good 
@@ -447,9 +450,9 @@ public class Board
 				{
 					levelValidation[levelIndex][i]=2;
 				}
-				//System.out.println (" sign : "+boardBody[levelIndex][i]);
+				System.out.println (" sign : "+BOARDBORDY[levelIndex][i]+" check : "+BOARDBORDY[levelIndex][i].equals(CAPTURED));
 			}
-			//System.out.println();
+			System.out.println();
 		}
 		//bottom up
 		if (conditionNumber==2)
