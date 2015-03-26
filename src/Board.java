@@ -167,6 +167,7 @@ public class Board
 				if((BOARDBORDY[y][x].equals(WHITE)||BOARDBORDY[y][x].equals(BLACK))&&trackingInCirclePath[y][x]==0)
 				{
 					tempOneCircle = new BoardDataCircleStructure(); 
+					//initial board data circle , parss in x ,y and black or white
 					doFindCircle(tempOneCircle,x,y,BOARDBORDY[y][x]);
 					if(tempOneCircle.positionCells.size()>0)
 					{
