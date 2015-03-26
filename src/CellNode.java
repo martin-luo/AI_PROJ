@@ -13,7 +13,7 @@ public class CellNode
 	ArrayList<Integer> validAdjCellX=null;
 	ArrayList<Integer> validAdjCellY=null;
 	
-	CellNode(int currentNodeX,int currentNodeY,int prevNodeX,int prevNodeY,String whoseCircle,int[][] trackingBoard)
+	CellNode(int currentNodeX,int currentNodeY,int prevNodeX,int prevNodeY,String whoseCircle,int[][] trackingBoard,int [][] trackingInCirclePath)
 	{
 		this.currentNodeX=currentNodeX;
 		this.currentNodeY=currentNodeY;
@@ -21,7 +21,7 @@ public class CellNode
 		this.prevNodeY=prevNodeY;
 		validAdjCellX=new ArrayList<Integer>();
 		validAdjCellY=new ArrayList<Integer>();
-		fillValidAdjcentCell(whoseCircle,trackingBoard);
+		fillValidAdjcentCell(whoseCircle,trackingBoard,trackingInCirclePath);
 //		System.out.println("x y adj array before choosing clockwise cell");
 //		AidUtility.printPositionArrayList(validAdjCellX, validAdjCellY);
 //		System.out.println("next clockwise cell");
@@ -61,7 +61,7 @@ public class CellNode
 		return validCell;
 	}
 	
-	public void fillValidAdjcentCell(String whoseCircle,int [][] trackingBoard)
+	public void fillValidAdjcentCell(String whoseCircle,int [][] trackingVistiedBoard,int [][] trackingInCirclePath)
 	{
 		// 8 directions adj cell from current node .
 		int numberOfDirections = 8;
@@ -73,27 +73,31 @@ public class CellNode
 		//ArrayList<Integer> tempValidAdjacentY=null;
 		//clock wise ,(x,y)
 		//int[][] directionLists=new int[8][2]{[-1,-1],[0,-1],[1,-1],[1,0],[1,1],[0,-1],[-1,1],[-1,0]};
-		int[][] directionList=new int[][]{{-1,-1},{0,-1},{1,-1},{1,0},{1,1},{0,-1},{-1,1},{-1,0}};
+		int[][] directionList=new int[][]{{-1,-1},{0,-1},{1,-1},{1,0},{1,1},{0,1},{-1,1},{-1,0}};
 		for (int i=0;i<numberOfDirections;i++)
 		{
 			tempDirectionX=directionList[i][0];
 			tempDirectionY=directionList[i][1];
 			tempX=currentNodeX+tempDirectionX;
 			tempY=currentNodeY+tempDirectionY;
-			System.out.println("direction tempx : "+tempX+" direction tempY: "+tempY);
+			//System.out.println("direction tempx : "+tempX+" direction tempY: "+tempY);
+			
 			if(tempX<0||tempY<0||tempX>=Board.BOARDDIMENSION||tempY>=Board.BOARDDIMENSION)
 			{
 				continue;
 			}
+			
 			//visited adj nodes will be eliminated 
-			if(Board.BOARDBORDY[tempY][tempX].equals(whoseCircle)&&trackingBoard[tempY][tempX]!=1)
+			if(Board.BOARDBORDY[tempY][tempX].equals(whoseCircle))
 			{
 				// with respect to current node .. all its surrounding which is not exceed board limites will be added start from top left
 				// in a clock wise direction to tempValidAdjacent
 				//and it should be same colour of starting one of 'circle'. 
+				System.out.println("--------direction tempx : "+tempX+" direction tempY: "+tempY+"-----------");
 				validAdjCellX.add(tempX);
 				validAdjCellY.add(tempY);
 			}
+			
 		}
 	}
 	//return position of prev cells in the current adj array 
@@ -127,7 +131,7 @@ public class CellNode
 		}
 		
 		validIndex=prevIndexInValidAdj()+1;
-		System.out.println("validindex : "+validIndex+"valid x point "+validAdjCellX.get(validIndex)+" valid y point: "+validAdjCellY.get(validIndex));
+		//System.out.println("validindex : "+validIndex+"valid x point "+validAdjCellX.get(validIndex)+" valid y point: "+validAdjCellY.get(validIndex));
 		//adj valid is only the preveous visited node
 		
 		//prev at the end of array ...so we want it just to first one.
@@ -146,6 +150,7 @@ public class CellNode
 		validXY[1]=validAdjCellY.get(validIndex);
 		validAdjCellX.remove(validIndex);
 		validAdjCellY.remove(validIndex);
+		//System.out.println("has point");
 		return validXY;
 	}
 	

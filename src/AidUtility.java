@@ -285,4 +285,20 @@ public class AidUtility
 		}
 		arrayListOfCellNodes.removeAll(removeTemp);
 	}
+	
+	static public void printBoardDataCircleStructureCellNode(BoardDataCircleStructure oneCircle)
+	{
+		System.out.println("length : "+oneCircle.positionCells.size());
+		for (CellNode oneCell:oneCircle.positionCells)
+		{
+			System.out.print("X :"+oneCell.currentNodeX);
+			
+			System.out.print("Y :"+oneCell.currentNodeY);
+			System.out.println();
+		}
+		System.out.println();
+		
+		
+	}
+	
 }
