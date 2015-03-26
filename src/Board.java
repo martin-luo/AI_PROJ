@@ -198,7 +198,30 @@ public class Board
 			}
 		}
 		
+		do_output();
 		
+	}
+	
+	public void do_output()
+	{
+		if(freeCell!=0)
+		{
+			System.out.print("None");
+		}
+		else if(whiteCaptured>blackCaptured)
+		{
+			System.out.println("White");
+		}
+		else if(whiteCaptured>blackCaptured)
+		{
+			System.out.println("Black");
+		}
+		else
+		{
+			System.out.println("Draw");
+		}
+		System.out.println(whiteCaptured);
+		System.out.println(blackCaptured);
 	}
 	
 	
