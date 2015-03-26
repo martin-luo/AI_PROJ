@@ -171,7 +171,7 @@ public class Board
 				//System.out.println("in here ");
 				if((BOARDBORDY[y][x].equals(WHITE)||BOARDBORDY[y][x].equals(BLACK))&&trackingInCirclePath[y][x]==0)
 				{
-					tempOneCircle = new BoardDataCircleStructure(); 
+					tempOneCircle = new BoardDataCircleStructure(BOARDBORDY[y][x]); 
 					//initial board data circle , parss in x ,y and black or white
 					doFindCircle(tempOneCircle,x,y,BOARDBORDY[y][x]);
 					if(tempOneCircle.positionCells.size()>0)
@@ -196,11 +196,13 @@ public class Board
 			tempOneCircle.constructLevel();
 			if (tempOneCircle.circleOwner.equals(WHITE))
 			{
+				System.out.println("White count capture");
 				whiteCaptured+=countCapturedCell(tempOneCircle);
 			}
 			
 			else if (tempOneCircle.circleOwner.equals(BLACK))
 			{
+				System.out.println("Black count capture");
 				blackCaptured+=countCapturedCell(tempOneCircle);
 			}
 		}
