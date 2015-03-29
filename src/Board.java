@@ -20,7 +20,7 @@ public class Board
 	public static String[][] BOARDBORDY=null;
 	//tracking point is already in one circle path or not.
 	public int[][] trackingInCirclePath=null;
-	public int [][]trackingVistiedBoard=null;
+	//public int [][]trackingVistiedBoard=null;
 	ArrayList<BoardDataCircleStructure> collectionOfCircle =null;
 	
 	
@@ -75,10 +75,12 @@ public class Board
 	         // FileReader inputFile = new FileReader("file name");
 	          BufferedReader bufferReader = new BufferedReader(new InputStreamReader(System.in));
 	          String line;
+	          
 	          //add sign into a string array by split each line with delimit ' '
 	          while ((line = bufferReader.readLine()) != null)
 	          {
 	            parts=line.split(" ");
+	            System.out.println(""+line);
 	            for(int i=0 ;i<parts.length;i++)
 	            {
 	            	tempStringArray.add(parts[i]);
@@ -159,7 +161,7 @@ public class Board
 		freeCell=0;
 		//keep track whether if a point is already in circle or not .
 		trackingInCirclePath=initialize2Darray(0);
-		trackingVistiedBoard=initialize2Darray(0);
+		//trackingVistiedBoard=initialize2Darray(0);
 		//y
 		for(int y =0;y<BOARDDIMENSION;y++)
 		{
@@ -211,6 +213,10 @@ public class Board
 		do_output();
 		
 	}
+	public void do_check_captured(BoardDataCircleStructure oneCircle)
+	{
+		
+	}
 	
 	public void do_output()
 	{
@@ -222,7 +228,7 @@ public class Board
 		{
 			System.out.println("White");
 		}
-		else if(whiteCaptured>blackCaptured)
+		else if(blackCaptured>whiteCaptured)
 		{
 			System.out.println("Black");
 		}
@@ -240,7 +246,7 @@ public class Board
 		//ArrayList<CellNode> arrayListOfCellNodes=new ArrayList<CellNode>();
 		//CellNode tempValidCell = null;
 		//-1 ---> original , 0 --> not visited, 1 ---> visited
-		//int [][]trackingVistiedBoard=initialize2Darray(0);
+		int [][]trackingVistiedBoard=initialize2Darray(0);
 		//initial value is all -1 which means it is not in queue
 		//int[][] trackingIndex=initialize2Darray(-1);
 		int[] tempClockwiseXY=null;
@@ -276,6 +282,14 @@ public class Board
 			//System.out.println("temp clock wise");
 			currentTempX=tempClockwiseXY[0];
 			currentTempY=tempClockwiseXY[1];
+			//meet a point which is already in circle and it is not starting point 
+			if(trackingInCirclePath[currentTempY][currentTempX]==1 && currentTempX!=startX && currentTempY!=startY)
+			{
+				System.out.println("next --->  x : "+currentTempX+" y: "+currentTempY);
+				continue;
+			}
+			
+			
 			System.out.println("CurrentTemp X: "+currentTempX+"CurrentTemp Y:"+currentTempY);
 			if(currentTempX==startX &&currentTempY==startY)
 			{

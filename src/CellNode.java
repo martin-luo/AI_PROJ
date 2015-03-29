@@ -87,7 +87,6 @@ public class CellNode
 				continue;
 			}
 			
-			//visited adj nodes will be eliminated 
 			if(Board.BOARDBORDY[tempY][tempX].equals(whoseCircle))
 			{
 				// with respect to current node .. all its surrounding which is not exceed board limites will be added start from top left
