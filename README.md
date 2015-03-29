@@ -25,7 +25,7 @@
 - '-' == Captured Cell
 - '+' == Free Cell
 
-## Outcome Format
+## Output Format
 
 ### First Line
 - 'WHITE' ---> White is win
