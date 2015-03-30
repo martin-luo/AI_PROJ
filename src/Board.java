@@ -144,7 +144,7 @@ public class Board
 		System.out.println("Dimension" + BOARDDIMENSION + " xCount " + xCount);
 		// If dimension not match, exit.
 		checkxNumber(xCount);
-		// If the size of each row does not match simension, exit.
+		// If the size of each row does not match dimension, exit.
 		checkyNumber(yCount);
 		initializeBoardBody(BOARDDIMENSION);
 		fillBoardBody(tempStringArray);
