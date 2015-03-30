@@ -81,8 +81,10 @@ public class Board
 	public void doParseInput()
 	{
 		// First line is dimension
-		int xCount = -1;
+		// int xCount = -1;
+		int xCount = 0;
 		int yCount = 0;
+		int prevYCount = 0;
 		
 		ArrayList<String> tempStringArray = new ArrayList<String>();
 		String[] parts = null; // Transform everything into a 1d array .
@@ -92,17 +94,43 @@ public class Board
 			BufferedReader bufferReader = new BufferedReader(
 					new InputStreamReader(System.in));
 			String line;
-			
+
+			// Since the first line is the dimension of the board, read it separately
+			// and assign it to the corresponding variable.
+			line = bufferReader.readLine();
+			BOARDDIMENSION = Integer.parseInt(line);
+
 			// add sign into a string array by split each line with delimit ' '
 			while ((line = bufferReader.readLine()) != null)
 			{
+				// If it's not the first line of the board, make the prevYCount
+				// equal to yCount. To check whether each line contains the same
+				// number of cell.
+				if (xCount != 0)
+				{
+					prevYCount = yCount;
+				}
 				parts = line.split(" ");
+				yCount = parts.length;
+				
+				// If it's the first line of the board, make the prevYCount
+				// equal to yCount.
+				if (xCount == 0)
+				{
+					prevYCount = yCount;
+				}
 				System.out.println("" + line);
 				for (int i = 0; i < parts.length; i++)
 				{
 					tempStringArray.add(parts[i]);
 				}
 				xCount++;
+				if (prevYCount != yCount)
+				{
+					System.out
+							.println("X.X ---> Error:Different size for each row.");
+					System.exit(0);
+				}
 			}
 			
 			bufferReader.close();
@@ -114,10 +142,17 @@ public class Board
 		}
 		
 		// Set Dimension to first line of input and remove it from ArrayList.
-		BOARDDIMENSION = Integer.parseInt(tempStringArray.remove(0));
+		// BOARDDIMENSION = Integer.parseInt(tempStringArray.remove(0));
+		// yCount = tempStringArray.get(0).length();
+		// for (int i = 0; i < tempStringArray.size(); i++)
+		// {
+		
+		// }
+		
 		// if dimension not match exit
 		System.out.println("Dimension" + BOARDDIMENSION + " xCount " + xCount);
 		checkxNumber(xCount);
+		checkyNumber(yCount);
 		initializeBoardBody(BOARDDIMENSION);
 		fillBoardBody(tempStringArray);
 		
