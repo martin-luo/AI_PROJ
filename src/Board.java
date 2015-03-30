@@ -19,7 +19,7 @@ public class Board
 	//remember boardBodu[y][x]
 	public static String[][] BOARDBORDY=null;
 	//tracking point is already in one circle path or not.
-	public int[][] trackingInCirclePath=null;
+	public int[][] trackingInCircle=null;
 	//public int [][]trackingVistiedBoard=null;
 	ArrayList<BoardDataCircleStructure> collectionOfCircle =null;
 	
@@ -75,7 +75,6 @@ public class Board
 	         // FileReader inputFile = new FileReader("file name");
 	          BufferedReader bufferReader = new BufferedReader(new InputStreamReader(System.in));
 	          String line;
-	          
 	          //add sign into a string array by split each line with delimit ' '
 	          while ((line = bufferReader.readLine()) != null)
 	          {
@@ -160,7 +159,9 @@ public class Board
 		collectionOfCircle = new ArrayList<BoardDataCircleStructure>();
 		freeCell=0;
 		//keep track whether if a point is already in circle or not .
-		trackingInCirclePath=initialize2Darray(0);
+		trackingInCircle=initialize2Darray(0);
+		whiteCaptured=0;
+		blackCaptured=0;
 		//trackingVistiedBoard=initialize2Darray(0);
 		//y
 		for(int y =0;y<BOARDDIMENSION;y++)
@@ -171,15 +172,31 @@ public class Board
 				//if encounter a cell which is belong to white or black , and it is not currently in the part of any circle .. we use it 
 				//as start point to find cirlce 
 				//System.out.println("in here ");
-				if((BOARDBORDY[y][x].equals(WHITE)||BOARDBORDY[y][x].equals(BLACK))&&trackingInCirclePath[y][x]==0)
+				if((BOARDBORDY[y][x].equals(WHITE)||BOARDBORDY[y][x].equals(BLACK))&&trackingInCircle[y][x]==0)
 				{
 					tempOneCircle = new BoardDataCircleStructure(BOARDBORDY[y][x]); 
 					//initial board data circle , parss in x ,y and black or white
 					doFindCircle(tempOneCircle,x,y,BOARDBORDY[y][x]);
 					if(tempOneCircle.positionCells.size()>0)
 					{
+						tempOneCircle.transformCellNodeToIntArray();
+						tempOneCircle.constructLevel();
+						if (tempOneCircle.circleOwner.equals(WHITE))
+						{
+							System.out.println("White count capture");
+							whiteCaptured+=countCapturedCell(tempOneCircle);
+						}
+						
+						else if (tempOneCircle.circleOwner.equals(BLACK))
+						{
+							System.out.println("Black count capture");
+							blackCaptured+=countCapturedCell(tempOneCircle);
+						}
 						collectionOfCircle.add(tempOneCircle);
 						AidUtility.printBoardDataCircleStructureCellNode(tempOneCircle);
+						System.out.println("------tracking in circle");
+						AidUtility.print2DintArray(trackingInCircle,BOARDDIMENSION);
+						
 					}
 				}
 				else if (BOARDBORDY[y][x].equals(FREE))
@@ -187,10 +204,11 @@ public class Board
 					freeCell+=1;
 				}
 			}
+			
 		}
-		whiteCaptured=0;
-		blackCaptured=0;
 		
+		
+		/*
 		for(int i=0;i<collectionOfCircle.size();i++)
 		{
 			System.out.println("----start finding capture ------");
@@ -209,6 +227,7 @@ public class Board
 				blackCaptured+=countCapturedCell(tempOneCircle);
 			}
 		}
+		*/
 		
 		do_output();
 		
@@ -256,12 +275,12 @@ public class Board
 		int currentTempY;
 		int prevTempX;
 		int prevTempY;
-		trackingInCirclePath[startY][startX]=1;
+		trackingInCircle[startY][startX]=1;
 		trackingVistiedBoard[startY][startX]=-1;
 		//trackingIndex[startY][startX]=0;
 		//-1,-1 means starting cell does not have prev x and prev y
 		System.out.println("in find circle function");
-		oneCircle.positionCells.add(new CellNode(startX,startY,-1,-1,whoseCircle,trackingVistiedBoard,trackingInCirclePath));
+		oneCircle.positionCells.add(new CellNode(startX,startY,-1,-1,whoseCircle,trackingVistiedBoard,trackingInCircle));
 		System.out.println("Start X: "+startX+"Start Y:"+startY);
 		while (oneCircle.positionCells.size()!=0)
 		{
@@ -275,7 +294,7 @@ public class Board
 				//trackingIndex[oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeX][oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeY]=-1;
 				//positionInCircle[oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeX][oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeY]=-1;
 				System.out.println("removing");
-				trackingInCirclePath[oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeY][oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeX]=0;
+				trackingInCircle[oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeY][oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeX]=0;
 				oneCircle.positionCells.remove(oneCircle.positionCells.size()-1);
 				continue;
 			}
@@ -283,7 +302,7 @@ public class Board
 			currentTempX=tempClockwiseXY[0];
 			currentTempY=tempClockwiseXY[1];
 			//meet a point which is already in circle and it is not starting point 
-			if(trackingInCirclePath[currentTempY][currentTempX]==1 && currentTempX!=startX && currentTempY!=startY)
+			if(trackingInCircle[currentTempY][currentTempX]==1 && currentTempX!=startX && currentTempY!=startY)
 			{
 				System.out.println("next --->  x : "+currentTempX+" y: "+currentTempY);
 				continue;
@@ -308,13 +327,13 @@ public class Board
 			//}
 			//make new next node visited m
 			trackingVistiedBoard[currentTempY][currentTempX]=1;
-			trackingInCirclePath[currentTempY][currentTempX]=1;
+			trackingInCircle[currentTempY][currentTempX]=1;
 			//track current cellnodes index in array
 			//trackingIndex[currentTempY][currentTempX]=oneCircle.positionCells.size();
 			prevTempX=oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeX;
 			prevTempY=oneCircle.positionCells.get(oneCircle.positionCells.size()-1).currentNodeY;
 			System.out.println("adding currentTempX "+currentTempX+" current temp Y "+currentTempY+" prevTempX"+prevTempX+" prevTexp Y"+prevTempY);
-			oneCircle.positionCells.add(new CellNode(currentTempX,currentTempY,prevTempX,prevTempY,whoseCircle,trackingVistiedBoard,trackingInCirclePath));
+			oneCircle.positionCells.add(new CellNode(currentTempX,currentTempY,prevTempX,prevTempY,whoseCircle,trackingVistiedBoard,trackingInCircle));
 			//returned valid next cell won't be the current cell's prev cell 
 			//so if returned something that is already in the path ....
 			//we can confirm that there will be another circle .	
@@ -344,6 +363,11 @@ public class Board
 				if(BOARDBORDY[level][j].equals(CAPTURED) &&mergedLevelValidation[level][j]==1)
 				{
 					count++;
+					trackingInCircle[level][j]=1;
+				}
+				if(mergedLevelValidation[level][j]==2)
+				{
+					trackingInCircle[level][j]=1;
 				}
 			}
 		}
@@ -425,13 +449,26 @@ public class Board
 			for(int j=0;j<BOARDDIMENSION;j++)
 			{
 				//one not valid == all not valid .
-				if(countTopDown[i][j]==0||countBottomUp[i][j]==0)
+				if(countTopDown[i][j]==0&&countBottomUp[i][j]==0)
 				{
 					continue;
 				}
+				//self cell
+				if(countTopDown[i][j]==2&&countBottomUp[i][j]==2)
+				{
+					resultCountValidation[i][j]=2;
+					continue;
+				}
+				//valid captured cell
 				resultCountValidation[i][j]=1;
 			}
 		}
+		System.out.println ("countTopDown ");
+		AidUtility.print2DintArray(countTopDown, BOARDDIMENSION);
+		System.out.println ("bottom up ");
+		AidUtility.print2DintArray(countBottomUp, BOARDDIMENSION);
+		System.out.println ("merged ");
+		AidUtility.print2DintArray(resultCountValidation, BOARDDIMENSION);
 		return resultCountValidation;
 	}
 	
@@ -457,7 +494,6 @@ public class Board
 				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex-1][i]!=0&&BOARDBORDY[levelIndex][i].equals(CAPTURED))
 				{
 					levelValidation[levelIndex][i]=1;
-					
 				}
 				//meet self cell inside circle under ceiling ..still include it to ceiling but mark it as 2 
 				if(levelValidation[levelIndex][i]!=1&&levelValidation[levelIndex-1][i]!=0&&BOARDBORDY[levelIndex][i].equals(whoseCircle))
