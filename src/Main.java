@@ -17,7 +17,7 @@ public class Main
 	    Board newBoard = new Board();
 	    Algorithm temp_alg=new Algorithm();
 	    
-	    temp_alg.countCaptureCellNumber(newBoard.BOARDBORDY);
+	    temp_alg.countCaptureCellNumber(newBoard.BOARDBODY);
 	    blackNum = temp_alg.getBlackCaptureNumber();
 	    whiteNum = temp_alg.getWhitekCaptureNumber();
 	    
