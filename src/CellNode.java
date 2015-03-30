@@ -8,20 +8,24 @@ public class CellNode
 	int currentNodeY;
 	int nextNodeX;
 	int nextNodeY;
+	int boardDimension;
 	String whoseCell=null;
+	String[][] boardBody=null;
 	
 	ArrayList<Integer> validAdjCellX=null;
 	ArrayList<Integer> validAdjCellY=null;
 	
-	CellNode(int currentNodeX,int currentNodeY,int prevNodeX,int prevNodeY,String whoseCircle,int[][] trackingBoard,int [][] trackingInCirclePath)
+	CellNode(int currentNodeX,int currentNodeY,int prevNodeX,int prevNodeY,String whoseCircle,int boardDimension,String[][] boardBody)
 	{
+		this.boardDimension=boardDimension;
+		this.boardBody=boardBody;
 		this.currentNodeX=currentNodeX;
 		this.currentNodeY=currentNodeY;
 		this.prevNodeX=prevNodeX;
 		this.prevNodeY=prevNodeY;
 		validAdjCellX=new ArrayList<Integer>();
 		validAdjCellY=new ArrayList<Integer>();
-		fillValidAdjcentCell(whoseCircle,trackingBoard,trackingInCirclePath);
+		fillValidAdjcentCell(whoseCircle);
 //		System.out.println("x y adj array before choosing clockwise cell");
 //		AidUtility.printPositionArrayList(validAdjCellX, validAdjCellY);
 //		System.out.println("next clockwise cell");
@@ -61,7 +65,7 @@ public class CellNode
 		return validCell;
 	}
 	
-	public void fillValidAdjcentCell(String whoseCircle,int [][] trackingVistiedBoard,int [][] trackingInCirclePath)
+	public void fillValidAdjcentCell(String whoseCircle)
 	{
 		// 8 directions adj cell from current node .
 		int numberOfDirections = 8;
@@ -80,19 +84,20 @@ public class CellNode
 			tempDirectionY=directionList[i][1];
 			tempX=currentNodeX+tempDirectionX;
 			tempY=currentNodeY+tempDirectionY;
-			//System.out.println("direction tempx : "+tempX+" direction tempY: "+tempY);
+			//System.out.println("direction tempx : "+tempX+" direction tempY: "+tempY +"whos "+whoseCircle+"board dimension : "+ boardDimension);
 			
-			if(tempX<0||tempY<0||tempX>=Board.BOARDDIMENSION||tempY>=Board.BOARDDIMENSION)
+			if(tempX<0||tempY<0||tempX>=boardDimension||tempY>=boardDimension)
 			{
+				//System.out.println("in");
 				continue;
 			}
-			
-			if(Board.BOARDBODY[tempY][tempX].equals(whoseCircle))
+			//System.out.println("equality : "+boardBody[tempY][tempX].equals(whoseCircle));
+			if(boardBody[tempY][tempX].equals(whoseCircle))
 			{
 				// with respect to current node .. all its surrounding which is not exceed board limites will be added start from top left
 				// in a clock wise direction to tempValidAdjacent
 				//and it should be same colour of starting one of 'circle'. 
-				System.out.println("--------direction tempx : "+tempX+" direction tempY: "+tempY+"-----------");
+				//System.out.println("--------direction tempx : "+tempX+" direction tempY: "+tempY+"-----------");
 				validAdjCellX.add(tempX);
 				validAdjCellY.add(tempY);
 			}
@@ -119,8 +124,8 @@ public class CellNode
 	{
 		//not valid adjacent cell
 		int validIndex=-1;
-		int tempX;
-		int tempY;
+		//int tempX;
+		//int tempY;
 		boolean flag=false;
 		int[] validXY=new int[2];
 		//only prev left in array ...or adj has not valid .

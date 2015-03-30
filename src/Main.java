@@ -15,17 +15,17 @@ public class Main
 		
 		System.out.println("hello world 12312");
 	    Board newBoard = new Board();
-	    /*
-	    Algorithm temp_alg=new Algorithm();
+	   
+//	    Algorithm temp_alg=new Algorithm();
+//	    
+//	    temp_alg.countCaptureCellNumber(newBoard.BOARDBODY);
+//	    blackNum = temp_alg.getBlackCaptureNumber();
+//	    whiteNum = temp_alg.getWhitekCaptureNumber();
+//	    
+//	    System.out.println("blackNum = " + blackNum);
+//	    System.out.println("whiteNum = " + whiteNum);
 	    
-	    temp_alg.countCaptureCellNumber(newBoard.BOARDBODY);
-	    blackNum = temp_alg.getBlackCaptureNumber();
-	    whiteNum = temp_alg.getWhitekCaptureNumber();
-	    
-	    System.out.println("blackNum = " + blackNum);
-	    System.out.println("whiteNum = " + whiteNum);
-	    */
-	    newBoard.chekcBoard();
+	    //newBoard.chekcBoard();
 	    //int[] x=new int[]{3,2,2,3,1,0};
 	    //int[] y=new int[]{3,2,0,4,99,0};
 	    //AidUtility.printPositionArray(row,col);
