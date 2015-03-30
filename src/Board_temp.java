@@ -3,205 +3,155 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class Board
+public class Board 
 {
-	public static String WHITE = "W";
-	public static String BLACK = "B";
-	public static String CAPTURED = "-";
-	public static String FREE = "+";
+	public static String WHITE="W";
+	public static String BLACK="B";
+	public static String CAPTURED="-";
+	public static String FREE="+";
 	String inputFileName;
-	public static int BOARDDIMENSION = 0;
-	int freeCell = 0;
-	int whiteCaptured = 0;
-	int blackCaptured = 0;
-	// used to keep tracking of point which is in circle 0 === not in circle ,
-	// 1== in circle
-	public int[][] positionInCircle = null;
-	// remember boardBodu[y][x]
-	public static String[][] BOARDBODY = null;
-	// tracking point is already in one circle path or not.
-	public int[][] trackingInCircle = null;
-	// public int [][]trackingVistiedBoard=null;
-	ArrayList<BoardDataCircleStructure> collectionOfCircle = null;
+	public static int BOARDDIMENSION=0;
+	int freeCell=0;
+	int whiteCaptured=0;
+	int blackCaptured=0;
+	//used to keep tracking of point which is in circle 0 === not in circle , 1== in circle 
+	public int[][] positionInCircle=null;
+	//remember boardBodu[y][x]
+	public static String[][] BOARDBODY=null;
+	//tracking point is already in one circle path or not.
+	public int[][] trackingInCircle=null;
+	//public int [][]trackingVistiedBoard=null;
+	ArrayList<BoardDataCircleStructure> collectionOfCircle =null;
+	
 	
 	Board()
 	{
-		positionInCircle = initialize2Darray(0);
+		positionInCircle=initialize2Darray(0);
 		doParseInput();
 	}
-	
+
 	public void initializeBoardBody(int boardDimension)
 	{
-		BOARDBODY = new String[boardDimension][boardDimension];
+		BOARDBODY=new String[boardDimension][boardDimension];
 		
 	}
 	
-	public String getBoardCell(int x, int y)
+	public String getBoardCell(int x,int y)
 	{
 		return BOARDBODY[x][y];
 	}
 	
-	public void setBoardCell(int x, int y, String sign)
+	public void setBoardCell(int x,int y,String sign)
 	{
-		BOARDBODY[x][y] = sign;
+		BOARDBODY[x][y]=sign;
 	}
 	
 	public void checkxNumber(int xCount)
 	{
-		if (xCount == BOARDDIMENSION)
+		if (xCount==BOARDDIMENSION)
 		{
 			return;
 		}
 		
 		else
 		{
-			System.out
-					.println("X.X ---> Error:Actual xs and Board Dimension Mismatched.");
+			System.out.println ("X.X ---> Error:Actual xs and Board Dimension Mismatched.");
 			System.exit(0);
 		}
 		
 	}
 	
-	public void checkyNumber(int yCount)
-	{
-		if (yCount == BOARDDIMENSION)
-		{
-			return;
-		}
-		
-		else
-		{
-			System.out
-					.println("X.X ---> Error:Actual ys and Board Dimension Mismatched.");
-			System.exit(0);
-		}
-		
-	}
 	
 	public void doParseInput()
 	{
-		// The size of table row.
-		int xCount = 0;
-		// The size of table column.
-		int yCount = 0;
-		// Used check whether each line contains the same number of cell.
-		int prevYCount = 0;
+		//first line is dimension
+		int xCount=-1;
 		
-		ArrayList<String> tempStringArray = new ArrayList<String>();
-		String[] parts = null; // Transform everything into a 1d array .
+		ArrayList<String> tempStringArray=new ArrayList<String>();
+		String[] parts=null;
+		//transform everything into a 1d array .
 		try
 		{
-			// FileReader inputFile = new FileReader("file name");
-			BufferedReader bufferReader = new BufferedReader(
-					new InputStreamReader(System.in));
-			String line;
-			
-			// Since the first line is the dimension of the board, read it
-			// separately and assign it to the corresponding variable.
-			line = bufferReader.readLine();
-			BOARDDIMENSION = Integer.parseInt(line);
-			
-			// Add sign into a string array by split each line with delimit ' '
-			while ((line = bufferReader.readLine()) != null)
-			{
-				// If it's not the first line of the board, make the prevYCount
-				// equal to yCount.
-				if (xCount != 0)
-				{
-					prevYCount = yCount;
-				}
-				parts = line.split(" ");
-				yCount = parts.length;
-				
-				// If it's the first line of the board, make the prevYCount
-				// equal to yCount.
-				if (xCount == 0)
-				{
-					prevYCount = yCount;
-				}
-				System.out.println("" + line);
-				for (int i = 0; i < parts.length; i++)
-				{
-					tempStringArray.add(parts[i]);
-				}
-				xCount++;
-				if (prevYCount != yCount)
-				{
-					System.out
-							.println("X.X ---> Error:Different size for each row.");
-					System.exit(0);
-				}
-			}
-			
-			bufferReader.close();
-		}
-		catch (Exception e)
+	         // FileReader inputFile = new FileReader("file name");
+	          BufferedReader bufferReader = new BufferedReader(new InputStreamReader(System.in));
+	          String line;
+	          //add sign into a string array by split each line with delimit ' '
+	          while ((line = bufferReader.readLine()) != null)
+	          {
+	            parts=line.split(" ");
+	            System.out.println(""+line);
+	            for(int i=0 ;i<parts.length;i++)
+	            {
+	            	tempStringArray.add(parts[i]);
+	            }
+	            xCount++;
+	          }
+
+	          bufferReader.close();
+	     }
+		catch(Exception e)
 		{
-			System.out.println("Error while reading file line by line:"
-					+ e.getMessage());
-		}
+	          System.out.println("Error while reading file line by line:" + e.getMessage());                      
+	    }
 		
-		System.out.println("Dimension" + BOARDDIMENSION + " xCount " + xCount);
-		// If dimension not match, exit.
+		//set Dimension to first line of input and remove it from arraylist
+		BOARDDIMENSION=Integer.parseInt(tempStringArray.remove(0));
+		//if dimension not match exit
+		System.out.println("Dimension" + BOARDDIMENSION +" xCount "+xCount);
 		checkxNumber(xCount);
-		// If the size of each row does not match dimension, exit.
-		checkyNumber(yCount);
 		initializeBoardBody(BOARDDIMENSION);
 		fillBoardBody(tempStringArray);
 		
 		printBoardBody(BOARDBODY);
 	}
-	
-	// remembe bo
-	// transform 1D array of 'signs' to 2d array
+	//remembe bo
+	//transform 1D array of 'signs' to 2d array
 	public void fillBoardBody(ArrayList<String> tempStringArray)
 	{
-		int x = 0, y = 0;
-		for (String tempString : tempStringArray)
+		int x=0,y=0;
+		for(String tempString : tempStringArray)
 		{
-			BOARDBODY[y][x++] = tempString;
-			if (x >= BOARDDIMENSION)
+			BOARDBODY[y][x++]=tempString;
+			if (x>=BOARDDIMENSION)
 			{
 				y++;
-				x = 0;
+				x=0;
 			}
 		}
 	}
 	
 	public void printBoardBody(String boardBody[][])
 	{
-		for (int i = 0; i < BOARDDIMENSION; i++)
+		for (int i=0 ;i<BOARDDIMENSION;i++)
 		{
-			for (int j = 0; j < BOARDDIMENSION; j++)
+			for(int j=0;j<BOARDDIMENSION;j++)
 			{
-				System.out.print(boardBody[i][j] + "(x:" + j + " y:" + i + ")");
+				System.out.print(boardBody[i][j]+"(x:"+j+" y:"+i+")");
 			}
 			System.out.println();
 		}
 	}
 	
-	public boolean isFreeCell(int y, int x)
+	public boolean isFreeCell(int y,int x)
 	{
 		return BOARDBODY[y][x].equals(FREE);
 	}
 	
-	public boolean isCapturedCell(int y, int x)
+	public boolean isCapturedCell(int y,int x)
 	{
 		return BOARDBODY[y][x].equals(CAPTURED);
 	}
 	
-	public boolean isBlackCell(int y, int x)
+	public boolean isBlackCell(int y,int x)
 	{
 		return BOARDBODY[y][x].equals(BLACK);
 	}
 	
-	public boolean isWhiteCell(int y, int x)
+	public boolean isWhiteCell(int y,int x)
 	{
 		return BOARDBODY[y][x].equals(WHITE);
 	}
-	
-	// //////////////////////////find circle
-	// Algorithm/////////////////////////////////////
+	////////////////////////////find circle Algorithm/////////////////////////////////////
 	
 	public void chekcBoard()
 	{

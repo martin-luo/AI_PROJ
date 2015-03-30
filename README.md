@@ -10,7 +10,7 @@
 
 ##Rules of Boardgame
 
-- Only two players , one is called 'WHITE' ,the Other one is 'Black'
+- Only two players , one is called 'White' ,the Other one is 'Black'
 - Board has a size of N*N which N is greater than 5 (i.e. N > 5)
 - Top left corner is (0,0) , Bottom right coner is (N-1,N-1)
 - Edges does not count as part of captured territory
@@ -25,7 +25,7 @@
 - '-' == Captured Cell
 - '+' == Free Cell
 
-## Outcome Format
+## Output Format
 
 ### First Line
 - 'WHITE' ---> White is win

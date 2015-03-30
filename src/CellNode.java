@@ -87,7 +87,7 @@ public class CellNode
 				continue;
 			}
 			
-			if(Board.BOARDBORDY[tempY][tempX].equals(whoseCircle))
+			if(Board.BOARDBODY[tempY][tempX].equals(whoseCircle))
 			{
 				// with respect to current node .. all its surrounding which is not exceed board limites will be added start from top left
 				// in a clock wise direction to tempValidAdjacent
