@@ -80,10 +80,11 @@ public class Board
 	
 	public void doParseInput()
 	{
-		// First line is dimension
-		// int xCount = -1;
+		// The size of table row.
 		int xCount = 0;
+		// The size of table column.
 		int yCount = 0;
+		// Used check whether each line contains the same number of cell.
 		int prevYCount = 0;
 		
 		ArrayList<String> tempStringArray = new ArrayList<String>();
@@ -94,18 +95,17 @@ public class Board
 			BufferedReader bufferReader = new BufferedReader(
 					new InputStreamReader(System.in));
 			String line;
-
-			// Since the first line is the dimension of the board, read it separately
-			// and assign it to the corresponding variable.
+			
+			// Since the first line is the dimension of the board, read it
+			// separately and assign it to the corresponding variable.
 			line = bufferReader.readLine();
 			BOARDDIMENSION = Integer.parseInt(line);
-
-			// add sign into a string array by split each line with delimit ' '
+			
+			// Add sign into a string array by split each line with delimit ' '
 			while ((line = bufferReader.readLine()) != null)
 			{
 				// If it's not the first line of the board, make the prevYCount
-				// equal to yCount. To check whether each line contains the same
-				// number of cell.
+				// equal to yCount.
 				if (xCount != 0)
 				{
 					prevYCount = yCount;
@@ -141,17 +141,10 @@ public class Board
 					+ e.getMessage());
 		}
 		
-		// Set Dimension to first line of input and remove it from ArrayList.
-		// BOARDDIMENSION = Integer.parseInt(tempStringArray.remove(0));
-		// yCount = tempStringArray.get(0).length();
-		// for (int i = 0; i < tempStringArray.size(); i++)
-		// {
-		
-		// }
-		
-		// if dimension not match exit
 		System.out.println("Dimension" + BOARDDIMENSION + " xCount " + xCount);
+		// If dimension not match, exit.
 		checkxNumber(xCount);
+		// If the size of each row does not match simension, exit.
 		checkyNumber(yCount);
 		initializeBoardBody(BOARDDIMENSION);
 		fillBoardBody(tempStringArray);
