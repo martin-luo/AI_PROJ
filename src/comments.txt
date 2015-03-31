@@ -138,6 +138,15 @@ the results .
 
 pseudo code: 
 
+cellInCircleColelction.sortByXandY();
+
+circleLevelArray = cellInCircleColelction.constructLevel();
+
+//ceilingArray --> store indicator cells for 'current' level to determine 
+//captured cell 
+
+ceilingArray.add()
+
 
 
 
