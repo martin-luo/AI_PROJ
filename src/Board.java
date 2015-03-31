@@ -5,101 +5,175 @@ import java.util.ArrayList;
 
 public class Board
 {
+	/** The word used for white player. */
 	public static String WHITE = "W";
+	/** The word used for black player. */
 	public static String BLACK = "B";
+	/** The word used for captured cell. */
 	public static String CAPTURED = "-";
+	/** The word used for free cell. */
 	public static String FREE = "+";
-	//String inputFileName;
+	/** The dimension of the board. */
 	public int boardDimension = 0;
-
+	
+	/** The number of free cell on the board. */
 	int freeCell = 0;
+	/** The number of cell captured by white player. */
 	int whiteCaptured = 0;
+	/** The number of cell captured by black player. */
 	int blackCaptured = 0;
-	// used to keep tracking of point which is in circle 0 === not in circle ,
-	// 1== in circle
-	//public int[][] positionInCircle = null;
-	// remember boardBodu[y][x]
+	
+	/** The board. */
 	public String[][] boardBody = null;
-	// tracking point is already in one circle path or not.
+	/** Used to track point is already in one circle path or not. */
 	public int[][] trackingInCircle = null;
-	// public int [][]trackingVistiedBoard=null;
+	/** Used to store the data of circle. */
 	ArrayList<BoardDataCircleStructure> collectionOfCircle = null;
+	/** Used to call the board update algorithms. */
 	public BoardUpdateAlgorithm updateAlgorithm = null;
 	
-	
-	public int getBoardDimension() 
+	/**
+	 * Return the dimension of board.
+	 * 
+	 * @return the dimension of the board.
+	 */
+	public int getBoardDimension()
 	{
 		return boardDimension;
 	}
-
-	public void setBoardDimension(int boardDimension) 
+	
+	/**
+	 * Set the variable boardDimension to the specified value.
+	 * 
+	 * @param boardDimension
+	 *            the value boardDimension will be set to.
+	 */
+	public void setBoardDimension(int boardDimension)
 	{
 		this.boardDimension = boardDimension;
 	}
+	
+	/**
+	 * Return the board body.
+	 * 
+	 * @return the board body.
+	 */
 	public String[][] getBoardBody()
 	{
 		return boardBody;
 	}
 	
-	public int getFreeCell() 
+	/**
+	 * Return the number of free cell on the board.
+	 * 
+	 * @return the number of free cell on the board.
+	 */
+	public int getFreeCell()
 	{
 		return freeCell;
 	}
-
-	public void setFreeCell(int freeCell) 
+	
+	/**
+	 * Set the variable freeCell to the specified value.
+	 * 
+	 * @param freeCell
+	 *            the value freeCell will be set to.
+	 */
+	public void setFreeCell(int freeCell)
 	{
 		this.freeCell = freeCell;
 	}
-
-	public int getWhiteCaptured() 
+	
+	/**
+	 * Return the number of cell captured by white player.
+	 * 
+	 * @return the number of cell captured by white player.
+	 */
+	public int getWhiteCaptured()
 	{
 		return whiteCaptured;
 	}
-
-	public void setWhiteCaptured(int whiteCaptured) 
+	
+	/**
+	 * Set the variable whiteCaptured to the specified value.
+	 * 
+	 * @param whiteCaptured
+	 *            the value whiteCaptured will be set to.
+	 */
+	public void setWhiteCaptured(int whiteCaptured)
 	{
 		this.whiteCaptured = whiteCaptured;
 	}
-
+	
+	/**
+	 * Return the number of cell captured by black player.
+	 * 
+	 * @return the number of cell captured by black player.
+	 */
 	public int getBlackCaptured()
 	{
 		return blackCaptured;
 	}
-
-	public void setBlackCaptured(int blackCaptured) 
+	
+	/**
+	 * Set the variable blackCaptured to the specified value.
+	 * 
+	 * @param blackCaptured
+	 *            the value blackCaptured will be set to.
+	 */
+	public void setBlackCaptured(int blackCaptured)
 	{
 		this.blackCaptured = blackCaptured;
 	}
-
 	
+	/**
+	 * Used to initialize the board.
+	 */
 	Board()
 	{
-		//positionInCircle = initialize2Darray(0);
+		// positionInCircle = initialize2Darray(0);
 		doParseInput();
-		//updateAlgorithm=new SimpleBoardCountingAlgorithm(this);
-	}
-	
-	public void setFinderAlgorithm(BoardUpdateAlgorithm updateAlgorithm)
-	{
-		this.updateAlgorithm=updateAlgorithm;
-	}
-	
-	public void updateBoard()
-	{
+		// updateAlgorithm=new SimpleBoardCountingAlgorithm(this);
+		updateAlgorithm = new FindCircleAndCapturedCellAlgorithm(this);
 		updateAlgorithm.doUpdateBoard();
+		doOutput();
 	}
 	
+	/**
+	 * Initialize the variable boardBody to the specified value.
+	 * 
+	 * @param boardDimension
+	 *            the value boardBody will be set to.
+	 */
 	public void initializeboardBody(int boardDimension)
 	{
 		boardBody = new String[boardDimension][boardDimension];
 		
 	}
 	
+	/**
+	 * Get the cell at the specified position.
+	 * 
+	 * @param row
+	 *            the row the required cell is in.
+	 * @param col
+	 *            the column the required cell is in.
+	 * 
+	 * @return the cell at the specified position.
+	 */
 	public String getBoardCell(int row, int col)
 	{
 		return boardBody[row][col];
 	}
 	
+	/**
+	 * Set the specified cell on the board to the specified value.
+	 * 
+	 * @param row the row the target cell is in.
+	 * @param col the column the target cell is in.
+	 * @param sign the value the target cell will be set to.
+	 * 
+	 */
 	public void setBoardCell(int row, int col, String sign)
 	{
 		boardBody[row][col] = sign;
@@ -119,7 +193,6 @@ public class Board
 		}
 		
 	}
-	
 	public void checkyNumber(int yCount)
 	{
 		if (yCount == boardDimension)
