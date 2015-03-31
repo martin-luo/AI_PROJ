@@ -1,0 +1,72 @@
+Author: 
+Student Name: An Luo
+Login ID : 
+Student Name: Bingfeng liu
+Login ID : bingfengl
+
+
+This document is for COMP30024 for explaining the algorithms uesd to
+achieve project part A.
+
+There are two main algorithms invovled in this program in order to find out 
+the state of the board.
+
+The first algorithm is for finding the white/black 'circles' on the board.
+This algorithm is based on DFS and an heuristic of picking the next cell of 
+greatest degress in clockwise direction (i.e. to draw the widdest possible
+white/black cell circles).
+
+pseudo code: 
+
+currentCell = startCell;
+circleCellCollection.add(currentCell);
+
+while(circleCellCollection is not empty)
+{
+	nextCell = the 'valid' most clockwise cell of currentCell,
+					from its 8 adjacent cells
+	
+	//valid == same colour as startCell , and it is within board dimension
+
+	if (nextCell is empty)
+	{
+		circleCellCollection.remove(circleCellCollection.size()-1)
+		//removing the current cell 
+	}
+
+	if(nextCell is not visited and it is not in circleCellCollection)
+	{
+		circleCellCollection.add(next);
+	}
+}
+
+Plain description:
+We will take in a cell first ,it is either black and white and then explores
+its 8 adjacent cell (top-right,top,top-left,left,right,bottom-left,
+bottom,bottom-right). Choose the valid and most clockwise adjacent cell
+in order to draw the biggest possible cirlce from this starting cell.
+
+If there is a valid adjacent cell then we add it to circle path , and 
+update current path to this 'new valid cell'.
+
+If there is not a valid adjacent cell we will pop the current cell out of
+our circle cell collection . and update current cell to the last cell
+in the 'circle cell collection'
+
+Time Complexity: 
+
+-for finding one circle 
+	- Best Case O(n*8) ---> O(n) , where n is number of cells formed a circle ,
+	8 is the constant for checking each cell's 8 adjacent cells 
+
+	-Average Case O(n*8*d) --->O(n), d is the number of cells pop out from 
+	circle collection , normally it wont be same as board dimension ,
+	so it can also be considered as a constant which can be ommited 
+
+	-
+
+
+
+
+
+
