@@ -58,8 +58,8 @@ public class FindCircleAndCapturedCellAlgorithm  extends BoardUpdateAlgorithm
 						}
 						collectionOfCircle.add(tempOneCircle);
 						//AidUtility.printBoardDataCircleStructureCellNode(tempOneCircle);
-						System.out.println("------tracking in circle");
-						AidUtility.print2DintArray(trackingInCircle,boardDimension);
+						//System.out.println("------tracking in circle");
+						//AidUtility.print2DintArray(trackingInCircle,boardDimension);
 						
 					}
 				}

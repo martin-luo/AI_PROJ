@@ -140,7 +140,7 @@ public class Board
 	
 	public void updateBoard()
 	{
-		// updateAlgorithm=new SimpleBoardCountingAlgorithm(this);
+		//updateAlgorithm=new SimpleBoardCountingAlgorithm(this);
 		updateAlgorithm = new FindCircleAndCapturedCellAlgorithm(this);
 		updateAlgorithm.doUpdateBoard();
 	}
@@ -282,7 +282,7 @@ public class Board
 				// If it's the first line of the board, make the prevYCount
 				// equal to yCount.
 				checkxNumber(colCount);
-				System.out.println("" + line);
+				//System.out.println("" + line);
 				//need to skip first one ,split("") first one is ""
 				for (int i = 1; i < parts.length; i++)
 				{
@@ -310,7 +310,8 @@ public class Board
 		catch (Exception e)
 		{
 			
-			System.out.println("Error while reading file line by line:" + e.getMessage());
+			System.out.println("Error while reading file line by line Check your Input Format" );
+			System.exit(0);
 		}
 		
 		// System.out.println("Dimension" + boardDimension + " xCount " +
