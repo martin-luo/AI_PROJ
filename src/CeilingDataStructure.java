@@ -5,7 +5,7 @@
 /**
  * <b>Class Declaration</b>
  * <p>
- * This class is 
+ * This class is used to store the structure of ceiling data.
  * <p>
  * <b>Rules of Boardgame</b>
  * <ul>
@@ -49,10 +49,10 @@ public class CeilingDataStructure
 	/**
 	 * This class initialize the instance of this class to the given value.
 	 * 
-	 * @param ceilingIndex 
-	 * @param ceilingRowArray
-	 * @param ceilingColArray
-	 * @param rowPointArray
+	 * @param ceilingIndex the value the variable ceilingIndex will be set to.
+	 * @param ceilingRowArray the value the variable ceilingRowArray will be set to.
+	 * @param ceilingColArray the value the variable ceilingColArray will be set to.
+	 * @param rowPointArray 
 	 */
 	CeilingDataStructure(int ceilingIndex, int[] ceilingRowArray, int[] ceilingColArray, int[] rowPointArray)
 	{
