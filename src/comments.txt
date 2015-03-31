@@ -57,14 +57,86 @@ Time Complexity:
 
 -for finding one circle 
 	- Best Case O(n*8) ---> O(n) , where n is number of cells formed a circle ,
-	8 is the constant for checking each cell's 8 adjacent cells 
+	8 is the constant for checking each cell's '8' adjacent cells 
 
-	-Average Case O(n*8*d) --->O(n), d is the number of cells pop out from 
-	circle collection , normally it wont be same as board dimension ,
+	-Average Case (have found a circle) O(n*8+d*8*2) --->O(n), 
+	d is the number of cells that we checked
+	but they are not actually formed a circle.n*8 is the cost we get to 
+	find cells which invoving in a circle path .d*8*2 is the cost for
+	poping non-in-circle cell out of collection.
+
+	-Average Case (have not found a circle) O(d*8*2) --->O(d),in here
+	d is the number of cells we checked but they all dont form circle
+	we first add them in queue and check them ,then pop them out.
+
+
+	normally it wont be same as board dimension ,
 	so it can also be considered as a constant which can be ommited 
 
-	-
+	-Worse Case O(((n)/2*n)*8*2) --->O(mn) , if there is only one player , and 
+	he/she places pieces in a 'sneak form' that head at top left and tail
+	at bottom right of the board ,and there is one 'gap' in between. 
+	In here n is board dimension ,(n)/2 ---> sneak shape will occupy
+	half of the rows of the boatd , and n number of cols in each row.
+	(n)/2 will clearly smaller than n so it can be mark as a constant 'm'
 
+	This finding circle algorithm will take in 'mn' number of cells and
+	ends up with getting no circle ,so it will
+	pop cell out of circleCellCollection all the way back to start.
+	Each cell will be checked '2' times and each check will check its '8'
+	surrounding cells. 
+
+	sneak form : 
+    ----------->
+      row gap  |
+    <-----------
+    |
+    ----------->
+
+The second algorithm is used when we have found a sets of cells which formed
+a circle in order to count the captured cells in side the circle path. 
+In more simple word, this algorithm is used to count the captured cells 
+inside black/white circle.
+
+This algorithm will sort cells in circle path by row and col (i.e. cell 
+will be orders from top left to bottom right). By sorting with row and col 
+this 'circle ' will be divided into levels 
+
+BBBB ---> level 1
+B  B ---> level 2
+BBBB ---> level 3
+
+for counting captured cells inside circle, the previous 'level' is used as 
+indicator to determine whether if a cell in 'current level' is inside circle 
+or not.
+
+e.g. 
+
+BBBB ---> level 1
+BXXB ---> level 2 ---> use level 1 as indicator, 'XX' is under level 1 
+B  B ---> level 4
+BBBB ---> level 3      
+so XX must be inside circle and if they are marked '-'
+we can count it as captured for black . XX will be added 
+into 'level 2 indicator array' for determine 'level 4' captured cell
+
+Since we sorted the cells of forming circle , we can alwasy know where to 
+start checking at each level and where to end .
+
+BBBBBBBBB
+B       B
+B  BBB  B
+B  BXB  B
+BBBB BBBB
+
+if circle path is like above , simply use the algrithm mentioned above to scan
+it from top to bottom will failed by mistakenlly count X as captured 
+
+So the solution is use the captured cell counting algorithm to scan sorted
+circle path from top to bottom and from bottom to top , and then merge 
+the results .
+
+pseudo code: 
 
 
 
