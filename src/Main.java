@@ -8,7 +8,7 @@ import java.util.Collections;
 public class Main 
 {
 
-	public static void main(String[] args) throws Exception
+	public static void main(String[] args)
 	{
 	    Board newBoard = new Board();
 	   // newBoard.setFinderAlgorithm(new SimpleBoardCountingAlgorithm(newBoard));

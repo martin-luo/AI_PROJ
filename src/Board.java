@@ -128,7 +128,7 @@ public class Board
 	/**
 	 * Used to initialize the board.
 	 */
-	Board() throws Exception
+	Board()
 	{
 		doParseInput();
 	}
@@ -251,7 +251,7 @@ public class Board
 		}
 	}
 	
-	public void doParseInput() throws Exception
+	public void doParseInput()
 	{
 
 		int rowCount = 0;
@@ -311,7 +311,6 @@ public class Board
 		{
 			
 			System.out.println("Error while reading file line by line:" + e.getMessage());
-			throw e;
 		}
 		
 		// System.out.println("Dimension" + boardDimension + " xCount " +
