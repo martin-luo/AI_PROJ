@@ -147,7 +147,6 @@ public class Board
 		// updateAlgorithm=new SimpleBoardCountingAlgorithm(this);
 		updateAlgorithm = new FindCircleAndCapturedCellAlgorithm(this);
 		updateAlgorithm.doUpdateBoard();
-		doOutput();
 	}
 	
 	/**
