@@ -284,7 +284,35 @@ Time Complexity:
 	O(n^2).
 
 
+Optional algoirthm :
 
+We also implemented a really simple algorithm to check the stat of board..
+it consists only 2 for loop , basically it just loop through every cell
+on the board and looking for '-' and next black/white cell after we meet
+'-', in this way we can also find out the captured cells for black or white.
+
+The biggest flaw of this algorithm is that it can be only used for Part A,
+it cant find circle and cells inside circle .. its complexity of time is always
+n^2 where n is dimension of board
+
+Structure of Code:
+
+Main.java  ---> run program
+
+AidUtility.java ---> array printing and sorting function normally for debug
+
+Board.java ---> store board information
+BoardDataCircleStructure.java ---> store circle information
+
+FindCircleAndCapturedCellAlgorithm.java ---> finding circle + finding captured
+CeilingDataStructure.java ---> store 'indicator'/'ceiling' array for captured alg
+CellNode.java ---> for finding circle alg to store cell's adjacent cells
+
+
+SimpleBoardCountingAlgorithm.java ---> simple algorithm to find captured cell
+
+
+Libraries used : only the built in libraries are used e.g. Arraylist
 
 
 
