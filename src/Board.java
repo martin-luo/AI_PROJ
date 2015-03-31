@@ -77,9 +77,16 @@ public class Board
 		//positionInCircle = initialize2Darray(0);
 		doParseInput();
 		//updateAlgorithm=new SimpleBoardCountingAlgorithm(this);
-		updateAlgorithm=new FindCircleAndCapturedCellAlgorithm(this);
+	}
+	
+	public void setFinderAlgorithm(BoardUpdateAlgorithm updateAlgorithm)
+	{
+		this.updateAlgorithm=updateAlgorithm;
+	}
+	
+	public void updateBoard()
+	{
 		updateAlgorithm.doUpdateBoard();
-		doOutput();
 	}
 	
 	public void initializeboardBody(int boardDimension)

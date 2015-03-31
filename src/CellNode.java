@@ -26,14 +26,6 @@ public class CellNode
 		validAdjCellX=new ArrayList<Integer>();
 		validAdjCellY=new ArrayList<Integer>();
 		fillValidAdjcentCell(whoseCircle);
-//		System.out.println("x y adj array before choosing clockwise cell");
-//		AidUtility.printPositionArrayList(validAdjCellX, validAdjCellY);
-//		System.out.println("next clockwise cell");
-//		int[] tempClockwiseXY=mostClockwisedCellIndex();
-//		System.out.print("next x: "+tempClockwiseXY[0]+" next y: "+tempClockwiseXY[1]);
-//		System.out.println("");
-//		System.out.println("x y adj array after choosing clockwise cell");
-//		AidUtility.printPositionArrayList(validAdjCellX, validAdjCellY);
 		
 	}
 	
@@ -73,10 +65,7 @@ public class CellNode
 		int tempDirectionY;
 		int tempX;
 		int tempY;
-		//ArrayList<Integer> tempValidAdjacentX=null;
-		//ArrayList<Integer> tempValidAdjacentY=null;
 		//clock wise ,(x,y)
-		//int[][] directionLists=new int[8][2]{[-1,-1],[0,-1],[1,-1],[1,0],[1,1],[0,-1],[-1,1],[-1,0]};
 		int[][] directionList=new int[][]{{-1,-1},{0,-1},{1,-1},{1,0},{1,1},{0,1},{-1,1},{-1,0}};
 		for (int i=0;i<numberOfDirections;i++)
 		{
@@ -84,20 +73,15 @@ public class CellNode
 			tempDirectionY=directionList[i][1];
 			tempX=currentNodeX+tempDirectionX;
 			tempY=currentNodeY+tempDirectionY;
-			//System.out.println("direction tempx : "+tempX+" direction tempY: "+tempY +"whos "+whoseCircle+"board dimension : "+ boardDimension);
-			
 			if(tempX<0||tempY<0||tempX>=boardDimension||tempY>=boardDimension)
 			{
-				//System.out.println("in");
 				continue;
 			}
-			//System.out.println("equality : "+boardBody[tempY][tempX].equals(whoseCircle));
 			if(boardBody[tempY][tempX].equals(whoseCircle))
 			{
 				// with respect to current node .. all its surrounding which is not exceed board limites will be added start from top left
 				// in a clock wise direction to tempValidAdjacent
 				//and it should be same colour of starting one of 'circle'. 
-				//System.out.println("--------direction tempx : "+tempX+" direction tempY: "+tempY+"-----------");
 				validAdjCellX.add(tempX);
 				validAdjCellY.add(tempY);
 			}
@@ -124,8 +108,6 @@ public class CellNode
 	{
 		//not valid adjacent cell
 		int validIndex=-1;
-		//int tempX;
-		//int tempY;
 		boolean flag=false;
 		int[] validXY=new int[2];
 		//only prev left in array ...or adj has not valid .
@@ -135,9 +117,6 @@ public class CellNode
 		}
 		
 		validIndex=prevIndexInValidAdj()+1;
-		//System.out.println("validindex : "+validIndex+"valid x point "+validAdjCellX.get(validIndex)+" valid y point: "+validAdjCellY.get(validIndex));
-		//adj valid is only the preveous visited node
-		
 		//prev at the end of array ...so we want it just to first one.
 		if(validIndex==validAdjCellX.size())
 		{
@@ -154,7 +133,6 @@ public class CellNode
 		validXY[1]=validAdjCellY.get(validIndex);
 		validAdjCellX.remove(validIndex);
 		validAdjCellY.remove(validIndex);
-		//System.out.println("has point");
 		return validXY;
 	}
 	
