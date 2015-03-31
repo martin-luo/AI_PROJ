@@ -138,14 +138,41 @@ the results .
 
 pseudo code: 
 
-cellInCircleColelction.sortByXandY();
+function TopDown() :int [][]
+{
+	
+	int[boardDimension][boardDimension] TopDownResult=0;
+	//in this int array 0 means not captured
+	//will be marked as 1 in TopDownResult for all cell inside circle
+	cellInCircleColelction.sortByXandY();
 
-circleLevelArray = cellInCircleColelction.constructLevel();
+	circleLevelArray = cellInCircleColelction.constructLevel();
 
-//ceilingArray --> store indicator cells for 'current' level to determine 
-//captured cell 
+	//ceilingArray --> store indicator cells for 'current' level to determine 
+	//captured cell 
 
-ceilingArray.add()
+	ceilingArray.add(circleLevelArray[0])
+	//add first level in TopDownResult
+	parseTopDownResult(ceilingArray.get(0),TopDownResult)
+
+	for(int level=1; level <circleLevelArray.length-1;level++)
+	{
+		parseTopDownResult(ceilingArray.get(level),TopDownResult)
+		if(cells within the next level's col range is under last level's cell)
+		{
+			//add current level in TopDownResult
+			parseTopDownResult(AllCapturedPoint,TopDownResult)
+		}
+	}
+}
+function BottomUp() :int [][]
+{
+	reverse of TopDown;
+}
+
+countCapturedCell(mergeResult(TopDown(),TopDown()));
+
+
 
 
 
