@@ -195,8 +195,7 @@ public class Board
 			// separately and assign it to the corresponding variable.
 			line = bufferReader.readLine();
 			boardDimension = Integer.parseInt(line);
-			System.out
-					.println("boardDimension------ :  " + getBoardDimension());
+			//System.out.println("boardDimension------ :  " + getBoardDimension());
 			
 			// Add sign into a string array by split each line with delimit ' '
 			while ((line = bufferReader.readLine()) != null)
