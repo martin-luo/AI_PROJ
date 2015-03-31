@@ -1,8 +1,8 @@
 /**
- * <b>Project Declaration</b>
- * <p>
  * This is a part of the project of COMP30024 Artificial Intelligence, the University of Melbourne. The project is the Game of Squatter and is a group work, the members of the group is list below, so is the rule of the game.
- * <p>
+ */
+
+/**
  * <b>Class Declaration</b>
  * <p>
  * This class is a abstract class contains only one class called BoardUpdateAlgorithm, it's used to update the status of cells on the board.
