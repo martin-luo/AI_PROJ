@@ -47,12 +47,12 @@ public class CeilingDataStructure
 	}
 	
 	/**
-	 * This class initialize the instance of this class to the given value.
+	 * This constructor initialize the instance of this class to the given value.
 	 * 
 	 * @param ceilingIndex the value the variable ceilingIndex will be set to.
 	 * @param ceilingRowArray the value the variable ceilingRowArray will be set to.
 	 * @param ceilingColArray the value the variable ceilingColArray will be set to.
-	 * @param rowPointArray 
+	 * @param rowPointArray the array contains the row point.
 	 */
 	CeilingDataStructure(int ceilingIndex, int[] ceilingRowArray, int[] ceilingColArray, int[] rowPointArray)
 	{
@@ -63,9 +63,9 @@ public class CeilingDataStructure
 	}
 
 	/**
-	 * 
-	 * @param rowPointArray
-	 * @param checkFrom
+	 * Get a index which represent all same level point assume rowPointArray is sorted.
+	 * @param rowPointArray the array contains the row point.
+	 * @param checkFrom the specified position the array will be checked from.
 	 * @return a index which represent all same level point assume rowPointArray is sorted
 	 */
 	public int getCeilingIndex(int[] rowPointArray, int checkFrom)
