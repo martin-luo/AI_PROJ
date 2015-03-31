@@ -9,15 +9,15 @@ public class Board
 	public static String BLACK = "B";
 	public static String CAPTURED = "-";
 	public static String FREE = "+";
-	//String inputFileName;
+	// String inputFileName;
 	public int boardDimension = 0;
-
+	
 	int freeCell = 0;
 	int whiteCaptured = 0;
 	int blackCaptured = 0;
 	// used to keep tracking of point which is in circle 0 === not in circle ,
 	// 1== in circle
-	//public int[][] positionInCircle = null;
+	// public int[][] positionInCircle = null;
 	// remember boardBodu[y][x]
 	public String[][] boardBody = null;
 	// tracking point is already in one circle path or not.
@@ -26,58 +26,57 @@ public class Board
 	ArrayList<BoardDataCircleStructure> collectionOfCircle = null;
 	public BoardUpdateAlgorithm updateAlgorithm = null;
 	
-	
-	public int getBoardDimension() 
+	public int getBoardDimension()
 	{
 		return boardDimension;
 	}
-
-	public void setBoardDimension(int boardDimension) 
+	
+	public void setBoardDimension(int boardDimension)
 	{
 		this.boardDimension = boardDimension;
 	}
+	
 	public String[][] getBoardBody()
 	{
 		return boardBody;
 	}
 	
-	public int getFreeCell() 
+	public int getFreeCell()
 	{
 		return freeCell;
 	}
-
-	public void setFreeCell(int freeCell) 
+	
+	public void setFreeCell(int freeCell)
 	{
 		this.freeCell = freeCell;
 	}
-
-	public int getWhiteCaptured() 
+	
+	public int getWhiteCaptured()
 	{
 		return whiteCaptured;
 	}
-
-	public void setWhiteCaptured(int whiteCaptured) 
+	
+	public void setWhiteCaptured(int whiteCaptured)
 	{
 		this.whiteCaptured = whiteCaptured;
 	}
-
+	
 	public int getBlackCaptured()
 	{
 		return blackCaptured;
 	}
-
-	public void setBlackCaptured(int blackCaptured) 
+	
+	public void setBlackCaptured(int blackCaptured)
 	{
 		this.blackCaptured = blackCaptured;
 	}
-
 	
 	Board()
 	{
-		//positionInCircle = initialize2Darray(0);
+		// positionInCircle = initialize2Darray(0);
 		doParseInput();
-		//updateAlgorithm=new SimpleBoardCountingAlgorithm(this);
-		updateAlgorithm=new FindCircleAndCapturedCellAlgorithm(this);
+		// updateAlgorithm=new SimpleBoardCountingAlgorithm(this);
+		updateAlgorithm = new FindCircleAndCapturedCellAlgorithm(this);
 		updateAlgorithm.doUpdateBoard();
 		doOutput();
 	}
@@ -107,7 +106,8 @@ public class Board
 		
 		else
 		{
-			System.out.println("X.X ---> Error:Actual xs and Board Dimension Mismatched.");
+			System.out
+					.println("X.X ---> Error:Actual xs and Board Dimension Mismatched.");
 			System.exit(0);
 		}
 		
@@ -126,7 +126,39 @@ public class Board
 					.println("X.X ---> Error:Actual ys and Board Dimension Mismatched.");
 			System.exit(0);
 		}
-		
+	}
+	
+	/**
+	 * Validates a cell on the board
+	 *
+	 * Check if the cell is one the the four types: Black, White, Captured, Free
+	 *
+	 * @param cell
+	 *            the element to be validated.
+	 * @return true if the cell is valid, otherwise false
+	 */
+	public boolean checkCellValidation(String cell)
+	{
+		if (cell.equals(BLACK))
+		{
+			return true;
+		}
+		else if (cell.equals(WHITE))
+		{
+			return true;
+		}
+		else if (cell.equals(CAPTURED))
+		{
+			return true;
+		}
+		else if (cell.equals(FREE))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	public void doParseInput()
@@ -135,24 +167,32 @@ public class Board
 		int xCount = 0;
 		// The size of table column.
 		int yCount = 0;
-		// Used check whether each line contains the same number of cell.
+		// Used to check whether each line contains the same number of cell.
 		int prevYCount = 0;
+		
+		// Used to point out the position of the wrong input.
+		int xPosition = xCount + 1;
+		int yPosition = 0;
 		
 		ArrayList<String> tempStringArray = new ArrayList<String>();
 		String[] parts = null; // Transform everything into a 1d array .
 		try
 		{
 			// FileReader inputFile = new FileReader("file name");
-			BufferedReader bufferReader = new BufferedReader(new InputStreamReader(System.in));
+			BufferedReader bufferReader = new BufferedReader(
+					new InputStreamReader(System.in));
 			String line;
 			
 			// Since the first line is the dimension of the board, read it
 			// separately and assign it to the corresponding variable.
 			line = bufferReader.readLine();
 			boardDimension = Integer.parseInt(line);
-			System.out.println("boardDimension------ :  "+getBoardDimension());
+			System.out
+					.println("boardDimension------ :  " + getBoardDimension());
+			
 			// Add sign into a string array by split each line with delimit ' '
 			while ((line = bufferReader.readLine()) != null)
+			// while ((line = bufferReader.readLine()) != "")
 			{
 				// If it's not the first line of the board, make the prevYCount
 				// equal to yCount.
@@ -163,6 +203,8 @@ public class Board
 				parts = line.split(" ");
 				yCount = parts.length;
 				
+				xPosition = xCount + 1;
+				
 				// If it's the first line of the board, make the prevYCount
 				// equal to yCount.
 				if (xCount == 0)
@@ -172,12 +214,36 @@ public class Board
 				System.out.println("" + line);
 				for (int i = 0; i < parts.length; i++)
 				{
-					tempStringArray.add(parts[i]);
+					yPosition = i + 1;
+					
+					// If the element is valid, add it to the temporary array,
+					// otherwise notify the user then exit.
+					if (checkCellValidation(parts[i]))
+					{
+						tempStringArray.add(parts[i]);
+					}
+					else
+					{
+						System.out
+								.println("X.X ---> Error:Unexpected types on position ("
+										+ xPosition + "," + yPosition + ").");
+						System.out
+								.println("Please make sure the input contains only these four types: ");
+						System.out.println("\"" + BLACK + "\" \"" + WHITE
+								+ "\" \"" + CAPTURED + "\" \"" + FREE + "\"");
+						
+						System.exit(0);
+					}
 				}
+				
 				xCount++;
+				
+				// Check whether each row contains the same number of element.
+				// If not the same, notify the user then exit.
 				if (prevYCount != yCount)
 				{
-					System.out.println("X.X ---> Error:Different size for each row.");
+					System.out
+							.println("X.X ---> Error:Different size for each row.");
 					System.exit(0);
 				}
 			}
@@ -190,14 +256,15 @@ public class Board
 					+ e.getMessage());
 		}
 		
-		//System.out.println("Dimension" + boardDimension + " xCount " + xCount);
+		// System.out.println("Dimension" + boardDimension + " xCount " +
+		// xCount);
 		// If dimension not match, exit.
 		checkxNumber(xCount);
-		// If the size of each row does not match dimension, exit.
+		// If the size of rows does not match dimension, exit.
 		checkyNumber(yCount);
 		initializeboardBody(boardDimension);
 		fillboardBody(tempStringArray);
-		//printboardBody(boardBody);
+		// printboardBody(boardBody);
 	}
 	
 	// remembe bo
@@ -250,18 +317,18 @@ public class Board
 	
 	// //////////////////////////find circle
 	// Algorithm/////////////////////////////////////
-
+	
 	public void doOutput()
 	{
-		if(freeCell!=0)
+		if (freeCell != 0)
 		{
 			System.out.println("None");
 		}
-		else if(whiteCaptured>blackCaptured)
+		else if (whiteCaptured > blackCaptured)
 		{
 			System.out.println("White");
 		}
-		else if(blackCaptured>whiteCaptured)
+		else if (blackCaptured > whiteCaptured)
 		{
 			System.out.println("Black");
 		}
