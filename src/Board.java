@@ -132,7 +132,18 @@ public class Board
 	Board()
 	{
 		// positionInCircle = initialize2Darray(0);
+		// positionInCircle = initialize2Darray(0);
 		doParseInput();
+		// updateAlgorithm=new SimpleBoardCountingAlgorithm(this);
+	}
+	
+	public void setFinderAlgorithm(BoardUpdateAlgorithm updateAlgorithm)
+	{
+		this.updateAlgorithm = updateAlgorithm;
+	}
+	
+	public void updateBoard()
+	{
 		// updateAlgorithm=new SimpleBoardCountingAlgorithm(this);
 		updateAlgorithm = new FindCircleAndCapturedCellAlgorithm(this);
 		updateAlgorithm.doUpdateBoard();
@@ -169,9 +180,12 @@ public class Board
 	/**
 	 * Set the specified cell on the board to the specified value.
 	 * 
-	 * @param row the row the target cell is in.
-	 * @param col the column the target cell is in.
-	 * @param sign the value the target cell will be set to.
+	 * @param row
+	 *            the row the target cell is in.
+	 * @param col
+	 *            the column the target cell is in.
+	 * @param sign
+	 *            the value the target cell will be set to.
 	 * 
 	 */
 	public void setBoardCell(int row, int col, String sign)
@@ -193,6 +207,7 @@ public class Board
 		}
 		
 	}
+	
 	public void checkyNumber(int yCount)
 	{
 		if (yCount == boardDimension)
@@ -202,8 +217,7 @@ public class Board
 		
 		else
 		{
-			System.out
-					.println("X.X ---> Error:Actual ys and Board Dimension Mismatched.");
+			System.out.println("X.X ---> Error:Actual ys and Board Dimension Mismatched.");
 			System.exit(0);
 		}
 		
@@ -260,15 +274,14 @@ public class Board
 		try
 		{
 			// FileReader inputFile = new FileReader("file name");
-			BufferedReader bufferReader = new BufferedReader(
-					new InputStreamReader(System.in));
+			BufferedReader bufferReader = new BufferedReader(new InputStreamReader(System.in));
 			String line;
 			
 			// Since the first line is the dimension of the board, read it
 			// separately and assign it to the corresponding variable.
 			line = bufferReader.readLine();
 			boardDimension = Integer.parseInt(line);
-			//System.out.println("boardDimension------ :  " + getBoardDimension());
+			// System.out.println("boardDimension------ :  " + getBoardDimension());
 			
 			// Add sign into a string array by split each line with delimit ' '
 			while ((line = bufferReader.readLine()) != null)
@@ -304,13 +317,9 @@ public class Board
 					}
 					else
 					{
-						System.out
-								.println("X.X ---> Error:Unexpected types on position ("
-										+ xPosition + "," + yPosition + "). sign : "+ parts[i]);
-						System.out
-								.println("Please make sure the input contains only these four types: ");
-						System.out.println("\"" + BLACK + "\" \"" + WHITE
-								+ "\" \"" + CAPTURED + "\" \"" + FREE + "\"");
+						System.out.println("X.X ---> Error:Unexpected types on position (" + xPosition + "," + yPosition + "). sign : " + parts[i]);
+						System.out.println("Please make sure the input contains only these four types: ");
+						System.out.println("\"" + BLACK + "\" \"" + WHITE + "\" \"" + CAPTURED + "\" \"" + FREE + "\"");
 						
 						System.exit(0);
 					}
@@ -322,8 +331,7 @@ public class Board
 				// If not the same, notify the user then exit.
 				if (prevYCount != yCount)
 				{
-					System.out
-							.println("X.X ---> Error:Different size for each row.");
+					System.out.println("X.X ---> Error:Different size for each row.");
 					System.exit(0);
 				}
 			}
@@ -332,8 +340,7 @@ public class Board
 		}
 		catch (Exception e)
 		{
-			System.out.println("Error while reading file line by line:"
-					+ e.getMessage());
+			System.out.println("Error while reading file line by line:" + e.getMessage());
 		}
 		
 		// System.out.println("Dimension" + boardDimension + " xCount " +
@@ -397,18 +404,18 @@ public class Board
 	
 	// //////////////////////////find circle
 	// Algorithm/////////////////////////////////////
-
+	
 	public void doOutput()
 	{
-		if(freeCell!=0)
+		if (freeCell != 0)
 		{
 			System.out.println("None");
 		}
-		else if(whiteCaptured>blackCaptured)
+		else if (whiteCaptured > blackCaptured)
 		{
 			System.out.println("White");
 		}
-		else if(blackCaptured>whiteCaptured)
+		else if (blackCaptured > whiteCaptured)
 		{
 			System.out.println("Black");
 		}
