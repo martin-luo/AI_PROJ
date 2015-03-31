@@ -28,7 +28,6 @@ public class Board
 	/** Used to track point is already in one circle path or not. */
 	public int[][] trackingInCircle = null;
 	/** Used to store the data of circle. */
-	ArrayList<BoardDataCircleStructure> collectionOfCircle = null;
 	/** Used to call the board update algorithms. */
 	public BoardUpdateAlgorithm updateAlgorithm = null;
 	
@@ -129,12 +128,9 @@ public class Board
 	/**
 	 * Used to initialize the board.
 	 */
-	Board()
+	Board() throws Exception
 	{
-		// positionInCircle = initialize2Darray(0);
-		// positionInCircle = initialize2Darray(0);
 		doParseInput();
-		// updateAlgorithm=new SimpleBoardCountingAlgorithm(this);
 	}
 	
 	public void setFinderAlgorithm(BoardUpdateAlgorithm updateAlgorithm)
@@ -255,18 +251,11 @@ public class Board
 		}
 	}
 	
-	public void doParseInput()
+	public void doParseInput() throws Exception
 	{
-		// The size of table row.
-		int xCount = 0;
-		// The size of table column.
-		int yCount = 0;
-		// Used to check whether each line contains the same number of cell.
-		int prevYCount = 0;
-		
-		// Used to point out the position of the wrong input.
-		int xPosition = xCount + 1;
-		int yPosition = 0;
+
+		int rowCount = 0;
+		int colCount = 0;
 		
 		ArrayList<String> tempStringArray = new ArrayList<String>();
 		String[] parts = null; // Transform everything into a 1d array .
@@ -283,31 +272,21 @@ public class Board
 			// System.out.println("boardDimension------ :  " + getBoardDimension());
 			
 			// Add sign into a string array by split each line with delimit ' '
-			while ((line = bufferReader.readLine()) != null)
-			// while ((line = bufferReader.readLine()) != "")
+			while (!(line = bufferReader.readLine()).equals(""))
 			{
-				// If it's not the first line of the board, make the prevYCount
-				// equal to yCount.
-				if (xCount != 0)
-				{
-					prevYCount = yCount;
-				}
-				parts = line.split(" ");
-				yCount = parts.length;
 				
-				xPosition = xCount + 1;
-				
+
+				line=line.replace(" ","").replace("\t","");
+				parts = line.split("");
+				colCount=parts.length-1;
 				// If it's the first line of the board, make the prevYCount
 				// equal to yCount.
-				if (xCount == 0)
-				{
-					prevYCount = yCount;
-				}
+				checkxNumber(colCount);
 				System.out.println("" + line);
-				for (int i = 0; i < parts.length; i++)
+				//need to skip first one ,split("") first one is ""
+				for (int i = 1; i < parts.length; i++)
 				{
-					yPosition = i + 1;
-					
+					//System.out.println("i: "+i+" sign : "+parts[i]+"<-" +"level : "+tempStringArray.size());
 					// If the element is valid, add it to the temporary array,
 					// otherwise notify the user then exit.
 					if (checkCellValidation(parts[i]))
@@ -316,38 +295,31 @@ public class Board
 					}
 					else
 					{
-						System.out.println("X.X ---> Error:Unexpected types on position (" + xPosition + "," + yPosition + "). sign : " + parts[i]);
+						System.out.println("X.X ---> Error:Unexpected types on position (" + (i-1) + "," + rowCount + "). sign : " + parts[i]+"<-");
 						System.out.println("Please make sure the input contains only these four types: ");
 						System.out.println("\"" + BLACK + "\" \"" + WHITE + "\" \"" + CAPTURED + "\" \"" + FREE + "\"");
 						
 						System.exit(0);
 					}
 				}
-				
-				xCount++;
-				
-				// Check whether each row contains the same number of element.
-				// If not the same, notify the user then exit.
-				if (prevYCount != yCount)
-				{
-					System.out.println("X.X ---> Error:Different size for each row.");
-					System.exit(0);
-				}
+				rowCount++;
 			}
 			
 			bufferReader.close();
 		}
 		catch (Exception e)
 		{
+			
 			System.out.println("Error while reading file line by line:" + e.getMessage());
+			throw e;
 		}
 		
 		// System.out.println("Dimension" + boardDimension + " xCount " +
 		// xCount);
 		// If dimension not match, exit.
-		checkxNumber(xCount);
+		
 		// If the size of rows does not match dimension, exit.
-		checkyNumber(yCount);
+		checkyNumber(rowCount);
 		initializeboardBody(boardDimension);
 		fillboardBody(tempStringArray);
 		// printboardBody(boardBody);
