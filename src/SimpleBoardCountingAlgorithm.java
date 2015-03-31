@@ -20,6 +20,7 @@ public class SimpleBoardCountingAlgorithm extends BoardUpdateAlgorithm
 	
 	public void countCell()
 	{
+		System.out.println("Simple");
 		String[][] tempBoardBody=board.getBoardBody();
 		whiteCaptured=0;
 		blackCaptured=0;

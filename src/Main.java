@@ -11,7 +11,7 @@ public class Main
 	public static void main(String[] args)
 	{
 	    Board newBoard = new Board();
-	   // newBoard.setFinderAlgorithm(new SimpleBoardCountingAlgorithm(newBoard));
+	    //newBoard.setFinderAlgorithm(new SimpleBoardCountingAlgorithm(newBoard));
 	    newBoard.setFinderAlgorithm(new FindCircleAndCapturedCellAlgorithm(newBoard));
 	    newBoard.updateBoard();
 	    newBoard.doOutput();
