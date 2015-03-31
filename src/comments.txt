@@ -40,7 +40,7 @@ while(circleCellCollection is not empty)
 	}
 }
 
-Plain description:
+Code description:
 We will take in a cell first ,it is either black and white and then explores
 its 8 adjacent cell (top-right,top,top-left,left,right,bottom-left,
 bottom,bottom-right). Choose the valid and most clockwise adjacent cell
@@ -56,7 +56,8 @@ in the 'circle cell collection'
 Time Complexity: 
 
 -for finding one circle 
-	- Best Case O(n*8) ---> O(n) , where n is number of cells formed a circle ,
+	- Best Case O(n*8) (have found a circle)---> O(n) , 
+	where n is number of cells formed a circle ,
 	8 is the constant for checking each cell's '8' adjacent cells 
 
 	-Average Case (have found a circle) O(n*8+d*8*2) --->O(n), 
@@ -153,15 +154,15 @@ function TopDown() :int [][]
 
 	ceilingArray.add(circleLevelArray[0])
 	//add first level in TopDownResult
-	parseTopDownResult(ceilingArray.get(0),TopDownResult)
+	parseTopDownResult(ceilingArray.get(0),TopDownResult,0)
 
 	for(int level=1; level <circleLevelArray.length-1;level++)
 	{
 		parseTopDownResult(ceilingArray.get(level),TopDownResult)
-		if(cells within the next level's col range is under last level's cell)
+		if(cells within the next level's col range are under last level's cell)
 		{
 			//add current level in TopDownResult
-			parseTopDownResult(AllCapturedPoint,TopDownResult)
+			parseTopDownResult(AllCapturedPoint,TopDownResult,level)
 		}
 	}
 }
@@ -170,7 +171,122 @@ function BottomUp() :int [][]
 	reverse of TopDown;
 }
 
+function parseTopDownResult(AllCapturedPoint,TopDownResult,level)
+{
+	for(int i=0;i<AllCapturedPoint.length;i++)
+	{
+		TopDownResult[level][i]=1;
+	}
+}
+
 countCapturedCell(mergeResult(TopDown(),TopDown()));
+
+Code Description: 
+
+This algorithm will partition circle into levels by sorting cells of circle 
+with y and x . Iterating each level one by one from top to bottom and then 
+from bottom to top. The previous level is used as 'ceiling'/'indicator' 
+to help determine the cells in next level is in side circle or not.
+If the cells are captured inside the circle, it will be marked '1' 
+in result array. Finally the two result array generated from topDowm
+and bottomUp will be merged, only '1' present in both result array 
+in same cell position will be keeped . and This merged array will be 
+pass to count function to count how many cells are 'captured'.
+
+
+Note:We had tried our best to explain this 'captured' algorithm , it is really
+hard to explain it with our limited skill of wording. It can be explain more clearly
+with picture, but .txt is really hard to draw a picture.So we are Sorry about this. 
+
+
+Time Complexity:
+-for processing one circle
+	- Best Case (O(n^2)) ---> this algorithm will check every cell within the
+	range of circle. So in here n is dimension of circle (its level and 
+	approximate number of cells in the each level )
+	Sorting algorithm also take n^2 , but in sorting this 'n' is number 
+	of cells formed the circle .. normally it will be smaller than 
+	the number of cells within the range of circle .
+
+	- Average Case (O(n^2)) ---> average case won't be to different from
+	best case, because no matter what situation , this algorithm will
+	scan all the cells inside the circle range.
+
+	-Worst Cse (O(n^2)) ---> worse case will occure when the cirlce which
+	encircles the whole board. in here n is the dimension of board.
+
+
+note: We ignore the constant '2' which is resulted by performing this 
+algorithm twice to scan circle from top to bottom and bottom to top .
+
+
+So far the complexity of finding one circle and its captured cells are discussed
+What is the cost of checking the entire board with these two algorithms ? 
+
+Put it all together: 
+
+psudo code:
+
+for (each rows of board)
+{
+	for (each cols in curent row && this col is not in existed circle)
+	{
+		if (cell is either black or white)
+		{
+			doFindCircle()
+			//if a circle is found immediately perform captured cell alg
+			if(this circle is belong to white)
+			{
+				whiteCapturedNumber+=doFindCapturedCellInThisCircle();
+			}
+			else
+			{
+				blackCapturedNumber+=doFindCapturedCellInThisCircle();
+			}
+		}
+
+		if(cell is free)
+		{
+			freeCellNumber++;
+		}
+
+	}
+
+}
+
+doOuput() 
+
+It is really hard to calculate best, average and worse case for checking entire
+board with these two alogrithms ,since their best,average and worse case 
+happened in contradictory situations. E.g. worse case for finding a circle 
+is encounting the 'sneak' shape, but 'sneak' shape does not form a circle ,
+so doCapturedCellAlgorithm will not execute ..
+
+Time Complexity:
+
+	-Best Case O(n^2) ,  obviously best case will happened when there are no 
+	circles on the board, so both finding cirlce and count captured algorithms
+	won't going to execute, we will just simply loop through the entire board.
+	in here n is dimension of board.
+
+	-Average Case O(n^2+t*(d+c^2))---> O(n^2), let's said in average case we found some 
+	circles and perform finding circles and finding captured algorithm to them.
+	Still looping through entire board, and during some iterations we found 
+	a circle perform finding circle algorithm in its average manner so it is O(d)
+	number of cells in the circle , and we perform 'captured cell algorithm'
+	'c' is dimension of circle ,and it cost O(c^2) to find captured cells. t means
+	we perform t times of 'finding circle + finding captured cells'
+
+	-Worse Case (s(n^2)) ---> s in here is total cost of finding circle and finding
+	captured in the circle (d+c^2) , we assume we approximately find a circle 
+	for nearly each cells on the board (it is impossible ), this 's' will normally
+	smaller than n^2 so it is really a large constant ... Worse case is approximately
+	O(n^2).
+
+
+
+
+
 
 
 
