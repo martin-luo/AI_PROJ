@@ -1,0 +1,2354 @@
+============================================
+vis/compile
+13:35:40_Wednesday_01_April_2015
+============================================
+compiling the java project
+/usr/bin/javac -classpath ../data/aima-core.jar -d ./ AidUtility.java Board.java BoardDataCircleStructure.java BoardUpdateAlgorithm.java CeilingDataStructure.java CellNode.java FindCircleAndCapturedCellAlgorithm.java Main.java SimpleBoardCountingAlgorithm.java -g
+==== Project compiled successfully. =====
+============================================
+src/BoardUpdateAlgorithm.java
+13:35:38_Wednesday_01_April_2015
+============================================
+/**
+ * This is a part of the project of COMP30024 Artificial Intelligence, the University of Melbourne. The project is the Game of Squatter and is a group work, the members of the group is list below, so is the rule of the game.
+ */
+
+/**
+ * <b>Class Declaration</b>
+ * <p>
+ * This class is a abstract class contains only one class called BoardUpdateAlgorithm, it's used to update the status of cells on the board.
+ * <p>
+ * <b>Rules of Boardgame</b>
+ * <ul>
+ * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is '<i>BLACK</i>'</li>
+ * <li>Board has a size of N*N, which N is greater than 5 (i.e. N > 5)</li>
+ * <li>Top left corner is (0,0), Bottom right coner is (N-1,N-1)</li>
+ * <li>Edges does not count as part of captured territory</li>
+ * <ul>
+ * <li>Only free cells and opponent's cells count as captured cell</li>
+ * <li>Pieces can't be placed in</li>
+ * </ul>
+ * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
+ * <p>
+ * 
+ * @author Bingfeng Liu (bingfengl@student.unimelb.edu.au)
+ * @author An Luo (aluo1@student.unimelb.edu.au)
+ * @version 2.0
+ * @since 2015-03-30
+ */
+public abstract class BoardUpdateAlgorithm
+{
+	/**
+	 * This is an abstract method, it's used to update the status of cells on the board.
+	 */
+	public abstract void doUpdateBoard();
+}
+============================================
+src/Main.java
+13:35:38_Wednesday_01_April_2015
+============================================
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
+/**
+ * <b>Class Declaration</b>
+ * <p>
+ * This class is used to find the circle of the board and to count the cell and judge whether it's the final state of the game.
+ * <p>
+ * <b>Rules of Boardgame</b>
+ * <ul>
+ * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is '<i>BLACK</i>'</li>
+ * <li>Board has a size of N*N, which N is greater than 5 (i.e. N > 5)</li>
+ * <li>Top left corner is (0,0), Bottom right coner is (N-1,N-1)</li>
+ * <li>Edges does not count as part of captured territory</li>
+ * <ul>
+ * <li>Only free cells and opponent's cells count as captured cell</li>
+ * <li>Pieces can't be placed in</li>
+ * </ul>
+ * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
+ * <p>
+ * 
+ * @author Bingfeng Liu (bingfengl)
+ * @author An Luo (aluo1)
+ * @version 2.0
+ * @since 2015-03-30
+ */
+public class Main
+{
+	
+	public static void main(String[] args)
+	{
+		Board newBoard = new Board();
+		
+		newBoard.setFinderAlgorithm(new FindCircleAndCapturedCellAlgorithm(newBoard));
+		newBoard.updateBoard();
+		newBoard.doOutput();
+		//following is simple alg for doing output ...
+		/*
+		newBoard.setFinderAlgorithm(new SimpleBoardCountingAlgorithm(newBoard));
+		newBoard.updateBoard();
+		newBoard.doOutput();
+		*/
+	}
+	
+}
+============================================
+src/CeilingDataStructure.java
+13:35:38_Wednesday_01_April_2015
+============================================
+/**
+ * This is a part of the project of COMP30024 Artificial Intelligence, the University of Melbourne. The project is the Game of Squatter and is a group work, the members of the group is list below, so is the rule of the game.
+ */
+
+/**
+ * <b>Class Declaration</b>
+ * <p>
+ * This class is used to store the structure of ceiling data.
+ * <p>
+ * <b>Rules of Boardgame</b>
+ * <ul>
+ * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is '<i>BLACK</i>'</li>
+ * <li>Board has a size of N*N, which N is greater than 5 (i.e. N > 5)</li>
+ * <li>Top left corner is (0,0), Bottom right coner is (N-1,N-1)</li>
+ * <li>Edges does not count as part of captured territory</li>
+ * <ul>
+ * <li>Only free cells and opponent's cells count as captured cell</li>
+ * <li>Pieces can't be placed in</li>
+ * </ul>
+ * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
+ * <p>
+ * 
+ * @author Bingfeng Liu (bingfengl)
+ * @author An Luo (aluo1)
+ * @version 2.0
+ * @since 2015-03-30
+ */
+public class CeilingDataStructure
+{
+	/** The current size of ceiling. */
+	int ceilingCurrentSize;
+	/** The index of ceiling. */
+	int ceilingIndex;
+	/** The old index of ceiling. */
+	int ceilingOldIndex;
+	/** The array store the row of ceiling. */
+	int[] ceilingRowArray;
+	/** The array store the column of ceiling. */
+	int[] ceilingColArray;
+	
+	/**
+	 * This constructor take no argument and build nothing.
+	 */
+	CeilingDataStructure()
+	{
+		
+	}
+	
+	/**
+	 * This constructor initialize the instance of this class to the given value.
+	 * 
+	 * @param ceilingIndex the value the variable ceilingIndex will be set to.
+	 * @param ceilingRowArray the value the variable ceilingRowArray will be set to.
+	 * @param ceilingColArray the value the variable ceilingColArray will be set to.
+	 * @param rowPointArray the array contains the row point.
+	 */
+	CeilingDataStructure(int ceilingIndex, int[] ceilingRowArray, int[] ceilingColArray, int[] rowPointArray)
+	{
+		this.ceilingIndex = ceilingIndex;
+		this.ceilingRowArray = ceilingRowArray;
+		this.ceilingColArray = ceilingColArray;
+		this.ceilingIndex = getCeilingIndex(rowPointArray, 0);
+	}
+
+	/**
+	 * Get a index which represent all same level point assume rowPointArray is sorted.
+	 * @param rowPointArray the array contains the row point.
+	 * @param checkFrom the specified position the array will be checked from.
+	 * @return a index which represent all same level point assume rowPointArray is sorted
+	 */
+	public int getCeilingIndex(int[] rowPointArray, int checkFrom)
+	{
+		this.ceilingCurrentSize = 0;
+		int tempRowPoint = rowPointArray[checkFrom];
+		this.ceilingIndex = checkFrom;
+		this.ceilingOldIndex = checkFrom;
+		while (rowPointArray[this.ceilingIndex] == tempRowPoint && this.ceilingIndex < rowPointArray.length)
+		{
+			ceilingIndex++;
+			this.ceilingCurrentSize++;
+		}
+		// index will be one after ceiling row
+	
+		return ceilingIndex;	
+	}
+}
+============================================
+src/CellNode.java
+13:35:38_Wednesday_01_April_2015
+============================================
+import java.util.ArrayList;
+
+/**
+ * <b>Class Declaration</b>
+ * <p>
+ * This class is used to find the circle of the board and to count the cell and judge whether it's the final state of the game.
+ * <p>
+ * <b>Rules of Boardgame</b>
+ * <ul>
+ * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is '<i>BLACK</i>'</li>
+ * <li>Board has a size of N*N, which N is greater than 5 (i.e. N > 5)</li>
+ * <li>Top left corner is (0,0), Bottom right coner is (N-1,N-1)</li>
+ * <li>Edges does not count as part of captured territory</li>
+ * <ul>
+ * <li>Only free cells and opponent's cells count as captured cell</li>
+ * <li>Pieces can't be placed in</li>
+ * </ul>
+ * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
+ * <p>
+ * 
+ * @author Bingfeng Liu (bingfengl)
+ * @author An Luo (aluo1)
+ * @version 2.0
+ * @since 2015-03-30
+ */
+
+public class CellNode 
+{
+	int prevNodeX;
+	int prevNodeY;
+	int currentNodeX;
+	int currentNodeY;
+	int nextNodeX;
+	int nextNodeY;
+	int boardDimension;
+	String whoseCell=null;
+	String[][] boardBody=null;
+	
+	ArrayList<Integer> validAdjCellX=null;
+	ArrayList<Integer> validAdjCellY=null;
+	
+	/**
+	 * Used to initialize the CellNode
+	 * @param currentNodeX this node's X
+	 * @param currentNodeY this node's y
+	 * @param prevNodeX its prev x
+	 * @param prevNodeY its prev y
+	 * @param whoseCircle onwer of this circle
+	 * @param boardDimension 
+	 * @param boardBody
+	 */
+	
+	CellNode(int currentNodeX,int currentNodeY,int prevNodeX,int prevNodeY,String whoseCircle,int boardDimension,String[][] boardBody)
+	{
+		this.boardDimension=boardDimension;
+		this.boardBody=boardBody;
+		this.currentNodeX=currentNodeX;
+		this.currentNodeY=currentNodeY;
+		this.prevNodeX=prevNodeX;
+		this.prevNodeY=prevNodeY;
+		validAdjCellX=new ArrayList<Integer>();
+		validAdjCellY=new ArrayList<Integer>();
+		fillValidAdjcentCell(whoseCircle);
+		
+	}
+	
+	/**
+	 * this function is used to return nextNodeX 
+	 * 
+	 * @return nextNodeX
+	 */
+	
+	public int getNextNodeX() 
+	{
+		return nextNodeX;
+	}
+	
+	/**
+	 * this function is used to set nextNodeX 
+	 * 
+	 * @param nextNodeX
+	 */
+
+	public void setNextNodeX(int nextNodeX) 
+	{
+		this.nextNodeX = nextNodeX;
+	}
+
+	/**
+	 * this function is used to return nextNodeY
+	 * 
+	 * @return nextNodeY
+	 */
+	
+	public int getNextNodeY() 
+	{
+		return nextNodeY;
+	}
+
+		
+	/**
+	 * this function is used to set nextNodeY
+	 * 
+	 * @param nextNodeX
+	 */
+	public void setNextNodeY(int nextNodeY)
+	{
+		this.nextNodeY = nextNodeY;
+	}
+	
+	/**
+	 * this function is used to return set of validCell x and y
+	 * 
+	 * @return validCell
+	 */
+	
+	public int[] getValidNextCellClockwise()
+	{
+		//0---> x, 1--->y
+		int[] validCell=new int[2];
+		
+		return validCell;
+	}
+	
+	/**
+	 * this function is used to generate current cell's 8 adjacent cell 
+	 * 
+	 * @param whoseCircle is used to determine who is the owner of this circle 
+	 */
+	
+	public void fillValidAdjcentCell(String whoseCircle)
+	{
+		// 8 directions adj cell from current node .
+		int numberOfDirections = 8;
+		int tempDirectionX;
+		int tempDirectionY;
+		int tempX;
+		int tempY;
+		//clock wise ,(x,y)
+		//8 directions 
+		int[][] directionList=new int[][]{{-1,-1},{0,-1},{1,-1},{1,0},{1,1},{0,1},{-1,1},{-1,0}};
+		//iterate through 8 directions
+		for (int i=0;i<numberOfDirections;i++)
+		{
+			tempDirectionX=directionList[i][0];
+			tempDirectionY=directionList[i][1];
+			tempX=currentNodeX+tempDirectionX;
+			tempY=currentNodeY+tempDirectionY;
+			if(tempX<0||tempY<0||tempX>=boardDimension||tempY>=boardDimension)
+			{
+				continue;
+			}
+			//8 direction which is same color as the starting cell
+			if(boardBody[tempY][tempX].equals(whoseCircle))
+			{
+				// with respect to current node .. all its surrounding which is not exceed board limites will be added start from top left
+				// in a clock wise direction to tempValidAdjacent
+				//and it should be same colour of starting one of 'circle'. 
+				validAdjCellX.add(tempX);
+				validAdjCellY.add(tempY);
+			}
+			
+		}
+	}
+	//return position of prev cells in the current adj array 
+	
+	/**
+	 * clockwise is based on this cell's previous cell ,so this function get index of prev cell in 8 directions cell array
+	 * 
+	 * @return index of prev cell in 8 directions array 
+	 */
+	
+	public int prevIndexInValidAdj()
+	{
+		int index=-1;
+		for(int i=0;i<validAdjCellX.size();i++)
+		{
+			if(prevNodeX==validAdjCellX.get(i) && prevNodeY==validAdjCellY.get(i))
+			{
+				index=i;
+				return index;
+			}
+		}
+		return index;
+	}
+	
+	/**
+	 * get the valid most clockwise adjacent cell available form current cell
+	 * 
+	 * @return vadlidXY its first index is valid adjacent cell's x , second index is y
+	 */
+	
+	public int[] mostClockwisedCellIndex()
+	{
+		//not valid adjacent cell
+		int validIndex=-1;
+		boolean flag=false;
+		int[] validXY=new int[2];
+		//only prev left in array ...or adj has not valid .
+		if (validAdjCellX.size()<=1)
+		{
+			return null;
+		}
+		
+		validIndex=prevIndexInValidAdj()+1;
+		//prev at the end of array ...so we want it just to first one.
+		if(validIndex==validAdjCellX.size())
+		{
+			validIndex=0;
+			//valid clockwize x --->0 ,y--->1
+			validXY[0]=validAdjCellX.get(validIndex);
+			validXY[1]=validAdjCellY.get(validIndex);
+			//removed it from valid adj array
+			validAdjCellX.remove(validIndex);
+			validAdjCellY.remove(validIndex);
+			return validXY;
+		}
+		validXY[0]=validAdjCellX.get(validIndex);
+		validXY[1]=validAdjCellY.get(validIndex);
+		validAdjCellX.remove(validIndex);
+		validAdjCellY.remove(validIndex);
+		return validXY;
+	}
+	
+}
+============================================
+src/comments.txt
+13:35:38_Wednesday_01_April_2015
+============================================
+Author: 
+Student Name: An Luo
+Login ID : aluo1
+Student Name: Bingfeng liu
+Login ID : bingfengl
+
+
+This document is for COMP30024 for explaining the algorithms uesd to
+achieve project part A.
+
+There are two main algorithms invovled in this program in order to find out 
+the state of the board.
+
+The first algorithm is for finding the white/black 'circles' on the board.
+This algorithm is based on DFS and an heuristic of picking the next cell of 
+greatest degress in clockwise direction (i.e. to draw the widdest possible
+white/black cell circles).
+
+pseudo code: 
+
+currentCell = startCell;
+circleCellCollection.add(currentCell);
+
+while(circleCellCollection is not empty)
+{
+	nextCell = the 'valid' most clockwise cell of currentCell,
+					from its 8 adjacent cells
+	
+	//valid == same colour as startCell , and it is within board dimension
+
+	if (nextCell is empty)
+	{
+		circleCellCollection.remove(circleCellCollection.size()-1)
+		//removing the current cell 
+	}
+
+	if(nextCell is not visited and it is not in circleCellCollection)
+	{
+		circleCellCollection.add(next);
+	}
+}
+
+Code description:
+We will take in a cell first ,it is either black and white and then explores
+its 8 adjacent cell (top-right,top,top-left,left,right,bottom-left,
+bottom,bottom-right). Choose the valid and most clockwise adjacent cell
+in order to draw the biggest possible cirlce from this starting cell.
+
+If there is a valid adjacent cell then we add it to circle path , and 
+update current path to this 'new valid cell'.
+
+If there is not a valid adjacent cell we will pop the current cell out of
+our circle cell collection . and update current cell to the last cell
+in the 'circle cell collection'
+
+Time Complexity: 
+
+-for finding one circle 
+	- Best Case O(n*8) (have found a circle)---> O(n) , 
+	where n is number of cells formed a circle ,
+	8 is the constant for checking each cell's '8' adjacent cells 
+
+	-Average Case (have found a circle) O(n*8+d*8*2) --->O(n), 
+	d is the number of cells that we checked
+	but they are not actually formed a circle.n*8 is the cost we get to 
+	find cells which invoving in a circle path .d*8*2 is the cost for
+	poping non-in-circle cell out of collection.
+
+	-Average Case (have not found a circle) O(d*8*2) --->O(d),in here
+	d is the number of cells we checked but they all dont form circle
+	we first add them in queue and check them ,then pop them out.
+
+
+	normally it wont be same as board dimension ,
+	so it can also be considered as a constant which can be ommited 
+
+	-Worse Case O(((n)/2*n)*8*2) --->O(mn) , if there is only one player , and 
+	he/she places pieces in a 'sneak form' that head at top left and tail
+	at bottom right of the board ,and there is one 'gap' in between. 
+	In here n is board dimension ,(n)/2 ---> sneak shape will occupy
+	half of the rows of the boatd , and n number of cols in each row.
+	(n)/2 will clearly smaller than n so it can be mark as a constant 'm'
+
+	This finding circle algorithm will take in 'mn' number of cells and
+	ends up with getting no circle ,so it will
+	pop cell out of circleCellCollection all the way back to start.
+	Each cell will be checked '2' times and each check will check its '8'
+	surrounding cells. 
+
+	sneak form : 
+    ----------->
+      row gap  |
+    <-----------
+    |
+    ----------->
+
+The second algorithm is used when we have found a sets of cells which formed
+a circle in order to count the captured cells in side the circle path. 
+In more simple word, this algorithm is used to count the captured cells 
+inside black/white circle.
+
+This algorithm will sort cells in circle path by row and col (i.e. cell 
+will be orders from top left to bottom right). By sorting with row and col 
+this 'circle ' will be divided into levels 
+
+BBBB ---> level 1
+B  B ---> level 2
+BBBB ---> level 3
+
+for counting captured cells inside circle, the previous 'level' is used as 
+indicator to determine whether if a cell in 'current level' is inside circle 
+or not.
+
+e.g. 
+
+BBBB ---> level 1
+BXXB ---> level 2 ---> use level 1 as indicator, 'XX' is under level 1 
+B  B ---> level 4
+BBBB ---> level 3      
+so XX must be inside circle and if they are marked '-'
+we can count it as captured for black . XX will be added 
+into 'level 2 indicator array' for determine 'level 4' captured cell
+
+Since we sorted the cells of forming circle , we can alwasy know where to 
+start checking at each level and where to end .
+
+BBBBBBBBB
+B       B
+B  BBB  B
+B  BXB  B
+BBBB BBBB
+
+if circle path is like above , simply use the algrithm mentioned above to scan
+it from top to bottom will failed by mistakenlly count X as captured 
+
+So the solution is use the captured cell counting algorithm to scan sorted
+circle path from top to bottom and from bottom to top , and then merge 
+the results .
+
+pseudo code: 
+
+function TopDown() :int [][]
+{
+	
+	int[boardDimension][boardDimension] TopDownResult=0;
+	//in this int array 0 means not captured
+	//will be marked as 1 in TopDownResult for all cell inside circle
+	cellInCircleColelction.sortByXandY();
+
+	circleLevelArray = cellInCircleColelction.constructLevel();
+
+	//ceilingArray --> store indicator cells for 'current' level to determine 
+	//captured cell 
+
+	ceilingArray.add(circleLevelArray[0])
+	//add first level in TopDownResult
+	parseTopDownResult(ceilingArray.get(0),TopDownResult,0)
+
+	for(int level=1; level <circleLevelArray.length-1;level++)
+	{
+		parseTopDownResult(ceilingArray.get(level),TopDownResult)
+		if(cells within the next level's col range are under last level's cell)
+		{
+			//add current level in TopDownResult
+			parseTopDownResult(AllCapturedPoint,TopDownResult,level)
+		}
+	}
+}
+function BottomUp() :int [][]
+{
+	reverse of TopDown;
+}
+
+function parseTopDownResult(AllCapturedPoint,TopDownResult,level)
+{
+	for(int i=0;i<AllCapturedPoint.length;i++)
+	{
+		TopDownResult[level][i]=1;
+	}
+}
+
+countCapturedCell(mergeResult(TopDown(),TopDown()));
+
+Code Description: 
+
+This algorithm will partition circle into levels by sorting cells of circle 
+with y and x . Iterating each level one by one from top to bottom and then 
+from bottom to top. The previous level is used as 'ceiling'/'indicator' 
+to help determine the cells in next level is in side circle or not.
+If the cells are captured inside the circle, it will be marked '1' 
+in result array. Finally the two result array generated from topDowm
+and bottomUp will be merged, only '1' present in both result array 
+in same cell position will be keeped . and This merged array will be 
+pass to count function to count how many cells are 'captured'.
+
+
+Note:We had tried our best to explain this 'captured' algorithm , it is really
+hard to explain it with our limited skill of wording. It can be explain more clearly
+with picture, but .txt is really hard to draw a picture.So we are Sorry about this. 
+
+
+Time Complexity:
+-for processing one circle
+	- Best Case (O(n^2)) ---> this algorithm will check every cell within the
+	range of circle. So in here n is dimension of circle (its level and 
+	approximate number of cells in the each level )
+	Sorting algorithm also take n^2 , but in sorting this 'n' is number 
+	of cells formed the circle .. normally it will be smaller than 
+	the number of cells within the range of circle .
+
+	- Average Case (O(n^2)) ---> average case won't be to different from
+	best case, because no matter what situation , this algorithm will
+	scan all the cells inside the circle range.
+
+	-Worst Cse (O(n^2)) ---> worse case will occure when the cirlce which
+	encircles the whole board. in here n is the dimension of board.
+
+
+note: We ignore the constant '2' which is resulted by performing this 
+algorithm twice to scan circle from top to bottom and bottom to top .
+
+
+So far the complexity of finding one circle and its captured cells are discussed
+What is the cost of checking the entire board with these two algorithms ? 
+
+Put it all together: 
+
+psudo code:
+
+for (each rows of board)
+{
+	for (each cols in curent row && this col is not in existed circle)
+	{
+		if (cell is either black or white)
+		{
+			doFindCircle()
+			//if a circle is found immediately perform captured cell alg
+			if(this circle is belong to white)
+			{
+				whiteCapturedNumber+=doFindCapturedCellInThisCircle();
+			}
+			else
+			{
+				blackCapturedNumber+=doFindCapturedCellInThisCircle();
+			}
+		}
+
+		if(cell is free)
+		{
+			freeCellNumber++;
+		}
+
+	}
+
+}
+
+doOuput() 
+
+It is really hard to calculate best, average and worse case for checking entire
+board with these two alogrithms ,since their best,average and worse case 
+happened in contradictory situations. E.g. worse case for finding a circle 
+is encounting the 'sneak' shape, but 'sneak' shape does not form a circle ,
+so doCapturedCellAlgorithm will not execute ..
+
+Time Complexity:
+
+	-Best Case O(n^2) ,  obviously best case will happened when there are no 
+	circles on the board, so both finding cirlce and count captured algorithms
+	won't going to execute, we will just simply loop through the entire board.
+	in here n is dimension of board.
+
+	-Average Case O(n^2+t*(d+c^2))---> O(n^2), let's said in average case we found some 
+	circles and perform finding circles and finding captured algorithm to them.
+	Still looping through entire board, and during some iterations we found 
+	a circle perform finding circle algorithm in its average manner so it is O(d)
+	number of cells in the circle , and we perform 'captured cell algorithm'
+	'c' is dimension of circle ,and it cost O(c^2) to find captured cells. t means
+	we perform t times of 'finding circle + finding captured cells'
+
+	-Worse Case (s(n^2)) ---> s in here is total cost of finding circle and finding
+	captured in the circle (d+c^2) , we assume we approximately find a circle 
+	for nearly each cells on the board (it is impossible ), this 's' will normally
+	smaller than n^2 so it is really a large constant ... Worse case is approximately
+	O(n^2).
+
+
+Optional algoirthm :
+
+We also implemented a really simple algorithm to check the stat of board..
+it consists only 2 for loop , basically it just loop through every cell
+on the board and looking for '-' and next black/white cell after we meet
+'-', in this way we can also find out the captured cells for black or white.
+
+The biggest flaw of this algorithm is that it can be only used for Part A,
+it cant find circle and cells inside circle .. its complexity of time is always
+n^2 where n is dimension of board
+
+Structure of Code:
+
+Main.java  ---> run program
+
+AidUtility.java ---> array printing and sorting function normally for debug
+
+Board.java ---> store board information
+BoardDataCircleStructure.java ---> store circle information
+
+BoardUpdateAlgorithm.java ---> board stat checking algorithm both inherit it
+so we can swap to easy algorithm and 'find circle and find capture ' alg
+to check out output 
+
+FindCircleAndCapturedCellAlgorithm.java ---> finding circle + finding captured
+CeilingDataStructure.java ---> store 'indicator'/'ceiling' array for captured alg
+CellNode.java ---> for finding circle alg to store cell's adjacent cells
+
+
+SimpleBoardCountingAlgorithm.java ---> simple algorithm to find captured cell
+
+
+
+Libraries used : only the built in libraries are used e.g. Arraylist
+
+Space complexity : O(n^2) ---> n == dimension of board 
+
+
+
+
+
+
+
+============================================
+src/SimpleBoardCountingAlgorithm.java
+13:35:38_Wednesday_01_April_2015
+============================================
+public class SimpleBoardCountingAlgorithm extends BoardUpdateAlgorithm
+{	
+	Board board=null;
+	int whiteCaptured;
+	int blackCaptured;
+	int freeCell;
+	
+	/**
+	 * Used to initialize the SimpleBoardCountingAlgorithm obj
+	 * @param board 
+	 */
+	
+	SimpleBoardCountingAlgorithm(Board board)
+	{
+		this.board=board;
+		whiteCaptured=0;
+		blackCaptured=0;
+		freeCell=0;
+	}
+	
+	/**
+	 * this function will run find circle and find captured cell and update the information of board
+	 */
+	
+	public void doUpdateBoard()
+	{
+		countCell();
+	}
+	
+	/**
+	 * count cell use simple algorithm
+	 */
+	public void countCell()
+	{
+		System.out.println("Simple");
+		String[][] tempBoardBody=board.getBoardBody();
+		whiteCaptured=0;
+		blackCaptured=0;
+		freeCell=0;
+		for (int row = 0; row < tempBoardBody.length; row++)
+		{
+			int tempCapturedNumber = 0;
+			boolean metCaptured = false;
+			
+			for (int col = 0; col < tempBoardBody[0].length; col++)
+			{
+				if(tempBoardBody[row][col].equals(Board.FREE))
+				{
+					freeCell+=1;
+					continue;
+				}
+				if (tempBoardBody[row][col].equals(Board.CAPTURED))
+				{
+					// System.out.println("The position is [" + row + "][" + col
+					// + "]");
+					tempCapturedNumber++;
+					metCaptured = true;
+				}
+				if (metCaptured)
+				{
+					if (tempBoardBody[row][col].equals(Board.WHITE))
+					{
+						whiteCaptured += tempCapturedNumber;
+						metCaptured = false;
+						tempCapturedNumber = 0;
+					}
+					else if (tempBoardBody[row][col].equals(Board.BLACK))
+					{
+						blackCaptured += tempCapturedNumber;
+						metCaptured = false;
+						tempCapturedNumber = 0;
+					}
+				}
+			}
+		}
+		board.setBlackCaptured(blackCaptured);
+		board.setWhiteCaptured(whiteCaptured);
+		board.setFreeCell(freeCell);
+	}
+}
+============================================
+src/Board.java
+13:35:37_Wednesday_01_April_2015
+============================================
+/**
+ * This is a part of the project of COMP30024 Artificial Intelligence, the University of Melbourne. The project is the Game of Squatter and is a group work, the members of the group is list below, so is the rule of the game.
+ */
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+/**
+ * <b>Class Declaration</b>
+ * <p>
+ * This class contains the methods used to build a board and to update the board.
+ * <p>
+ * <b>Rules of Boardgame</b>
+ * <ul>
+ * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is '<i>BLACK</i>'</li>
+ * <li>Board has a size of N*N, which N is greater than 5 (i.e. N > 5)</li>
+ * <li>Top left corner is (0,0), Bottom right coner is (N-1,N-1)</li>
+ * <li>Edges does not count as part of captured territory</li>
+ * <ul>
+ * <li>Only free cells and opponent's cells count as captured cell</li>
+ * <li>Pieces can't be placed in</li>
+ * </ul>
+ * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
+ * <p>
+ * 
+ * @author Bingfeng Liu (bingfengl)
+ * @author An Luo (aluo1)
+ * @version 2.0
+ * @since 2015-03-14
+ */
+public class Board
+{
+	/** The word used for white player. */
+	public static String WHITE = "W";
+	/** The word used for black player. */
+	public static String BLACK = "B";
+	/** The word used for captured cell. */
+	public static String CAPTURED = "-";
+	/** The word used for free cell. */
+	public static String FREE = "+";
+	/** The dimension of the board. */
+	private int boardDimension = 0;
+	
+	/** The number of free cell on the board. */
+	private int freeCell = 0;
+	/** The number of cell captured by white player. */
+	private int whiteCaptured = 0;
+	/** The number of cell captured by black player. */
+	private int blackCaptured = 0;
+	
+	/** The board. */
+	private String[][] boardBody = null;
+	/** Used to track point is already in one circle path or not. */
+	public int[][] trackingInCircle = null;
+	/** Used to call the board update algorithms. */
+	public BoardUpdateAlgorithm updateAlgorithm = null;
+	
+	/**
+	 * Return the dimension of board.
+	 * 
+	 * @return the dimension of the board.
+	 */
+	public int getBoardDimension()
+	{
+		return boardDimension;
+	}
+	
+	/**
+	 * Set the variable boardDimension to the specified value.
+	 * 
+	 * @param boardDimension
+	 *            the value boardDimension will be set to.
+	 */
+	public void setBoardDimension(int boardDimension)
+	{
+		this.boardDimension = boardDimension;
+	}
+	
+	/**
+	 * Return the board body.
+	 * 
+	 * @return the board body.
+	 */
+	public String[][] getBoardBody()
+	{
+		return boardBody;
+	}
+	
+	/**
+	 * Return the number of free cell on the board.
+	 * 
+	 * @return the number of free cell on the board.
+	 */
+	public int getFreeCell()
+	{
+		return freeCell;
+	}
+	
+	/**
+	 * Set the variable freeCell to the specified value.
+	 * 
+	 * @param freeCell
+	 *            the value freeCell will be set to.
+	 */
+	public void setFreeCell(int freeCell)
+	{
+		this.freeCell = freeCell;
+	}
+	
+	/**
+	 * Return the number of cell captured by white player.
+	 * 
+	 * @return the number of cell captured by white player.
+	 */
+	public int getWhiteCaptured()
+	{
+		return whiteCaptured;
+	}
+	
+	/**
+	 * Set the variable whiteCaptured to the specified value.
+	 * 
+	 * @param whiteCaptured
+	 *            the value whiteCaptured will be set to.
+	 */
+	public void setWhiteCaptured(int whiteCaptured)
+	{
+		this.whiteCaptured = whiteCaptured;
+	}
+	
+	/**
+	 * Return the number of cell captured by black player.
+	 * 
+	 * @return the number of cell captured by black player.
+	 */
+	public int getBlackCaptured()
+	{
+		return blackCaptured;
+	}
+	
+	/**
+	 * Set the variable blackCaptured to the specified value.
+	 * 
+	 * @param blackCaptured
+	 *            the value blackCaptured will be set to.
+	 */
+	public void setBlackCaptured(int blackCaptured)
+	{
+		this.blackCaptured = blackCaptured;
+	}
+	
+	/**
+	 * Used to initialize the board.
+	 */
+	Board()
+	{
+		doParseInput();
+	}
+	
+	/**
+	 * Choose the wanted board update algorithm.
+	 * 
+	 * @param updateAlgorithm
+	 *            the algorithm the board game will use.
+	 */
+	public void setFinderAlgorithm(BoardUpdateAlgorithm updateAlgorithm)
+	{
+		this.updateAlgorithm = updateAlgorithm;
+	}
+	
+	/**
+	 * Use the algorithm to update the state of board.
+	 */
+	public void updateBoard()
+	{
+		updateAlgorithm.doUpdateBoard();
+	}
+	
+	/**
+	 * Initialize the variable boardBody to the specified value.
+	 * 
+	 * @param boardDimension
+	 *            the value boardBody will be set to.
+	 */
+	public void initializeboardBody(int boardDimension)
+	{
+		boardBody = new String[boardDimension][boardDimension];
+		
+	}
+	
+	/**
+	 * Get the cell at the specified position.
+	 * 
+	 * @param row
+	 *            the row the required cell is in.
+	 * @param col
+	 *            the column the required cell is in.
+	 * 
+	 * @return the cell at the specified position.
+	 */
+	public String getBoardCell(int row, int col)
+	{
+		return boardBody[row][col];
+	}
+	
+	/**
+	 * Set the specified cell on the board to the specified value.
+	 * 
+	 * @param row
+	 *            the row the target cell is in.
+	 * @param col
+	 *            the column the target cell is in.
+	 * @param sign
+	 *            the value the target cell will be set to.
+	 * 
+	 */
+	public void setBoardCell(int row, int col, String sign)
+	{
+		boardBody[row][col] = sign;
+	}
+	
+	/**
+	 * Check whether the number of row is the same as the dimension specified.
+	 * 
+	 * If the number of row is different from the dimension whose value is got from the first row of input file, notify the user then exit.
+	 * 
+	 * @param xCount
+	 *            the number of row
+	 */
+	public void checkxNumber(int xCount)
+	{
+		if (xCount == boardDimension)
+		{
+			return;
+		}
+		
+		else
+		{
+			System.out.println("X.X ---> Error:Actual xs and Board Dimension Mismatched.");
+			System.exit(0);
+		}
+		
+	}
+	
+	/**
+	 * Check whether the number of cell in each row is the same as the dimension specified.
+	 * 
+	 * If the number of cell of each row is different from the dimension whose value is got from the first row of input, notify the user then exit.
+	 * 
+	 * @param yCount
+	 *            the number of cell of row.
+	 */
+	public void checkyNumber(int yCount)
+	{
+		if (yCount == boardDimension)
+		{
+			return;
+		}
+		
+		else
+		{
+			System.out.println("X.X ---> Error:Actual ys and Board Dimension Mismatched.");
+			System.exit(0);
+		}
+		
+	}
+	
+	/**
+	 * Validates a cell on the board
+	 *
+	 * Check if the cell is one the the four types: Black, White, Captured, Free
+	 *
+	 * @param cell
+	 *            the element to be validated.
+	 * @return true if the cell is valid, otherwise false
+	 */
+	public boolean checkCellValidation(String cell)
+	{
+		if (cell.equals(BLACK))
+		{
+			return true;
+		}
+		else if (cell.equals(WHITE))
+		{
+			return true;
+		}
+		else if (cell.equals(CAPTURED))
+		{
+			return true;
+		}
+		else if (cell.equals(FREE))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Read the input from standard input and put the satisfied value into an arraylist then add it to the boardBody.
+	 */
+	public void doParseInput()
+	{
+		int rowCount = 0;
+		int colCount = 0;
+		
+		ArrayList<String> tempStringArray = new ArrayList<String>();
+		String[] parts = null; // Transform everything into a 1d array .
+		try
+		{
+			// FileReader inputFile = new FileReader("file name");
+			BufferedReader bufferReader = new BufferedReader(new InputStreamReader(System.in));
+			String line;
+			
+			// Since the first line is the dimension of the board, read it
+			// separately and assign it to the corresponding variable.
+			line = bufferReader.readLine();
+			try
+			{
+				boardDimension = Integer.parseInt(line);
+			}
+			catch(Exception e)
+			{
+				System.out.println("Error while reading file line by line Check your Input Format");
+				System.exit(0);
+			}
+			//System.out.println("boardDimension------ :  " + getBoardDimension());
+			
+			// Add sign into a string array by split each line with delimit ' '
+			while (!(line = bufferReader.readLine()).equals(""))
+			{
+				
+				line = line.replace(" ", "").replace("\t", "");
+				parts = line.split("");
+				//System.out.println("part[0]"+parts[0]);
+				colCount = parts.length;
+				//System.out.println("colCount : " + colCount);
+				// If it's the first line of the board, make the prevYCount
+				// equal to yCount.
+				checkxNumber(colCount);
+				//System.out.println("" + line);
+				// need to skip first one ,split("") first one is ""
+				for (int i = 0; i < parts.length; i++)
+				{
+					// System.out.println("i: "+i+" sign : "+parts[i]+"<-" +"level : "+tempStringArray.size());
+					// If the element is valid, add it to the temporary array,
+					// otherwise notify the user then exit.
+					if (checkCellValidation(parts[i]))
+					{
+						tempStringArray.add(parts[i]);
+					}
+					else
+					{
+						System.out.println("X.X ---> Error:Unexpected types on position (" + (i - 1) + "," + rowCount + "). sign : " + parts[i] + "<-");
+						System.out.println("Please make sure the input contains only these four types: ");
+						System.out.println("\"" + BLACK + "\" \"" + WHITE + "\" \"" + CAPTURED + "\" \"" + FREE + "\"");
+						
+						System.exit(0);
+					}
+				}
+				rowCount++;
+			}
+			
+			bufferReader.close();
+		}
+		catch (Exception e)
+		{
+			
+			System.out.println("Error while reading file line by line Check your Input Format");
+			System.exit(0);
+		}
+		
+		// System.out.println("Dimension" + boardDimension + " xCount " +
+		// xCount);
+		// If dimension not match, exit.
+		
+		// If the size of rows does not match dimension, exit.
+		checkyNumber(rowCount);
+		initializeboardBody(boardDimension);
+		fillboardBody(tempStringArray);
+		// printboardBody(boardBody);
+	}
+	
+	/**
+	 * Transform 1D array of 'signs' to 2d array boardBody
+	 * 
+	 * @param tempStringArray
+	 *            the arraylist contains all the satisfied value of the board.
+	 */
+	public void fillboardBody(ArrayList<String> tempStringArray)
+	{
+		int x = 0, y = 0;
+		for (String tempString : tempStringArray)
+		{
+			boardBody[y][x++] = tempString;
+			if (x >= boardDimension)
+			{
+				y++;
+				x = 0;
+			}
+		}
+	}
+	
+	/**
+	 * Print out the board.
+	 * 
+	 * @param boardBody
+	 *            the current state of the board.
+	 */
+	public void printboardBody(String boardBody[][])
+	{
+		for (int i = 0; i < boardDimension; i++)
+		{
+			for (int j = 0; j < boardDimension; j++)
+			{
+				System.out.print(boardBody[i][j] + "(x:" + j + " y:" + i + ")");
+			}
+			System.out.println();
+		}
+	}
+	
+	/**
+	 * Check whether the cell at the specified position is a free cell.
+	 * 
+	 * @param y
+	 *            the row the cell is in.
+	 * @param x
+	 *            the column the cell is in.
+	 * @return true if the cell is free, otherwise false.
+	 */
+	public boolean isFreeCell(int y, int x)
+	{
+		return boardBody[y][x].equals(FREE);
+	}
+	
+	/**
+	 * Check whether the cell at the specified position is a captured cell.
+	 * 
+	 * @param y
+	 *            the row the cell is in.
+	 * @param x
+	 *            the column the cell is in.
+	 * @return true if the cell is captured, otherwise false.
+	 */
+	public boolean isCapturedCell(int y, int x)
+	{
+		return boardBody[y][x].equals(CAPTURED);
+	}
+	
+	/**
+	 * Check whether the cell belongs to the black player.
+	 * 
+	 * @param y
+	 *            the row the cell is in.
+	 * @param x
+	 *            the column the cell is in.
+	 * @return true if the cell belongs to black player, otherwise false.
+	 */
+	public boolean isBlackCell(int y, int x)
+	{
+		return boardBody[y][x].equals(BLACK);
+	}
+	
+	/**
+	 * Check whether the cell belongs to the whiteplayer.
+	 * 
+	 * @param y
+	 *            the row the cell is in.
+	 * @param x
+	 *            the column the cell is in.
+	 * @return true if the cell belongs to white player, otherwise false.
+	 */
+	public boolean isWhiteCell(int y, int x)
+	{
+		return boardBody[y][x].equals(WHITE);
+	}
+	
+	
+	/**
+	 * Print out the result of the board.
+	 */
+	public void doOutput()
+	{
+		if (freeCell != 0)
+		{
+			System.out.println("None");
+		}
+		else if (whiteCaptured > blackCaptured)
+		{
+			System.out.println("White");
+		}
+		else if (blackCaptured > whiteCaptured)
+		{
+			System.out.println("Black");
+		}
+		else
+		{
+			System.out.println("Draw");
+		}
+		System.out.println(whiteCaptured);
+		System.out.println(blackCaptured);
+	}
+}
+============================================
+src/AidUtility.java
+13:35:37_Wednesday_01_April_2015
+============================================
+import java.util.ArrayList;
+
+
+public class AidUtility
+{
+	/**
+	 * get max value from input array
+	 * @param pointArray
+	 */
+	static public int getMaxPoint(int[] pointArray)
+	{
+		int max=0;
+		
+		if(pointArray.length==0)
+		{
+			System.out.println ("X.X --->Error: getMaxx received an empty array .");
+		}
+		
+		max= pointArray[0];
+		
+		for (int i : pointArray)
+		{
+			if (i>max)
+			{	
+				max=i;
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * sort array with y and x value
+	 * @param xPointArray
+	 * @param yPointArray
+	 */
+	
+	static public void sortByYandX(int[] xPointArray,int[] yPointArray)
+	{
+		int tempxPoint;
+		int tempyPoint;
+		int length=xPointArray.length;
+		if(xPointArray.length!=yPointArray.length)
+		{
+			System.out.println("X.X ---> Error: sortByxtheny got invalid array");
+			System.exit(0);
+		}
+		
+		for(int i=0;i<length;i++)
+		{
+			tempxPoint=xPointArray[i];
+			tempyPoint=yPointArray[i];
+			for(int j=i-1,tempI=i;j>=0&&j<length&&tempI>=0;j--)
+			{
+				if(tempyPoint > yPointArray[j])
+				{
+					continue;
+				}
+				else if(tempyPoint < yPointArray[j])
+				{
+					swapPoint(xPointArray,yPointArray,tempI--,j);
+				}
+				else //x is equal compare y
+				{
+					// want most upper left ... 
+					if (tempxPoint < xPointArray[j])
+					{
+						swapPoint(xPointArray,yPointArray,tempI--,j);
+					}
+				}
+				//System.out.println("----");
+				//printPositionArray(xPointArray,yPointArray);
+			}
+		}
+		
+		
+	}
+	
+	
+	/**
+	 * swap two points 
+	 * @param xPointArray
+	 * @param yPointArray
+	 * @param fromIndex
+	 * @param toIndex
+	 */
+	
+	static public void swapPoint(int[] xPointArray,int[] yPointArray,int fromIndex,int toIndex)
+	{
+		int tempxPoint = xPointArray[fromIndex];
+		int tempyPoint = yPointArray[fromIndex];
+		xPointArray[fromIndex]=xPointArray[toIndex];
+		yPointArray[fromIndex]=yPointArray[toIndex];
+		xPointArray[toIndex]=tempxPoint;
+		yPointArray[toIndex]=tempyPoint;
+	}
+	
+	/**
+	 * print array
+	 * @param pointArray
+	 */
+	
+	static public void printPointArray(int[] pointArray)
+	{
+		for(int i:pointArray)
+		{
+			System.out.print(i+" ");
+		}
+		System.out.println();
+	}
+	
+	/**
+	 * print  col array and row array in nice format
+	 * @param xPointArray
+	 * @param yPointArray
+	 */
+	
+	static public void printPositionArray(int[] xPointArray, int[] yPointArray)
+	{
+		if(xPointArray.length!=yPointArray.length)
+		{
+			System.out.println("X.X ---> Error: printPositionArray got invalid array");
+			System.exit(0);
+		}
+		
+		for(int i=0;i<xPointArray.length;i++)
+		{
+			System.out.println("x:"+xPointArray[i] + "  y:" +yPointArray[i]);
+		}
+		
+	}
+	
+	/**
+	 * print  value in array list
+	 * @param pointArrayList
+	 */
+	
+	static public void printPointArrayList(ArrayList<Integer> pointArrayList)
+	{
+		for(int i : pointArrayList)
+		{
+			System.out.print(i+" ");
+		}
+		System.out.println();
+		
+		
+	}
+	
+	/**
+	 * print  row value and col value in array list
+	 * @param xPointArrayList
+	 * @param yPointArrayList
+	 */
+	
+	static public void printPositionArrayList(ArrayList<Integer> xPointArrayList , ArrayList<Integer> yPointArrayList)
+	{
+		if(xPointArrayList.size()!=yPointArrayList.size())
+		{
+			System.out.println("X.X ---> Error: printPositionArray got invalid array");
+			System.exit(0);
+		}
+		
+		for(int i=0;i<xPointArrayList.size();i++)
+		{
+			System.out.println("x:"+xPointArrayList.get(i) + "  y:" +yPointArrayList.get(i));
+		}
+	}
+	
+	/**
+	 * print  value in 2d array with break element
+	 * @param temp
+	 * @param breakLine
+	 */
+	
+	static public void print2DintArray(int[][] temp,int breakLine)
+	{
+		for (int i=0;i<temp.length;i++)
+		{
+			for(int j=0;j<temp[i].length;j++)
+			{
+				System.out.print(""+temp[i][j]+" ");
+				if(j==breakLine-1)
+				{
+					System.out.println("");
+				}
+			}
+		}
+		System.out.println("");
+		
+	}
+	
+	/**
+	 * parse arraylist to normal array
+	 * @param intArrayList
+	 * @return tempList
+	 */
+	
+	static public int[] parseIntArrayList(ArrayList<Integer> intArrayList)
+	{
+		int[] tempList=new int[intArrayList.size()];
+		for (int i=0;i<intArrayList.size();i++)
+		{
+			tempList[i]=intArrayList.get(i);
+		}
+		return tempList;
+	}
+	
+	/**
+	 * if point existed in the xPointArray and yPointArray return true
+	 * @param xPoint
+	 * @param yPoint
+	 * @param xPointArray
+	 * @param yPointArray
+	 * @return boolean
+	 */
+	
+	static public boolean checkPointInPositionArray(int xPoint,int yPoint,int[] xPointArray,int[] yPointArray)
+	{
+		for(int i=0;i<xPointArray.length;i++)
+		{
+			if(xPoint==xPointArray[i]&&yPoint==yPointArray[i])
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	static public boolean checkPointInPointArray(int point,int[] pointArray)
+	{
+		for(int i:pointArray)
+		{
+			if(i==point)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * return unique value in that array back 
+	 * @param point
+	 * @return uniquePointArray
+	 */
+	static public int[] getUniquePointInArray(int[] point)
+	{
+		int[] uniquePointArray=null;
+		int tempPoint;
+		int repetition;
+		ArrayList<Integer> tempArrayList=new ArrayList<Integer>();
+		tempArrayList.add(point[0]);
+		for(int i=0;i<point.length;i++)
+		{
+			tempPoint=point[i];
+			repetition=0;
+			for (int j : tempArrayList)
+			{
+				if (tempPoint==j)
+				{
+					//System.out.println("inside "+tempPoint);
+					repetition=1;
+					break;
+				}
+			}
+			if(repetition==0)
+			{
+				tempArrayList.add(tempPoint);
+			}
+			
+		}
+		
+		uniquePointArray= convertArrayListToIntArray(tempArrayList);
+		//System.out.println(tempArrayList.size());
+		return uniquePointArray;
+	}
+	/**
+	 * convert ArrayList to int array
+	 * @param arrayList
+	 * @return result
+	 */
+	
+	static public int[] convertArrayListToIntArray(ArrayList<Integer> arrayList)
+	{
+		int[] result=new int[arrayList.size()];
+		
+		for (int i =0;i<arrayList.size();i++)
+		{
+			result[i]=arrayList.get(i);
+		}
+		
+		return result;
+		
+	}
+	
+	/**
+	 * convert int array to array list
+	 * @param intList
+	 * @return result
+	 */
+	
+	static public ArrayList<Integer> parseIntListToArrayList(int[] intList)
+	{
+		ArrayList<Integer> result= new ArrayList<Integer>();
+		for (int i:intList)
+		{
+			result.add(i);
+		}
+		
+		return result;
+		
+	}
+	
+	/**
+	 * merge two array to one
+	 * @param arrayA
+	 * @return arrayB
+	 */
+	
+	
+	static public int[] mergeIntArray(int[] arrayA,int[] arrayB)
+	{
+		int[] mergedIntArray = new int[arrayA.length+arrayB.length];
+		
+		int indexOfMergedIntArray=0;
+		
+		for(int i=0;i<arrayA.length;i++)
+		{
+			mergedIntArray[indexOfMergedIntArray++]=arrayA[i];
+		}
+		
+		for(int i=0;i<arrayB.length;i++)
+		{
+			mergedIntArray[indexOfMergedIntArray++]=arrayB[i];
+		}
+		
+		return mergedIntArray;
+	}
+	
+	/**
+	 * parse int array to arraylist
+	 * @param from
+	 * @param to
+	 */
+	
+	static public void insertIntListToArrayList(int[] from,ArrayList<Integer> to)
+	{
+		for(int i : from)
+		{
+			to.add(i);
+		}
+	}
+	
+	/**
+	 * slicing part of circle out from circle
+	 * @param from
+	 * @param to
+	 * @param circleOwner
+	 * @param arrayListOfCellNodes
+	 * @return oneCircle
+	 */
+	
+	static public BoardDataCircleStructure slicingCellNodeCollectionToBoardDataCircleStructure(int from,int to, String circleOwner,ArrayList<CellNode> arrayListOfCellNodes)
+	{
+		BoardDataCircleStructure oneCircle = null;
+		int tempX[]=new int[to-from];
+		int tempY[]=new int[to-from];
+		int index=0;
+		
+		for(int i=from;i<to;i++)
+		{
+			tempX[index]=arrayListOfCellNodes.get(i).currentNodeX;
+			tempY[index]=arrayListOfCellNodes.get(i).currentNodeY;
+			
+			index++;
+		}
+		//removed circle path/CellNodes from the original path collection .
+		
+		oneCircle= new BoardDataCircleStructure(circleOwner,tempX,tempY);
+		return oneCircle;
+	}
+	/**
+	 * removing element from arraylist
+	 * @param from
+	 * @param to
+	 * @param arrayListOfCellNodes
+	 */
+	
+	
+	static public void arrayListOfCellNodesRemove(int from,int to,ArrayList<CellNode> arrayListOfCellNodes)
+	{
+		ArrayList<CellNode> removeTemp=new ArrayList<CellNode>();
+		for (int i=from;i<to;i++)
+		{
+			removeTemp.add(arrayListOfCellNodes.get(i));
+		}
+		arrayListOfCellNodes.removeAll(removeTemp);
+	}
+	
+	
+	/**
+	 * printing circle out 
+	 * @param oneCircle
+	 */
+	static public void printBoardDataCircleStructureCellNode(BoardDataCircleStructure oneCircle)
+	{
+		System.out.println("length : "+oneCircle.positionCells.size());
+		for (CellNode oneCell:oneCircle.positionCells)
+		{
+			System.out.print("X :"+oneCell.currentNodeX);
+			
+			System.out.print("Y :"+oneCell.currentNodeY);
+			System.out.println();
+		}
+		System.out.println();
+		
+		
+	}
+	
+}
+============================================
+src/manifest.mf
+13:35:38_Wednesday_01_April_2015
+============================================
+Main-Class: Main.java============================================
+src/FindCircleAndCapturedCellAlgorithm.java
+13:35:38_Wednesday_01_April_2015
+============================================
+/*
+ * This is a part of the project of COMP30024 Artificial Intelligence, the University of Melbourne. The project is the Game of Squatter and is a group work, the members of the group is list below, so is the rule of the game.
+ */
+
+import java.util.ArrayList;
+
+/**
+ * <b>Class Declaration</b>
+ * <p>
+ * This class is used to find the circle of the board and to count the cell and judge whether it's the final state of the game.
+ * <p>
+ * <b>Rules of Boardgame</b>
+ * <ul>
+ * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is '<i>BLACK</i>'</li>
+ * <li>Board has a size of N*N, which N is greater than 5 (i.e. N > 5)</li>
+ * <li>Top left corner is (0,0), Bottom right coner is (N-1,N-1)</li>
+ * <li>Edges does not count as part of captured territory</li>
+ * <ul>
+ * <li>Only free cells and opponent's cells count as captured cell</li>
+ * <li>Pieces can't be placed in</li>
+ * </ul>
+ * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
+ * <p>
+ * 
+ * @author Bingfeng Liu (bingfengl)
+ * @author An Luo (aluo1)
+ * @version 2.0
+ * @since 2015-03-30
+ */
+public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
+{
+	Board board = null;
+	ArrayList<BoardDataCircleStructure> collectionOfCircle = null;
+	public int[][] trackingInCircle = null;
+	int whiteCaptured;
+	int blackCaptured;
+	int freeCell;
+	String[][] boardBody = null;
+	int boardDimension;
+	
+	/**
+	 * Initialize find circle algorithm  obj
+	 * @param board is the board of this game
+	 */
+	
+	FindCircleAndCapturedCellAlgorithm(Board board)
+	{
+		this.board = board;
+		this.boardBody = board.getBoardBody();
+		this.boardDimension = board.getBoardDimension();
+	}
+	/**
+	 * this function will run find circle and find captured cell and update the information of board
+	 */
+	public void doUpdateBoard()
+	{
+		BoardDataCircleStructure tempOneCircle = null;
+		collectionOfCircle = new ArrayList<BoardDataCircleStructure>();
+		freeCell = 0;
+		// keep track whether if a point is already in circle or not .
+		trackingInCircle = initialize2Darray(0);
+		whiteCaptured = 0;
+		blackCaptured = 0;
+		// trackingVistiedBoard=initialize2Darray(0);
+		// iterating row
+		for (int y = 0; y < boardDimension; y++)
+		{
+			// iterating cols
+			for (int x = 0; x < boardDimension; x++)
+			{
+				// if encounter a cell which is belong to white or black , and it is not currently in the part of any circle .. we use it
+				// as start point to find cirlce
+				if ((boardBody[y][x].equals(Board.WHITE) || boardBody[y][x].equals(Board.BLACK)) && trackingInCircle[y][x] == 0)
+				{
+					tempOneCircle = new BoardDataCircleStructure(boardBody[y][x]);
+					// initial board data circle , parss in x ,y and black or white
+					//finding circle for current cell
+					doFindCircle(tempOneCircle, x, y, boardBody[y][x]);
+					//if circle found per form count capture alg
+					if (tempOneCircle.positionCells.size() > 0)
+					{
+						tempOneCircle.transformCellNodeToIntArray();
+						tempOneCircle.constructLevel();
+						if (tempOneCircle.circleOwner.equals(Board.WHITE))
+						{
+							// System.out.println("White count capture");
+							whiteCaptured += countCapturedCell(tempOneCircle);
+						}
+						
+						else if (tempOneCircle.circleOwner.equals(Board.BLACK))
+						{
+							// System.out.println("Black count capture");
+							blackCaptured += countCapturedCell(tempOneCircle);
+						}
+						collectionOfCircle.add(tempOneCircle);
+						// AidUtility.printBoardDataCircleStructureCellNode(tempOneCircle);
+						//System.out.println("------tracking in circle");
+						//AidUtility.print2DintArray(trackingInCircle, boardDimension);
+						
+					}
+				}
+				else if (boardBody[y][x].equals(Board.FREE))
+				{
+					freeCell += 1;
+				}
+			}
+			board.setBlackCaptured(blackCaptured);
+			board.setWhiteCaptured(whiteCaptured);
+			board.setFreeCell(freeCell);
+			
+			
+		}
+		
+	}
+	
+	/**
+	 * this function will find circle from starting row and col value,
+	 * @param oneCircle used to store cells which forming the circle
+	 * @param startX starting col point of finding circle
+	 * @param startY starting row point of finding circle
+	 * @param whoseCircle state which circle we are finding is belonged to 
+	 * 
+	 */
+	
+	public void doFindCircle(BoardDataCircleStructure oneCircle, int startX, int startY, String whoseCircle)
+	{
+		// ArrayList<CellNode> arrayListOfCellNodes=new ArrayList<CellNode>();
+		// CellNode tempValidCell = null;
+		// -1 ---> original , 0 --> not visited, 1 ---> visited
+		// int [][]trackingVistiedBoard=initialize2Darray(0);
+		// initial value is all -1 which means it is not in queue
+		// int[][] trackingIndex=initialize2Darray(-1);
+		int[] tempClockwiseXY = null;
+		// ArrayList<Integer> circleRangeFrom=new ArrayList<Integer>();
+		// ArrayList<Integer> circleRangeTo=new ArrayList<Integer>();
+		int currentTempX;
+		int currentTempY;
+		int prevTempX;
+		int prevTempY;
+		trackingInCircle[startY][startX] = 1;
+		// trackingVistiedBoard[startY][startX]=-1;
+		// trackingIndex[startY][startX]=0;
+		// -1,-1 means starting cell does not have prev x and prev y
+		oneCircle.positionCells.add(new CellNode(startX, startY, -1, -1, whoseCircle, boardDimension, boardBody));
+		while (oneCircle.positionCells.size() != 0)
+		{
+			tempClockwiseXY = oneCircle.positionCells.get(oneCircle.positionCells.size() - 1).mostClockwisedCellIndex();
+			// means no next cell can be found
+			if (tempClockwiseXY == null)
+			{
+				// set index to -1 means it is not in the queue.
+				trackingInCircle[oneCircle.positionCells.get(oneCircle.positionCells.size() - 1).currentNodeY][oneCircle.positionCells.get(oneCircle.positionCells.size() - 1).currentNodeX] = 0;
+				oneCircle.positionCells.remove(oneCircle.positionCells.size() - 1);
+				continue;
+			}
+			currentTempX = tempClockwiseXY[0];
+			currentTempY = tempClockwiseXY[1];
+			// meet a next point which is already in circle and it is not starting point
+			if (trackingInCircle[currentTempY][currentTempX] == 1 && currentTempX != startX && currentTempY != startY)
+			{
+				continue;
+			}
+			if (currentTempX == startX && currentTempY == startY)
+			{
+				break;
+			}
+			// find a circle before returning to original
+			// make new next node visited m
+			// trackingVistiedBoard[currentTempY][currentTempX]=1;
+			trackingInCircle[currentTempY][currentTempX] = 1;
+			// track current cellnodes index in array
+			// trackingIndex[currentTempY][currentTempX]=oneCircle.positionCells.size();
+			prevTempX = oneCircle.positionCells.get(oneCircle.positionCells.size() - 1).currentNodeX;
+			prevTempY = oneCircle.positionCells.get(oneCircle.positionCells.size() - 1).currentNodeY;
+			oneCircle.positionCells.add(new CellNode(currentTempX, currentTempY, prevTempX, prevTempY, whoseCircle, boardDimension, boardBody));
+			// returned valid next cell won't be the current cell's prev cell
+			// so if returned something that is already in the path ....
+			// we can confirm that there will be another circle .
+		}
+	}
+	
+	// //////////////////////////Count Capture Algorithm//////////////////////////////////
+	
+	/**
+	 * this function count number of captured cell of this circle based on validation array
+	 * @return countCapturedNumber(circleOne, mergeCountBottomUpAndTopDown(countTopDown(circleOne), countBottomUp(circleOne))) ---> merged and count
+	 */
+	
+	public int countCapturedCell(BoardDataCircleStructure circleOne)
+	{
+		return countCapturedNumber(circleOne, mergeCountBottomUpAndTopDown(countTopDown(circleOne), countBottomUp(circleOne)));
+	}
+	
+	/**
+	 * this function count number of captured cell of this circle based on validation array
+	 * @return count captured cells of this circle's onwer 
+	 */
+	
+	public int countCapturedNumber(BoardDataCircleStructure circleOne, int[][] mergedLevelValidation)
+	{
+		int count = 0;
+		int level = 0;
+		// iterate number of levels,skip first and last level
+		int[] tempX = null;
+		int[] tempY = null;
+		for (int i = 1; i < circleOne.circleLevel.length - 1; i++)
+		{
+			tempX = (int[]) circleOne.circleLevel[i][0];
+			tempY = (int[]) circleOne.circleLevel[i][1];
+			// from left to right but skip boarder
+			level = tempY[0];
+			for (int j = tempX[0] + 1; j < tempX[tempX.length - 1]; j++)
+			{ 
+				// if cell is captured and it is marked '-' means captured count
+				if (boardBody[level][j].equals(Board.CAPTURED) && mergedLevelValidation[level][j] == 1)
+				{
+					count++;
+					//mark cells which is in circle ... so we can perform less finding circle + finding capture alg
+					trackingInCircle[level][j] = 1;
+				}
+				// if cell is captured self cell
+				if (mergedLevelValidation[level][j] == 2)
+				{
+					trackingInCircle[level][j] = 1;
+				}
+			}
+		}
+		
+		return count;
+		
+	}
+	
+	/**
+	 * this function perform capture algorithm in topDown manner
+	 * @return levelValidation 
+	 */
+	
+	public int[][] countTopDown(BoardDataCircleStructure circleOne)
+	{
+		int[][] levelValidation = initializeLevelValidation();
+		int numberOfCircleLevel = circleOne.circleLevel.length;
+		// assume x and y array sorted properly by y and x
+		// circleLevel[level][0] ----> x array , circleLevel[level][1] ----> y array
+		// skip first level by just put first level path info in
+		int tempXlevelArray[] = (int[]) circleOne.circleLevel[0][0];
+		// this temp Y level array will contain same value ....
+		int tempYlevelArray[] = (int[]) circleOne.circleLevel[0][1];
+		
+		fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 0, circleOne.circleOwner);
+		
+		for (int i = 1; i < numberOfCircleLevel - 1; i++)
+		{
+			tempXlevelArray = (int[]) circleOne.circleLevel[i][0];
+			tempYlevelArray = (int[]) circleOne.circleLevel[i][1];
+			fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 0, circleOne.circleOwner);
+			fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 1, circleOne.circleOwner);
+			
+		}
+		// put last level in
+		tempXlevelArray = (int[]) circleOne.circleLevel[circleOne.circleLevel.length - 1][0];
+		tempYlevelArray = (int[]) circleOne.circleLevel[circleOne.circleLevel.length - 1][1];
+		fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 0, circleOne.circleOwner);
+		// skip last level by just put last level path info in
+		return levelValidation;
+	}
+	
+	/**
+	 * this function perform capture algorithm in BottomUp manner
+	 * @return levelValidation 
+	 */
+	
+	public int[][] countBottomUp(BoardDataCircleStructure circleOne)
+	{
+		// 1 means free, 0 means not valid , 2 means self cell,in future we mark opponent as 3 and change it to '-' after merge
+		int[][] levelValidation = initializeLevelValidation();
+		int numberOfCircleLevel = circleOne.circleLevel.length;
+		// assume x and y array sorted properly by y and x
+		// skip last level by just put first level path info in
+		int tempXlevelArray[] = (int[]) circleOne.circleLevel[numberOfCircleLevel - 1][0];
+		// this temp Y level array will contain same value ....
+		int tempYlevelArray[] = (int[]) circleOne.circleLevel[numberOfCircleLevel - 1][1];
+		fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 0, circleOne.circleOwner);
+		for (int i = numberOfCircleLevel - 2; i > 0; i--)
+		{
+			tempXlevelArray = (int[]) circleOne.circleLevel[i][0];
+			tempYlevelArray = (int[]) circleOne.circleLevel[i][1];
+			// put in boundary points of this level first
+			fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 0, circleOne.circleOwner);
+			// tempYlevelArray[0] == current level's y value
+			fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 2, circleOne.circleOwner);
+		}
+		// put last level in
+		tempXlevelArray = (int[]) circleOne.circleLevel[0][0];
+		tempYlevelArray = (int[]) circleOne.circleLevel[0][1];
+		fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 0, circleOne.circleOwner);
+		// skip last level by just put last level path info in
+		return levelValidation;
+	}
+	
+	/**
+	 * this function is used to merge two validation array from topDown and bottomUp
+	 * @return resultCountValidation is merged result validation array 
+	 */
+	
+	public int[][] mergeCountBottomUpAndTopDown(int[][] countTopDown, int[][] countBottomUp)
+	{
+		int[][] resultCountValidation = initializeLevelValidation();
+		
+		for (int i = 0; i < boardDimension; i++)
+		{
+			for (int j = 0; j < boardDimension; j++)
+			{
+				// one not valid == all not valid .
+				if (countTopDown[i][j] == 0 && countBottomUp[i][j] == 0)
+				{
+					continue;
+				}
+				// self cell captured
+				if (countTopDown[i][j] == 2 && countBottomUp[i][j] == 2)
+				{
+					resultCountValidation[i][j] = 2;
+					continue;
+				}
+				// valid captured cell
+				resultCountValidation[i][j] = 1;
+			}
+		}
+		return resultCountValidation;
+	}
+	
+	/**
+	 * this function is used to fill validation array with conditions
+	 *
+	 */
+	
+	// following only for reading in board ... so we only determine 'captured' cells .
+	public void fillLevelIntoValidation(int[][] levelValidation, int levelIndex, int[] xPointArray, int conditionNumber, String whoseCircle)
+	{
+		if (conditionNumber == 0)
+		{
+			for (int i = 0; i < xPointArray.length; i++)
+			{
+				levelValidation[levelIndex][xPointArray[i]] = 1;
+			}
+		}
+		// top down decision to add cell into ceiling with comparing to previous level
+		if (conditionNumber == 1)
+		{
+			// only go between this level's max and min x-boundary .
+			// System.out.println("topdown in here");
+			for (int i = xPointArray[0] + 1; i < xPointArray[xPointArray.length - 1]; i++)
+			{
+				// skip this level's boundary x and if above x is ==1 and this board position marked captured ==> good
+				if (levelValidation[levelIndex][i] != 1 && levelValidation[levelIndex - 1][i] != 0 && boardBody[levelIndex][i].equals(Board.CAPTURED))
+				{
+					levelValidation[levelIndex][i] = 1;
+				}
+				// meet self cell inside circle under ceiling ..still include it to ceiling but mark it as 2
+				if (levelValidation[levelIndex][i] != 1 && levelValidation[levelIndex - 1][i] != 0 && boardBody[levelIndex][i].equals(whoseCircle))
+				{
+					levelValidation[levelIndex][i] = 2;
+				}
+				// System.out.println (" sign : "+boardBody[levelIndex][i]+" check : "+boardBody[levelIndex][i].equals(Board.CAPTURED));
+			}
+			// System.out.println();
+		}
+		// bottom up decision to add cell into ceiling with comparing to previous level
+		if (conditionNumber == 2)
+		{ // only go between this level's max and min x-boundary .
+			// System.out.println("bottomup in here");
+			for (int i = xPointArray[0] + 1; i < xPointArray[xPointArray.length - 1]; i++)
+			{
+				// skip this level's boundary x and if above x is ==1 and this board position marked captured ==> good
+				if (levelValidation[levelIndex][i] != 1 && levelValidation[levelIndex + 1][i] != 0 && boardBody[levelIndex][i].equals(Board.CAPTURED))
+				{
+					levelValidation[levelIndex][i] = 1;
+				}
+				if (levelValidation[levelIndex][i] != 1 && levelValidation[levelIndex + 1][i] != 0 && boardBody[levelIndex][i].equals(whoseCircle))
+				{
+					levelValidation[levelIndex][i] = 2;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * it is used to initialize 2d array for validation array with zero
+	 * @return levelValidation
+	 */
+	
+	public int[][] initializeLevelValidation()
+	{
+		int levelValidation[][] = new int[boardDimension][boardDimension];
+		for (int i = 0; i < boardDimension; i++)
+		{
+			for (int j = 0; j < boardDimension; j++)
+			{
+				levelValidation[i][j] = 0;
+			}
+		}
+		return levelValidation;
+	}
+	
+	/**
+	 * it is used to initialize 2d array with a value
+	 * @return levelValidation
+	 */
+	
+	public int[][] initialize2Darray(int initialValue)
+	{
+		int levelValidation[][] = new int[boardDimension][boardDimension];
+		for (int i = 0; i < boardDimension; i++)
+		{
+			for (int j = 0; j < boardDimension; j++)
+			{
+				levelValidation[i][j] = initialValue;
+			}
+		}
+		return levelValidation;
+	}
+}
+============================================
+src/BoardDataCircleStructure.java
+13:35:38_Wednesday_01_April_2015
+============================================
+/**
+ * <b>Class Declaration</b>
+ * <p>
+ * This class is used to find the circle of the board and to count the cell and judge whether it's the final state of the game.
+ * <p>
+ * <b>Rules of Boardgame</b>
+ * <ul>
+ * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is '<i>BLACK</i>'</li>
+ * <li>Board has a size of N*N, which N is greater than 5 (i.e. N > 5)</li>
+ * <li>Top left corner is (0,0), Bottom right coner is (N-1,N-1)</li>
+ * <li>Edges does not count as part of captured territory</li>
+ * <ul>
+ * <li>Only free cells and opponent's cells count as captured cell</li>
+ * <li>Pieces can't be placed in</li>
+ * </ul>
+ * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
+ * <p>
+ * 
+ * @author Bingfeng Liu (bingfengl)
+ * @author An Luo (aluo1)
+ * @version 2.0
+ * @since 2015-03-30
+ */
+import java.util.ArrayList;
+
+//used to store cycle data
+public class BoardDataCircleStructure 
+{
+	//black or white
+	public String circleOwner="";
+	int capturedCellNumber=0;
+	int circlePointsNumber=0;
+	//used to stored points which formed the cycle
+	//they are all sorted
+	public int[] xPointArray=null;
+	public int[] yPointArray=null;
+	public ArrayList<CellNode> positionCells=new ArrayList<CellNode>();
+	//usede to store points which captured within this cycle
+	public int[] capturedxPointArray=null;
+	public int[] capturedyPointArray=null;
+	//cast to int[]
+	public Object[][] circleLevel =null; 
+	
+	
+	/**
+	 * Initialize BoardDataCircleStructure obj
+	 */
+	
+	BoardDataCircleStructure()
+	{
+		
+	}
+	
+	/**
+	 * Initialize BoardDataCircleStructure obj
+	 * @param circleOnwer it specifies which onwer is current circle
+	 */
+	BoardDataCircleStructure(String circleOwner)
+	{
+		this.circleOwner=circleOwner;
+	}
+	
+	/**
+	 * Initialize BoardDataCircleStructure obj
+	 * @param xPointArray it set the col values for this circle
+	 * @param yPointArray it set the row valus for this circle
+	 */
+	
+	BoardDataCircleStructure(String circleOwner,int []xPointArray,int []yPointArray)
+	{
+		this.circleOwner = circleOwner;
+		this.xPointArray = xPointArray;
+		this.yPointArray= yPointArray;
+	}
+	
+	/**
+	 * Initialize BoardDataCircleStructure obj
+	 * @param xPointArray it set the col values for this circle
+	 * @param yPointArray it set the row valus for this circle
+	 */
+	
+	BoardDataCircleStructure(String cycleOwner,ArrayList<Integer>xPointArrayList,ArrayList<Integer> yPointArrayList)
+	{
+		this.circleOwner = cycleOwner;
+		this.xPointArray = xPointArray;
+		this.yPointArray= yPointArray;
+	}
+	
+	/**
+	 * this function construct level of this circle 
+	 */
+	
+	public void constructLevel()
+	{
+		AidUtility.sortByYandX(xPointArray, yPointArray);
+		//System.out.println("debugging array");
+		//AidUtility.printPositionArray(xPointArray, yPointArray);
+		int[] tempLevelPointY= AidUtility.getUniquePointInArray(yPointArray);
+		ArrayList<Integer> tempX = new ArrayList<Integer>();
+		ArrayList<Integer> tempY = new ArrayList<Integer>();
+		//System.out.println("tempLevel:");
+		//AidUtility.printPointArray(tempLevelPointY);
+		circleLevel = new Object[tempLevelPointY.length][2];
+		for (int i =0;i<tempLevelPointY.length;i++)
+		{
+			for(int j = 0 ; j<yPointArray.length;j++)
+			{
+				//put col value of same y into tempX and tempY
+				if(tempLevelPointY[i]==yPointArray[j])
+				{
+					tempX.add(xPointArray[j]);
+					tempY.add(yPointArray[j]);
+				}
+			}
+			//0 = level x array, 1= y array,  need to be casted 
+			//add same level points into circlelevel
+			circleLevel[i][0]=AidUtility.parseIntArrayList(tempX);
+			circleLevel[i][1]=AidUtility.parseIntArrayList(tempY);
+			tempX.clear();
+			tempY.clear();
+		}
+		//System.out.println("circle array");
+		//printCircleLevel();
+	}
+	
+	/**
+	 * this function print out level of this circle 
+	 */
+	public void printCircleLevel()
+	{
+		for (int i =0;i<circleLevel.length;i++)
+		{
+			AidUtility.printPositionArray((int[])circleLevel[i][0],(int[])circleLevel[i][1]);
+			//System.out.println("----");
+		}
+	}
+	
+	/**
+	 * this function transform CellNode data to normal array
+	 */
+	public void transformCellNodeToIntArray()
+	{
+		CellNode tempCellNode = null;
+		xPointArray=new int[positionCells.size()];
+		yPointArray=new int[positionCells.size()];
+		//System.out.println("transforming");
+		for(int i=0;i<positionCells.size();i++)
+		{
+			tempCellNode=positionCells.get(i);
+			xPointArray[i]=tempCellNode.currentNodeX;
+			yPointArray[i]=tempCellNode.currentNodeY;
+		}
+	}
+	
+	
+}

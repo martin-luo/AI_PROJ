@@ -326,7 +326,6 @@ public class Board
 			catch(Exception e)
 			{
 				System.out.println("Error while reading file line by line Check your Input Format");
-				System.exit(0);
 			}
 			//System.out.println("boardDimension------ :  " + getBoardDimension());
 			
