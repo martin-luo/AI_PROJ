@@ -5,6 +5,11 @@ public class SimpleBoardCountingAlgorithm extends BoardUpdateAlgorithm
 	int blackCaptured;
 	int freeCell;
 	
+	/**
+	 * Used to initialize the SimpleBoardCountingAlgorithm obj
+	 * @param board 
+	 */
+	
 	SimpleBoardCountingAlgorithm(Board board)
 	{
 		this.board=board;
@@ -13,11 +18,18 @@ public class SimpleBoardCountingAlgorithm extends BoardUpdateAlgorithm
 		freeCell=0;
 	}
 	
+	/**
+	 * this function will run find circle and find captured cell and update the information of board
+	 */
+	
 	public void doUpdateBoard()
 	{
 		countCell();
 	}
 	
+	/**
+	 * count cell use simple algorithm
+	 */
 	public void countCell()
 	{
 		System.out.println("Simple");
