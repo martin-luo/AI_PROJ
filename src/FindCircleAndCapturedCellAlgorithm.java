@@ -1,6 +1,9 @@
 /*
  * This is a part of the project of COMP30024 Artificial Intelligence, the University of Melbourne. The project is the Game of Squatter and is a group work, the members of the group is list below, so is the rule of the game.
  */
+
+import java.util.ArrayList;
+
 /**
  * <b>Class Declaration</b>
  * <p>
@@ -24,11 +27,6 @@
  * @version 2.0
  * @since 2015-03-30
  */
-
-
-import java.util.ArrayList;
-
-
 public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 {
 	Board board = null;

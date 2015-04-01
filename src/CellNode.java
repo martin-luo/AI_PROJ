@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * <b>Class Declaration</b>
  * <p>
@@ -21,8 +23,6 @@
  * @version 2.0
  * @since 2015-03-30
  */
-
-import java.util.ArrayList;
 
 public class CellNode 
 {

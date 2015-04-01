@@ -1,3 +1,10 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * <b>Class Declaration</b>
  * <p>
@@ -21,24 +28,16 @@
  * @version 2.0
  * @since 2015-03-30
  */
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
-public class Main 
+public class Main
 {
-
+	
 	public static void main(String[] args)
 	{
-	    Board newBoard = new Board();
-	    //newBoard.setFinderAlgorithm(new SimpleBoardCountingAlgorithm(newBoard));
-	    newBoard.setFinderAlgorithm(new FindCircleAndCapturedCellAlgorithm(newBoard));
-	    newBoard.updateBoard();
-	    newBoard.doOutput();
+		Board newBoard = new Board();
+		// newBoard.setFinderAlgorithm(new SimpleBoardCountingAlgorithm(newBoard));
+		newBoard.setFinderAlgorithm(new FindCircleAndCapturedCellAlgorithm(newBoard));
+		newBoard.updateBoard();
+		newBoard.doOutput();
 	}
-
+	
 }
