@@ -1,3 +1,27 @@
+/**
+ * <b>Class Declaration</b>
+ * <p>
+ * This class is used to find the circle of the board and to count the cell and judge whether it's the final state of the game.
+ * <p>
+ * <b>Rules of Boardgame</b>
+ * <ul>
+ * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is '<i>BLACK</i>'</li>
+ * <li>Board has a size of N*N, which N is greater than 5 (i.e. N > 5)</li>
+ * <li>Top left corner is (0,0), Bottom right coner is (N-1,N-1)</li>
+ * <li>Edges does not count as part of captured territory</li>
+ * <ul>
+ * <li>Only free cells and opponent's cells count as captured cell</li>
+ * <li>Pieces can't be placed in</li>
+ * </ul>
+ * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
+ * <p>
+ * 
+ * @author Bingfeng Liu (bingfengl)
+ * @author An Luo (aluo1)
+ * @version 2.0
+ * @since 2015-03-30
+ */
+
 import java.util.ArrayList;
 
 public class CellNode 
@@ -15,6 +39,17 @@ public class CellNode
 	ArrayList<Integer> validAdjCellX=null;
 	ArrayList<Integer> validAdjCellY=null;
 	
+	/**
+	 * Used to initialize the CellNode
+	 * @param currentNodeX this node's X
+	 * @param currentNodeY this node's y
+	 * @param prevNodeX its prev x
+	 * @param prevNodeY its prev y
+	 * @param whoseCircle onwer of this circle
+	 * @param boardDimension 
+	 * @param boardBody
+	 */
+	
 	CellNode(int currentNodeX,int currentNodeY,int prevNodeX,int prevNodeY,String whoseCircle,int boardDimension,String[][] boardBody)
 	{
 		this.boardDimension=boardDimension;
@@ -29,25 +64,55 @@ public class CellNode
 		
 	}
 	
+	/**
+	 * this function is used to return nextNodeX 
+	 * 
+	 * @return nextNodeX
+	 */
+	
 	public int getNextNodeX() 
 	{
 		return nextNodeX;
 	}
+	
+	/**
+	 * this function is used to set nextNodeX 
+	 * 
+	 * @param nextNodeX
+	 */
 
 	public void setNextNodeX(int nextNodeX) 
 	{
 		this.nextNodeX = nextNodeX;
 	}
 
+	/**
+	 * this function is used to return nextNodeY
+	 * 
+	 * @return nextNodeY
+	 */
+	
 	public int getNextNodeY() 
 	{
 		return nextNodeY;
 	}
 
+		
+	/**
+	 * this function is used to set nextNodeY
+	 * 
+	 * @param nextNodeX
+	 */
 	public void setNextNodeY(int nextNodeY)
 	{
 		this.nextNodeY = nextNodeY;
 	}
+	
+	/**
+	 * this function is used to return set of validCell x and y
+	 * 
+	 * @return validCell
+	 */
 	
 	public int[] getValidNextCellClockwise()
 	{
@@ -56,6 +121,12 @@ public class CellNode
 		
 		return validCell;
 	}
+	
+	/**
+	 * this function is used to generate current cell's 8 adjacent cell 
+	 * 
+	 * @param whoseCircle is used to determine who is the owner of this circle 
+	 */
 	
 	public void fillValidAdjcentCell(String whoseCircle)
 	{
@@ -66,7 +137,9 @@ public class CellNode
 		int tempX;
 		int tempY;
 		//clock wise ,(x,y)
+		//8 directions 
 		int[][] directionList=new int[][]{{-1,-1},{0,-1},{1,-1},{1,0},{1,1},{0,1},{-1,1},{-1,0}};
+		//iterate through 8 directions
 		for (int i=0;i<numberOfDirections;i++)
 		{
 			tempDirectionX=directionList[i][0];
@@ -77,6 +150,7 @@ public class CellNode
 			{
 				continue;
 			}
+			//8 direction which is same color as the starting cell
 			if(boardBody[tempY][tempX].equals(whoseCircle))
 			{
 				// with respect to current node .. all its surrounding which is not exceed board limites will be added start from top left
@@ -89,6 +163,12 @@ public class CellNode
 		}
 	}
 	//return position of prev cells in the current adj array 
+	
+	/**
+	 * clockwise is based on this cell's previous cell ,so this function get index of prev cell in 8 directions cell array
+	 * 
+	 * @return index of prev cell in 8 directions array 
+	 */
 	
 	public int prevIndexInValidAdj()
 	{
@@ -103,6 +183,12 @@ public class CellNode
 		}
 		return index;
 	}
+	
+	/**
+	 * get the valid most clockwise adjacent cell available form current cell
+	 * 
+	 * @return vadlidXY its first index is valid adjacent cell's x , second index is y
+	 */
 	
 	public int[] mostClockwisedCellIndex()
 	{

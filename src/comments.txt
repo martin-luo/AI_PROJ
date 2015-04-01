@@ -1,6 +1,6 @@
 Author: 
 Student Name: An Luo
-Login ID : 
+Login ID : aluo1
 Student Name: Bingfeng liu
 Login ID : bingfengl
 
@@ -304,6 +304,10 @@ AidUtility.java ---> array printing and sorting function normally for debug
 Board.java ---> store board information
 BoardDataCircleStructure.java ---> store circle information
 
+BoardUpdateAlgorithm.java ---> board stat checking algorithm both inherit it
+so we can swap to easy algorithm and 'find circle and find capture ' alg
+to check out output 
+
 FindCircleAndCapturedCellAlgorithm.java ---> finding circle + finding captured
 CeilingDataStructure.java ---> store 'indicator'/'ceiling' array for captured alg
 CellNode.java ---> for finding circle alg to store cell's adjacent cells
@@ -312,9 +316,10 @@ CellNode.java ---> for finding circle alg to store cell's adjacent cells
 SimpleBoardCountingAlgorithm.java ---> simple algorithm to find captured cell
 
 
+
 Libraries used : only the built in libraries are used e.g. Arraylist
 
-
+Space complexity : O(n^2) ---> n == dimension of board 
 
 
 

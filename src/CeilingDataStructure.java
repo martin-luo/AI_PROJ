@@ -20,8 +20,8 @@
  * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
  * <p>
  * 
- * @author Bingfeng Liu (bingfengl@student.unimelb.edu.au)
- * @author An Luo (aluo1@student.unimelb.edu.au)
+ * @author Bingfeng Liu (bingfengl)
+ * @author An Luo (aluo1)
  * @version 2.0
  * @since 2015-03-30
  */

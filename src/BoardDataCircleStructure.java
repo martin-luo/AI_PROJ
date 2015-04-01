@@ -1,3 +1,26 @@
+/**
+ * <b>Class Declaration</b>
+ * <p>
+ * This class is used to find the circle of the board and to count the cell and judge whether it's the final state of the game.
+ * <p>
+ * <b>Rules of Boardgame</b>
+ * <ul>
+ * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is '<i>BLACK</i>'</li>
+ * <li>Board has a size of N*N, which N is greater than 5 (i.e. N > 5)</li>
+ * <li>Top left corner is (0,0), Bottom right coner is (N-1,N-1)</li>
+ * <li>Edges does not count as part of captured territory</li>
+ * <ul>
+ * <li>Only free cells and opponent's cells count as captured cell</li>
+ * <li>Pieces can't be placed in</li>
+ * </ul>
+ * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
+ * <p>
+ * 
+ * @author Bingfeng Liu (bingfengl)
+ * @author An Luo (aluo1)
+ * @version 2.0
+ * @since 2015-03-30
+ */
 import java.util.ArrayList;
 
 //used to store cycle data
@@ -18,17 +41,30 @@ public class BoardDataCircleStructure
 	//cast to int[]
 	public Object[][] circleLevel =null; 
 	
+	
+	/**
+	 * Initialize BoardDataCircleStructure obj
+	 */
+	
 	BoardDataCircleStructure()
 	{
 		
 	}
 	
-	
+	/**
+	 * Initialize BoardDataCircleStructure obj
+	 * @param circleOnwer it specifies which onwer is current circle
+	 */
 	BoardDataCircleStructure(String circleOwner)
 	{
 		this.circleOwner=circleOwner;
 	}
-
+	
+	/**
+	 * Initialize BoardDataCircleStructure obj
+	 * @param xPointArray it set the col values for this circle
+	 * @param yPointArray it set the row valus for this circle
+	 */
 	
 	BoardDataCircleStructure(String circleOwner,int []xPointArray,int []yPointArray)
 	{
@@ -37,12 +73,22 @@ public class BoardDataCircleStructure
 		this.yPointArray= yPointArray;
 	}
 	
+	/**
+	 * Initialize BoardDataCircleStructure obj
+	 * @param xPointArray it set the col values for this circle
+	 * @param yPointArray it set the row valus for this circle
+	 */
+	
 	BoardDataCircleStructure(String cycleOwner,ArrayList<Integer>xPointArrayList,ArrayList<Integer> yPointArrayList)
 	{
 		this.circleOwner = cycleOwner;
 		this.xPointArray = xPointArray;
 		this.yPointArray= yPointArray;
 	}
+	
+	/**
+	 * this function construct level of this circle 
+	 */
 	
 	public void constructLevel()
 	{
@@ -59,6 +105,7 @@ public class BoardDataCircleStructure
 		{
 			for(int j = 0 ; j<yPointArray.length;j++)
 			{
+				//put col value of same y into tempX and tempY
 				if(tempLevelPointY[i]==yPointArray[j])
 				{
 					tempX.add(xPointArray[j]);
@@ -66,6 +113,7 @@ public class BoardDataCircleStructure
 				}
 			}
 			//0 = level x array, 1= y array,  need to be casted 
+			//add same level points into circlelevel
 			circleLevel[i][0]=AidUtility.parseIntArrayList(tempX);
 			circleLevel[i][1]=AidUtility.parseIntArrayList(tempY);
 			tempX.clear();
@@ -75,7 +123,9 @@ public class BoardDataCircleStructure
 		//printCircleLevel();
 	}
 	
-	
+	/**
+	 * this function print out level of this circle 
+	 */
 	public void printCircleLevel()
 	{
 		for (int i =0;i<circleLevel.length;i++)
@@ -85,7 +135,9 @@ public class BoardDataCircleStructure
 		}
 	}
 	
-	
+	/**
+	 * this function transform CellNode data to normal array
+	 */
 	public void transformCellNodeToIntArray()
 	{
 		CellNode tempCellNode = null;

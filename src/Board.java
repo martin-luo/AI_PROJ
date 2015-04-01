@@ -1,3 +1,27 @@
+/**
+ * <b>Class Declaration</b>
+ * <p>
+ * This class is used to find the circle of the board and to count the cell and judge whether it's the final state of the game.
+ * <p>
+ * <b>Rules of Boardgame</b>
+ * <ul>
+ * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is '<i>BLACK</i>'</li>
+ * <li>Board has a size of N*N, which N is greater than 5 (i.e. N > 5)</li>
+ * <li>Top left corner is (0,0), Bottom right coner is (N-1,N-1)</li>
+ * <li>Edges does not count as part of captured territory</li>
+ * <ul>
+ * <li>Only free cells and opponent's cells count as captured cell</li>
+ * <li>Pieces can't be placed in</li>
+ * </ul>
+ * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
+ * <p>
+ * 
+ * @author Bingfeng Liu (bingfengl)
+ * @author An Luo (aluo1)
+ * @version 2.0
+ * @since 2015-03-30
+ */
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -186,6 +210,13 @@ public class Board
 		boardBody[row][col] = sign;
 	}
 	
+	/**
+	 * checking col number is valid with board dimension
+	 * 
+	 * @param xCount
+	 * 
+	 */
+	
 	public void checkxNumber(int xCount)
 	{
 		if (xCount == boardDimension)
@@ -200,6 +231,14 @@ public class Board
 		}
 		
 	}
+	
+	/**
+	 * checking row number is valid with board dimension
+	 * 
+	 * @param yCount
+	 * 
+	 */
+	
 	
 	public void checkyNumber(int yCount)
 	{
@@ -225,6 +264,7 @@ public class Board
 	 *            the element to be validated.
 	 * @return true if the cell is valid, otherwise false
 	 */
+	
 	public boolean checkCellValidation(String cell)
 	{
 		if (cell.equals(BLACK))
@@ -248,6 +288,10 @@ public class Board
 			return false;
 		}
 	}
+	
+	/**
+	 * parse system in to 2d string array 
+	 */
 	
 	public void doParseInput()
 	{
@@ -325,6 +369,9 @@ public class Board
 	
 	// remembe bo
 	// transform 1D array of 'signs' to 2d array
+	/**
+	 * turn 1d string array to 2d
+	 */
 	public void fillboardBody(ArrayList<String> tempStringArray)
 	{
 		int x = 0, y = 0;
@@ -339,6 +386,10 @@ public class Board
 		}
 	}
 	
+	/**
+	 * print board information
+	 */
+	
 	public void printboardBody(String boardBody[][])
 	{
 		for (int i = 0; i < boardDimension; i++)
@@ -351,28 +402,57 @@ public class Board
 		}
 	}
 	
+	/**
+	 * check cell is free
+	 * @param y is row
+	 * @param x is col
+	 * @param  bollean true or false
+	 */
+	
 	public boolean isFreeCell(int y, int x)
 	{
 		return boardBody[y][x].equals(FREE);
 	}
+	
+	/**
+	 * check cell is captured
+	 * @param y is row
+	 * @param x is col
+	 * @param  bollean true or false
+	 */
 	
 	public boolean isCapturedCell(int y, int x)
 	{
 		return boardBody[y][x].equals(CAPTURED);
 	}
 	
+	/**
+	 * check cell is black
+	 * @param y is row
+	 * @param x is col
+	 * @param  bollean true or false
+	 */
+	
 	public boolean isBlackCell(int y, int x)
 	{
 		return boardBody[y][x].equals(BLACK);
 	}
+	
+	/**
+	 * check cell is white
+	 * @param y is row
+	 * @param x is col
+	 * @param  bollean true or false
+	 */
 	
 	public boolean isWhiteCell(int y, int x)
 	{
 		return boardBody[y][x].equals(WHITE);
 	}
 	
-	// //////////////////////////find circle
-	// Algorithm/////////////////////////////////////
+	/**
+	 * print reuslt output based on board state 
+	 */
 	
 	public void doOutput()
 	{

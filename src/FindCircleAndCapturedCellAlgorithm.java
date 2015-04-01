@@ -1,9 +1,6 @@
 /*
  * This is a part of the project of COMP30024 Artificial Intelligence, the University of Melbourne. The project is the Game of Squatter and is a group work, the members of the group is list below, so is the rule of the game.
  */
-
-import java.util.ArrayList;
-
 /**
  * <b>Class Declaration</b>
  * <p>
@@ -22,11 +19,16 @@ import java.util.ArrayList;
  * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
  * <p>
  * 
- * @author Bingfeng Liu (bingfengl@student.unimelb.edu.au)
- * @author An Luo (aluo1@student.unimelb.edu.au)
+ * @author Bingfeng Liu (bingfengl)
+ * @author An Luo (aluo1)
  * @version 2.0
  * @since 2015-03-30
  */
+
+
+import java.util.ArrayList;
+
+
 public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 {
 	Board board = null;
@@ -38,13 +40,20 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 	String[][] boardBody = null;
 	int boardDimension;
 	
+	/**
+	 * Initialize find circle algorithm  obj
+	 * @param board is the board of this game
+	 */
+	
 	FindCircleAndCapturedCellAlgorithm(Board board)
 	{
 		this.board = board;
 		this.boardBody = board.getBoardBody();
 		this.boardDimension = board.getBoardDimension();
 	}
-	
+	/**
+	 * this function will run find circle and find captured cell and update the information of board
+	 */
 	public void doUpdateBoard()
 	{
 		BoardDataCircleStructure tempOneCircle = null;
@@ -55,10 +64,10 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 		whiteCaptured = 0;
 		blackCaptured = 0;
 		// trackingVistiedBoard=initialize2Darray(0);
-		// y
+		// iterating row
 		for (int y = 0; y < boardDimension; y++)
 		{
-			// x
+			// iterating cols
 			for (int x = 0; x < boardDimension; x++)
 			{
 				// if encounter a cell which is belong to white or black , and it is not currently in the part of any circle .. we use it
@@ -67,7 +76,9 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 				{
 					tempOneCircle = new BoardDataCircleStructure(boardBody[y][x]);
 					// initial board data circle , parss in x ,y and black or white
+					//finding circle for current cell
 					doFindCircle(tempOneCircle, x, y, boardBody[y][x]);
+					//if circle found per form count capture alg
 					if (tempOneCircle.positionCells.size() > 0)
 					{
 						tempOneCircle.transformCellNodeToIntArray();
@@ -98,11 +109,20 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 			board.setBlackCaptured(blackCaptured);
 			board.setWhiteCaptured(whiteCaptured);
 			board.setFreeCell(freeCell);
-			;
+			
 			
 		}
 		
 	}
+	
+	/**
+	 * this function will find circle from starting row and col value,
+	 * @param oneCircle used to store cells which forming the circle
+	 * @param startX starting col point of finding circle
+	 * @param startY starting row point of finding circle
+	 * @param whoseCircle state which circle we are finding is belonged to 
+	 * 
+	 */
 	
 	public void doFindCircle(BoardDataCircleStructure oneCircle, int startX, int startY, String whoseCircle)
 	{
@@ -162,10 +182,21 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 	}
 	
 	// //////////////////////////Count Capture Algorithm//////////////////////////////////
+	
+	/**
+	 * this function count number of captured cell of this circle based on validation array
+	 * @return countCapturedNumber(circleOne, mergeCountBottomUpAndTopDown(countTopDown(circleOne), countBottomUp(circleOne))) ---> merged and count
+	 */
+	
 	public int countCapturedCell(BoardDataCircleStructure circleOne)
 	{
 		return countCapturedNumber(circleOne, mergeCountBottomUpAndTopDown(countTopDown(circleOne), countBottomUp(circleOne)));
 	}
+	
+	/**
+	 * this function count number of captured cell of this circle based on validation array
+	 * @return count captured cells of this circle's onwer 
+	 */
 	
 	public int countCapturedNumber(BoardDataCircleStructure circleOne, int[][] mergedLevelValidation)
 	{
@@ -181,12 +212,15 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 			// from left to right but skip boarder
 			level = tempY[0];
 			for (int j = tempX[0] + 1; j < tempX[tempX.length - 1]; j++)
-			{ // boardBody[y][x]
+			{ 
+				// if cell is captured and it is marked '-' means captured count
 				if (boardBody[level][j].equals(Board.CAPTURED) && mergedLevelValidation[level][j] == 1)
 				{
 					count++;
+					//mark cells which is in circle ... so we can perform less finding circle + finding capture alg
 					trackingInCircle[level][j] = 1;
 				}
+				// if cell is captured self cell
 				if (mergedLevelValidation[level][j] == 2)
 				{
 					trackingInCircle[level][j] = 1;
@@ -197,6 +231,11 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 		return count;
 		
 	}
+	
+	/**
+	 * this function perform capture algorithm in topDown manner
+	 * @return levelValidation 
+	 */
 	
 	public int[][] countTopDown(BoardDataCircleStructure circleOne)
 	{
@@ -227,6 +266,11 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 		return levelValidation;
 	}
 	
+	/**
+	 * this function perform capture algorithm in BottomUp manner
+	 * @return levelValidation 
+	 */
+	
 	public int[][] countBottomUp(BoardDataCircleStructure circleOne)
 	{
 		// 1 means free, 0 means not valid , 2 means self cell,in future we mark opponent as 3 and change it to '-' after merge
@@ -255,6 +299,11 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 		return levelValidation;
 	}
 	
+	/**
+	 * this function is used to merge two validation array from topDown and bottomUp
+	 * @return resultCountValidation is merged result validation array 
+	 */
+	
 	public int[][] mergeCountBottomUpAndTopDown(int[][] countTopDown, int[][] countBottomUp)
 	{
 		int[][] resultCountValidation = initializeLevelValidation();
@@ -268,7 +317,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 				{
 					continue;
 				}
-				// self cell
+				// self cell captured
 				if (countTopDown[i][j] == 2 && countBottomUp[i][j] == 2)
 				{
 					resultCountValidation[i][j] = 2;
@@ -281,6 +330,11 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 		return resultCountValidation;
 	}
 	
+	/**
+	 * this function is used to fill validation array with conditions
+	 *
+	 */
+	
 	// following only for reading in board ... so we only determine 'captured' cells .
 	public void fillLevelIntoValidation(int[][] levelValidation, int levelIndex, int[] xPointArray, int conditionNumber, String whoseCircle)
 	{
@@ -291,7 +345,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 				levelValidation[levelIndex][xPointArray[i]] = 1;
 			}
 		}
-		// top down
+		// top down decision to add cell into ceiling with comparing to previous level
 		if (conditionNumber == 1)
 		{
 			// only go between this level's max and min x-boundary .
@@ -312,7 +366,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 			}
 			// System.out.println();
 		}
-		// bottom up
+		// bottom up decision to add cell into ceiling with comparing to previous level
 		if (conditionNumber == 2)
 		{ // only go between this level's max and min x-boundary .
 			// System.out.println("bottomup in here");
@@ -331,6 +385,11 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 		}
 	}
 	
+	/**
+	 * it is used to initialize 2d array for validation array with zero
+	 * @return levelValidation
+	 */
+	
 	public int[][] initializeLevelValidation()
 	{
 		int levelValidation[][] = new int[boardDimension][boardDimension];
@@ -343,6 +402,11 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 		}
 		return levelValidation;
 	}
+	
+	/**
+	 * it is used to initialize 2d array with a value
+	 * @return levelValidation
+	 */
 	
 	public int[][] initialize2Darray(int initialValue)
 	{
