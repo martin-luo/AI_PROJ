@@ -1,7 +1,16 @@
 /**
+ * This is a part of the project of COMP30024 Artificial Intelligence, the University of Melbourne. The project is the Game of Squatter and is a group work, the members of the group is list below, so is the rule of the game.
+ */
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+/**
  * <b>Class Declaration</b>
  * <p>
- * This class is used to find the circle of the board and to count the cell and judge whether it's the final state of the game.
+ * This class contains the methods used to build a board and to update the board.
  * <p>
  * <b>Rules of Boardgame</b>
  * <ul>
@@ -16,17 +25,11 @@
  * <li>Board is read from stdin (i.e. java Main < input)</li> </ul>
  * <p>
  * 
- * @author Bingfeng Liu (bingfengl)
- * @author An Luo (aluo1)
+ * @author Bingfeng Liu (bingfengl@student.unimelb.edu.au)
+ * @author An Luo (aluo1@student.unimelb.edu.au)
  * @version 2.0
- * @since 2015-03-30
+ * @since 2015-03-14
  */
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
 public class Board
 {
 	/** The word used for white player. */
@@ -38,20 +41,19 @@ public class Board
 	/** The word used for free cell. */
 	public static String FREE = "+";
 	/** The dimension of the board. */
-	public int boardDimension = 0;
+	private int boardDimension = 0;
 	
 	/** The number of free cell on the board. */
-	int freeCell = 0;
+	private int freeCell = 0;
 	/** The number of cell captured by white player. */
-	int whiteCaptured = 0;
+	private int whiteCaptured = 0;
 	/** The number of cell captured by black player. */
-	int blackCaptured = 0;
+	private int blackCaptured = 0;
 	
 	/** The board. */
-	public String[][] boardBody = null;
+	private String[][] boardBody = null;
 	/** Used to track point is already in one circle path or not. */
 	public int[][] trackingInCircle = null;
-	/** Used to store the data of circle. */
 	/** Used to call the board update algorithms. */
 	public BoardUpdateAlgorithm updateAlgorithm = null;
 	
@@ -157,11 +159,20 @@ public class Board
 		doParseInput();
 	}
 	
+	/**
+	 * Choose the wanted board update algorithm.
+	 * 
+	 * @param updateAlgorithm
+	 *            the algorithm the board game will use.
+	 */
 	public void setFinderAlgorithm(BoardUpdateAlgorithm updateAlgorithm)
 	{
 		this.updateAlgorithm = updateAlgorithm;
 	}
 	
+	/**
+	 * Use the algorithm to update the state of board.
+	 */
 	public void updateBoard()
 	{
 		updateAlgorithm.doUpdateBoard();
@@ -211,12 +222,13 @@ public class Board
 	}
 	
 	/**
-	 * checking col number is valid with board dimension
+	 * Check whether the number of row is the same as the dimension specified.
+	 * 
+	 * If the number of row is different from the dimension whose value is got from the first row of input file, notify the user then exit.
 	 * 
 	 * @param xCount
-	 * 
+	 *            the number of row
 	 */
-	
 	public void checkxNumber(int xCount)
 	{
 		if (xCount == boardDimension)
@@ -233,13 +245,13 @@ public class Board
 	}
 	
 	/**
-	 * checking row number is valid with board dimension
+	 * Check whether the number of cell in each row is the same as the dimension specified.
+	 * 
+	 * If the number of cell of each row is different from the dimension whose value is got from the first row of input, notify the user then exit.
 	 * 
 	 * @param yCount
-	 * 
+	 *            the number of cell of row.
 	 */
-	
-	
 	public void checkyNumber(int yCount)
 	{
 		if (yCount == boardDimension)
@@ -264,7 +276,6 @@ public class Board
 	 *            the element to be validated.
 	 * @return true if the cell is valid, otherwise false
 	 */
-	
 	public boolean checkCellValidation(String cell)
 	{
 		if (cell.equals(BLACK))
@@ -290,12 +301,10 @@ public class Board
 	}
 	
 	/**
-	 * parse system in to 2d string array 
+	 * Read the input from standard input and put the satisfied value into an arraylist then add it to the boardBody.
 	 */
-	
 	public void doParseInput()
 	{
-
 		int rowCount = 0;
 		int colCount = 0;
 		
@@ -317,18 +326,17 @@ public class Board
 			while (!(line = bufferReader.readLine()).equals(""))
 			{
 				
-
-				line=line.replace(" ","").replace("\t","");
+				line = line.replace(" ", "").replace("\t", "");
 				parts = line.split("");
-				colCount=parts.length-1;
+				colCount = parts.length - 1;
 				// If it's the first line of the board, make the prevYCount
 				// equal to yCount.
 				checkxNumber(colCount);
-				//System.out.println("" + line);
-				//need to skip first one ,split("") first one is ""
+				// System.out.println("" + line);
+				// need to skip first one ,split("") first one is ""
 				for (int i = 1; i < parts.length; i++)
 				{
-					//System.out.println("i: "+i+" sign : "+parts[i]+"<-" +"level : "+tempStringArray.size());
+					// System.out.println("i: "+i+" sign : "+parts[i]+"<-" +"level : "+tempStringArray.size());
 					// If the element is valid, add it to the temporary array,
 					// otherwise notify the user then exit.
 					if (checkCellValidation(parts[i]))
@@ -337,7 +345,7 @@ public class Board
 					}
 					else
 					{
-						System.out.println("X.X ---> Error:Unexpected types on position (" + (i-1) + "," + rowCount + "). sign : " + parts[i]+"<-");
+						System.out.println("X.X ---> Error:Unexpected types on position (" + (i - 1) + "," + rowCount + "). sign : " + parts[i] + "<-");
 						System.out.println("Please make sure the input contains only these four types: ");
 						System.out.println("\"" + BLACK + "\" \"" + WHITE + "\" \"" + CAPTURED + "\" \"" + FREE + "\"");
 						
@@ -352,7 +360,7 @@ public class Board
 		catch (Exception e)
 		{
 			
-			System.out.println("Error while reading file line by line Check your Input Format" );
+			System.out.println("Error while reading file line by line Check your Input Format");
 			System.exit(0);
 		}
 		
@@ -367,10 +375,11 @@ public class Board
 		// printboardBody(boardBody);
 	}
 	
-	// remembe bo
-	// transform 1D array of 'signs' to 2d array
 	/**
-	 * turn 1d string array to 2d
+	 * Transform 1D array of 'signs' to 2d array boardBody
+	 * 
+	 * @param tempStringArray
+	 *            the arraylist contains all the satisfied value of the board.
 	 */
 	public void fillboardBody(ArrayList<String> tempStringArray)
 	{
@@ -387,9 +396,11 @@ public class Board
 	}
 	
 	/**
-	 * print board information
+	 * Print out the board.
+	 * 
+	 * @param boardBody
+	 *            the current state of the board.
 	 */
-	
 	public void printboardBody(String boardBody[][])
 	{
 		for (int i = 0; i < boardDimension; i++)
@@ -403,57 +414,65 @@ public class Board
 	}
 	
 	/**
-	 * check cell is free
-	 * @param y is row
-	 * @param x is col
-	 * @param  bollean true or false
+	 * Check whether the cell at the specified position is a free cell.
+	 * 
+	 * @param y
+	 *            the row the cell is in.
+	 * @param x
+	 *            the column the cell is in.
+	 * @return true if the cell is free, otherwise false.
 	 */
-	
 	public boolean isFreeCell(int y, int x)
 	{
 		return boardBody[y][x].equals(FREE);
 	}
 	
 	/**
-	 * check cell is captured
-	 * @param y is row
-	 * @param x is col
-	 * @param  bollean true or false
+	 * Check whether the cell at the specified position is a captured cell.
+	 * 
+	 * @param y
+	 *            the row the cell is in.
+	 * @param x
+	 *            the column the cell is in.
+	 * @return true if the cell is captured, otherwise false.
 	 */
-	
 	public boolean isCapturedCell(int y, int x)
 	{
 		return boardBody[y][x].equals(CAPTURED);
 	}
 	
 	/**
-	 * check cell is black
-	 * @param y is row
-	 * @param x is col
-	 * @param  bollean true or false
+	 * Check whether the cell belongs to the black player.
+	 * 
+	 * @param y
+	 *            the row the cell is in.
+	 * @param x
+	 *            the column the cell is in.
+	 * @return true if the cell belongs to black player, otherwise false.
 	 */
-	
 	public boolean isBlackCell(int y, int x)
 	{
 		return boardBody[y][x].equals(BLACK);
 	}
 	
 	/**
-	 * check cell is white
-	 * @param y is row
-	 * @param x is col
-	 * @param  bollean true or false
+	 * Check whether the cell belongs to the whiteplayer.
+	 * 
+	 * @param y
+	 *            the row the cell is in.
+	 * @param x
+	 *            the column the cell is in.
+	 * @return true if the cell belongs to white player, otherwise false.
 	 */
-	
 	public boolean isWhiteCell(int y, int x)
 	{
 		return boardBody[y][x].equals(WHITE);
 	}
 	
-	/**
-	 * print reuslt output based on board state 
-	 */
 	
+	/**
+	 * Print out the result of the board.
+	 */
 	public void doOutput()
 	{
 		if (freeCell != 0)
