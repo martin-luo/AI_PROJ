@@ -3,6 +3,10 @@ import java.util.ArrayList;
 
 public class AidUtility
 {
+	/**
+	 * get max value from input array
+	 * @param pointArray
+	 */
 	static public int getMaxPoint(int[] pointArray)
 	{
 		int max=0;
@@ -23,6 +27,12 @@ public class AidUtility
 		}
 		return max;
 	}
+	
+	/**
+	 * sort array with y and x value
+	 * @param xPointArray
+	 * @param yPointArray
+	 */
 	
 	static public void sortByYandX(int[] xPointArray,int[] yPointArray)
 	{
@@ -65,6 +75,15 @@ public class AidUtility
 		
 	}
 	
+	
+	/**
+	 * swap two points 
+	 * @param xPointArray
+	 * @param yPointArray
+	 * @param fromIndex
+	 * @param toIndex
+	 */
+	
 	static public void swapPoint(int[] xPointArray,int[] yPointArray,int fromIndex,int toIndex)
 	{
 		int tempxPoint = xPointArray[fromIndex];
@@ -75,6 +94,11 @@ public class AidUtility
 		yPointArray[toIndex]=tempyPoint;
 	}
 	
+	/**
+	 * print array
+	 * @param pointArray
+	 */
+	
 	static public void printPointArray(int[] pointArray)
 	{
 		for(int i:pointArray)
@@ -83,6 +107,12 @@ public class AidUtility
 		}
 		System.out.println();
 	}
+	
+	/**
+	 * print  col array and row array in nice format
+	 * @param xPointArray
+	 * @param yPointArray
+	 */
 	
 	static public void printPositionArray(int[] xPointArray, int[] yPointArray)
 	{
@@ -99,6 +129,11 @@ public class AidUtility
 		
 	}
 	
+	/**
+	 * print  value in array list
+	 * @param pointArrayList
+	 */
+	
 	static public void printPointArrayList(ArrayList<Integer> pointArrayList)
 	{
 		for(int i : pointArrayList)
@@ -109,6 +144,12 @@ public class AidUtility
 		
 		
 	}
+	
+	/**
+	 * print  row value and col value in array list
+	 * @param xPointArrayList
+	 * @param yPointArrayList
+	 */
 	
 	static public void printPositionArrayList(ArrayList<Integer> xPointArrayList , ArrayList<Integer> yPointArrayList)
 	{
@@ -123,6 +164,12 @@ public class AidUtility
 			System.out.println("x:"+xPointArrayList.get(i) + "  y:" +yPointArrayList.get(i));
 		}
 	}
+	
+	/**
+	 * print  value in 2d array with break element
+	 * @param temp
+	 * @param breakLine
+	 */
 	
 	static public void print2DintArray(int[][] temp,int breakLine)
 	{
@@ -141,6 +188,12 @@ public class AidUtility
 		
 	}
 	
+	/**
+	 * parse arraylist to normal array
+	 * @param intArrayList
+	 * @return tempList
+	 */
+	
 	static public int[] parseIntArrayList(ArrayList<Integer> intArrayList)
 	{
 		int[] tempList=new int[intArrayList.size()];
@@ -150,6 +203,15 @@ public class AidUtility
 		}
 		return tempList;
 	}
+	
+	/**
+	 * if point existed in the xPointArray and yPointArray return true
+	 * @param xPoint
+	 * @param yPoint
+	 * @param xPointArray
+	 * @param yPointArray
+	 * @return boolean
+	 */
 	
 	static public boolean checkPointInPositionArray(int xPoint,int yPoint,int[] xPointArray,int[] yPointArray)
 	{
@@ -172,7 +234,11 @@ public class AidUtility
 		}
 		return false;
 	}
-	//return unique index in that array back 
+	/**
+	 * return unique value in that array back 
+	 * @param point
+	 * @return uniquePointArray
+	 */
 	static public int[] getUniquePointInArray(int[] point)
 	{
 		int[] uniquePointArray=null;
@@ -204,6 +270,11 @@ public class AidUtility
 		//System.out.println(tempArrayList.size());
 		return uniquePointArray;
 	}
+	/**
+	 * convert ArrayList to int array
+	 * @param arrayList
+	 * @return result
+	 */
 	
 	static public int[] convertArrayListToIntArray(ArrayList<Integer> arrayList)
 	{
@@ -218,6 +289,12 @@ public class AidUtility
 		
 	}
 	
+	/**
+	 * convert int array to array list
+	 * @param intList
+	 * @return result
+	 */
+	
 	static public ArrayList<Integer> parseIntListToArrayList(int[] intList)
 	{
 		ArrayList<Integer> result= new ArrayList<Integer>();
@@ -229,6 +306,13 @@ public class AidUtility
 		return result;
 		
 	}
+	
+	/**
+	 * merge two array to one
+	 * @param arrayA
+	 * @return arrayB
+	 */
+	
 	
 	static public int[] mergeIntArray(int[] arrayA,int[] arrayB)
 	{
@@ -249,6 +333,12 @@ public class AidUtility
 		return mergedIntArray;
 	}
 	
+	/**
+	 * parse int array to arraylist
+	 * @param from
+	 * @param to
+	 */
+	
 	static public void insertIntListToArrayList(int[] from,ArrayList<Integer> to)
 	{
 		for(int i : from)
@@ -256,6 +346,15 @@ public class AidUtility
 			to.add(i);
 		}
 	}
+	
+	/**
+	 * slicing part of circle out from circle
+	 * @param from
+	 * @param to
+	 * @param circleOwner
+	 * @param arrayListOfCellNodes
+	 * @return oneCircle
+	 */
 	
 	static public BoardDataCircleStructure slicingCellNodeCollectionToBoardDataCircleStructure(int from,int to, String circleOwner,ArrayList<CellNode> arrayListOfCellNodes)
 	{
@@ -276,6 +375,14 @@ public class AidUtility
 		oneCircle= new BoardDataCircleStructure(circleOwner,tempX,tempY);
 		return oneCircle;
 	}
+	/**
+	 * removing element from arraylist
+	 * @param from
+	 * @param to
+	 * @param arrayListOfCellNodes
+	 */
+	
+	
 	static public void arrayListOfCellNodesRemove(int from,int to,ArrayList<CellNode> arrayListOfCellNodes)
 	{
 		ArrayList<CellNode> removeTemp=new ArrayList<CellNode>();
@@ -286,6 +393,11 @@ public class AidUtility
 		arrayListOfCellNodes.removeAll(removeTemp);
 	}
 	
+	
+	/**
+	 * printing circle out 
+	 * @param oneCircle
+	 */
 	static public void printBoardDataCircleStructureCellNode(BoardDataCircleStructure oneCircle)
 	{
 		System.out.println("length : "+oneCircle.positionCells.size());
