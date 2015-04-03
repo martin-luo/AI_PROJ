@@ -43,6 +43,5 @@
 
 ![Keep calm](http://sd.keepcalm-o-matic.co.uk/i/keep-calm-and-code-hard-37.png)
 
-
 ![Image of YAO](http://img.qqday.com/allimg/120627/0921062E3-0.jpg)
 
