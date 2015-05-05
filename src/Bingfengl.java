@@ -20,7 +20,7 @@ public class Bingfengl implements Player, Piece
 
 		public Move makeMove()
 		{
-			return new Move();
+			return new Mov();
 		}
 		
 		/* Function called by referee to inform the player about the opponent's move
