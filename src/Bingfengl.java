@@ -4,13 +4,28 @@ import aiproj.squatter.*;
 
 public class Bingfengl implements Player, Piece
 {
-
+		public Board oneBoard=null;
+		public int playerPiece;
+		public int currentMoveRow;
+		public int currentMoveCol;
+		public Move opponentCurrentMove=null;
+		public boolean opponentIllegalMoveFlag=false;
 		/* This funstion is called by the referee to initialise the player.
 		 *  Return 0 for successful initialization and -1 for failed one.
 		 */
 		
 		public int init(int n, int p)
 		{
+			
+			//p is invalid
+			//diemension bigger than  5 ?
+			if((p!=WHITE && p!=BLACK) || n<=5)
+			{
+				return INVALID;
+			}
+			oneBoard=new Board(n);
+			oneBoard.setFinderAlgorithm(new FindCircleAndCapturedCellAlgorithm(oneBoard));
+			playerPiece=p;
 			return 0;
 		}
 		
@@ -20,7 +35,11 @@ public class Bingfengl implements Player, Piece
 
 		public Move makeMove()
 		{
-			return new Mov();
+			Move newMove = new Move();
+			newMove.P=playerPiece;
+			newMove.Row=currentMoveRow;
+			newMove.Col=currentMoveCol;
+			return newMove ;
 		}
 		
 		/* Function called by referee to inform the player about the opponent's move
@@ -29,6 +48,14 @@ public class Bingfengl implements Player, Piece
 		
 		public int opponentMove(Move m)
 		{
+			opponentCurrentMove = m;
+			
+			if (!checkLegalMove(opponentCurrentMove))
+			{
+				opponentIllegalMoveFlag=true;
+				return INVALID;
+			}
+			
 			return 0;
 		}
 
@@ -38,6 +65,28 @@ public class Bingfengl implements Player, Piece
 		
 		public int getWinner()
 		{
+			if(opponentIllegalMoveFlag)
+			{
+				
+			}
+			else if (oneBoard.freeCell != 0)
+			{
+				return EMPTY;
+			}
+			else if (oneBoard.whiteCaptured > oneBoard.blackCaptured)
+			{
+				return WHITE;
+			}
+			else if (oneBoard.blackCaptured > oneBoard.whiteCaptured)
+			{
+				return BLACK;
+			}
+			else
+			{
+				return DEAD;
+			}
+			System.out.println(oneBoard.whiteCaptured);
+			System.out.println(oneBoard.blackCaptured);
 			return 0;
 		}
 		
@@ -46,7 +95,15 @@ public class Bingfengl implements Player, Piece
 		 */
 		public void printBoard(PrintStream output)
 		{
-			
+			oneBoard.printboardBody(output,oneBoard.getBoardBody());
 		}
-	}
+		
+		public boolean checkLegalMove(Move oneMove)
+		{
+			if(oneBoard.getBoardBody()[oneMove.Row][oneMove.Col]!=Board.FREE)
+			{
+				return false;
+			}
+			return true;
+		}
 }

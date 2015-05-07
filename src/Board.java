@@ -5,6 +5,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 /**
@@ -44,11 +45,11 @@ public class Board
 	private int boardDimension = 0;
 	
 	/** The number of free cell on the board. */
-	private int freeCell = 0;
+	public int freeCell = 0;
 	/** The number of cell captured by white player. */
-	private int whiteCaptured = 0;
+	public int whiteCaptured = 0;
 	/** The number of cell captured by black player. */
-	private int blackCaptured = 0;
+	public int blackCaptured = 0;
 	
 	/** The board. */
 	private String[][] boardBody = null;
@@ -159,6 +160,17 @@ public class Board
 		doParseInput();
 	}
 	
+	Board(int n)
+	{
+		
+		
+		boardDimension=n;
+		initializeboardBody(boardDimension);
+		makeAllFreeBoardBody(boardDimension);
+		
+		
+	}
+	
 	/**
 	 * Choose the wanted board update algorithm.
 	 * 
@@ -188,6 +200,18 @@ public class Board
 	{
 		boardBody = new String[boardDimension][boardDimension];
 		
+	}
+	
+	//making free board body
+	public void makeAllFreeBoardBody(int boardDimension)
+	{
+		for(int row=0;row<boardDimension;row++)
+		{
+			for(int col=0;col<boardDimension;col++)
+			{
+				boardBody[row][col]=FREE;
+			}
+		}
 	}
 	
 	/**
@@ -423,6 +447,18 @@ public class Board
 		}
 	}
 	
+	public void printboardBody(PrintStream output,String boardBody[][])
+	{
+		for (int i = 0; i < boardDimension; i++)
+		{
+			for (int j = 0; j < boardDimension; j++)
+			{
+				output.print(boardBody[i][j] + "(x:" + j + " y:" + i + ")");
+			}
+			output.println();
+		}
+	}
+	
 	/**
 	 * Check whether the cell at the specified position is a free cell.
 	 * 
@@ -504,4 +540,5 @@ public class Board
 		System.out.println(whiteCaptured);
 		System.out.println(blackCaptured);
 	}
+	
 }

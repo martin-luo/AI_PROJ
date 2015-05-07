@@ -54,6 +54,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 	 */
 	public void doUpdateBoard()
 	{
+		boardBody = board.getBoardBody();
 		BoardDataCircleStructure tempOneCircle = null;
 		collectionOfCircle = new ArrayList<BoardDataCircleStructure>();
 		freeCell = 0;
