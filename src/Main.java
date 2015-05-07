@@ -1,9 +1,13 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+
+import aiproj.squatter.Move;
+import aiproj.squatter.Player;
 
 /**
  * <b>Class Declaration</b>
@@ -33,17 +37,61 @@ public class Main
 	
 	public static void main(String[] args)
 	{
-		Board newBoard = new Board();
+		/* searching algorithm testing*/
+		//Board newBoard = new Board();
 		
-		newBoard.setFinderAlgorithm(new FindCircleAndCapturedCellAlgorithm(newBoard));
-		newBoard.updateBoard();
-		newBoard.doOutput();
+		//newBoard.setFinderAlgorithm(new FindCircleAndCapturedCellAlgorithm(newBoard));
+		//newBoard.updateBoard();
+		//newBoard.doOutput();
 		//following is simple alg for doing output ...
 		/*
 		newBoard.setFinderAlgorithm(new SimpleBoardCountingAlgorithm(newBoard));
 		newBoard.updateBoard();
 		newBoard.doOutput();
 		*/
+		Move lastMove=new Move();
+		Bingfengl bing=new Bingfengl();
+		Pikachu pikachu=new Pikachu();
+		bing.init(6, 1);
+		pikachu.init(6, 2);
+		
+		try{
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	 
+			String input;
+			String[] inputArray=null;
+			while((input=br.readLine())!=null)
+			{
+				inputArray=input.split(" ");
+				System.out.println("===You are Palyer = "+bing.playerPiece+" Your Current Move is Row = "+inputArray[0]+" Col = "+inputArray[1]+"===");
+				bing.currentMoveRow=Integer.parseInt(inputArray[0]);
+				bing.currentMoveCol=Integer.parseInt(inputArray[1]);
+				lastMove=bing.makeMove();
+				pikachu.opponentMove(lastMove);
+				bing.oneBoard.updateBoard();
+				bing.printBoard(System.out);
+				System.out.println("Current Board State "+" Black Captured = "+bing.oneBoard.getBlackCaptured()+" White Captured = "+bing.oneBoard.getWhiteCaptured()+" Free Cell = "+bing.oneBoard.getFreeCell());
+				/*
+				if((input=br.readLine())!=null)
+				{
+					inputArray=input.split(" ");
+					System.out.println("===You are Palyer = "+pikachu.playerPiece+" Your Current Move is Row = "+inputArray[0]+" Col = "+inputArray[1]+"===");
+					pikachu.currentMoveRow=Integer.parseInt(inputArray[0]);
+					pikachu.currentMoveCol=Integer.parseInt(inputArray[1]);
+					lastMove=pikachu.makeMove();
+					pikachu.oneBoard.updateBoard();
+					bing.opponentMove(lastMove);
+					pikachu.printBoard(System.out);
+					System.out.println("Current Board State "+" Black Captured = "+bing.oneBoard.getBlackCaptured()+" White Captured = "+bing.oneBoard.getWhiteCaptured()+" Free Cell = "+bing.oneBoard.getFreeCell());
+				}*/
+			}
+	 
+		}
+		
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}	
 	}
 	
 }

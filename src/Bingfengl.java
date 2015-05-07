@@ -4,6 +4,7 @@ import aiproj.squatter.*;
 
 public class Bingfengl implements Player, Piece
 {
+		public boolean debug=false;
 		public Board oneBoard=null;
 		public int playerPiece;
 		public int currentMoveRow;
@@ -39,6 +40,15 @@ public class Bingfengl implements Player, Piece
 			newMove.P=playerPiece;
 			newMove.Row=currentMoveRow;
 			newMove.Col=currentMoveCol;
+			
+			if (!checkLegalMove(newMove))
+			{
+				opponentIllegalMoveFlag=true;
+				return null;
+			}
+			
+			setMoveOnBoardBody(currentMoveRow, currentMoveCol,playerPiece);
+			
 			return newMove ;
 		}
 		
@@ -50,13 +60,27 @@ public class Bingfengl implements Player, Piece
 		{
 			opponentCurrentMove = m;
 			
-			if (!checkLegalMove(opponentCurrentMove))
+			if (m == null||!checkLegalMove(opponentCurrentMove) )
 			{
 				opponentIllegalMoveFlag=true;
 				return INVALID;
 			}
 			
+			setMoveOnBoardBody(opponentCurrentMove.Row, opponentCurrentMove.Col,opponentCurrentMove.P);
+			
 			return 0;
+		}
+		
+		public void setMoveOnBoardBody(int row,int col,int p)
+		{
+			if(p==WHITE)
+			{
+				oneBoard.setBoardCell(row, col, Board.WHITE);
+			}
+			else
+			{
+				oneBoard.setBoardCell(row, col, Board.BLACK);
+			}
 		}
 
 		/* This function when called by referee should return the winner
@@ -100,7 +124,8 @@ public class Bingfengl implements Player, Piece
 		
 		public boolean checkLegalMove(Move oneMove)
 		{
-			if(oneBoard.getBoardBody()[oneMove.Row][oneMove.Col]!=Board.FREE)
+			System.out.println("in check");
+			if(oneMove.Row<0||oneMove.Col<0||oneMove.Row>=oneBoard.getBoardDimension()||oneMove.Col>=oneBoard.getBoardDimension()||!oneBoard.getBoardBody()[oneMove.Row][oneMove.Col].equals(Board.FREE))
 			{
 				return false;
 			}

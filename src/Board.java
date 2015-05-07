@@ -33,6 +33,9 @@ import java.util.ArrayList;
  */
 public class Board
 {
+	public static String CAPTUREDLETTER="C";
+	public static String WHITECAPTURED="WC";
+	public static String BLACKCAPTURED="BC";
 	/** The word used for white player. */
 	public static String WHITE = "W";
 	/** The word used for black player. */
@@ -224,6 +227,7 @@ public class Board
 	 * 
 	 * @return the cell at the specified position.
 	 */
+	
 	public String getBoardCell(int row, int col)
 	{
 		return boardBody[row][col];
@@ -441,7 +445,16 @@ public class Board
 		{
 			for (int j = 0; j < boardDimension; j++)
 			{
-				System.out.print(boardBody[i][j] + "(x:" + j + " y:" + i + ")");
+				//System.out.print(boardBody[i][j] + "(x:" + j + " y:" + i + ")");
+				if(boardBody[i][j].equals(Board.WHITECAPTURED)||boardBody[i][j].equals(Board.BLACKCAPTURED))
+				{
+					System.out.print(Board.CAPTURED+" ");
+				}
+				else
+				{
+					System.out.print(boardBody[i][j]+" ");
+				}
+				
 			}
 			System.out.println();
 		}
@@ -453,7 +466,15 @@ public class Board
 		{
 			for (int j = 0; j < boardDimension; j++)
 			{
-				output.print(boardBody[i][j] + "(x:" + j + " y:" + i + ")");
+				//System.out.print(boardBody[i][j] + "(x:" + j + " y:" + i + ")");
+				if(boardBody[i][j].equals(Board.WHITECAPTURED)||boardBody[i][j].equals(Board.BLACKCAPTURED))
+				{
+					output.print(Board.CAPTURED+" ");
+				}
+				else
+				{
+					output.print(boardBody[i][j]+" ");
+				}
 			}
 			output.println();
 		}

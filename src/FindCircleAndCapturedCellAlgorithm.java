@@ -75,7 +75,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 				{
 					tempOneCircle = new BoardDataCircleStructure(boardBody[y][x]);
 					// initial board data circle , parss in x ,y and black or white
-					//finding circle for current cell
+					// finding circle for current cell
 					doFindCircle(tempOneCircle, x, y, boardBody[y][x]);
 					//if circle found per form count capture alg
 					if (tempOneCircle.positionCells.size() > 0)
@@ -199,6 +199,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 	
 	public int countCapturedNumber(BoardDataCircleStructure circleOne, int[][] mergedLevelValidation)
 	{
+		boardBody=board.getBoardBody();
 		int count = 0;
 		int level = 0;
 		// iterate number of levels,skip first and last level
@@ -210,12 +211,15 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 			tempY = (int[]) circleOne.circleLevel[i][1];
 			// from left to right but skip boarder
 			level = tempY[0];
+			System.out.println("Counting Debugging");
 			for (int j = tempX[0] + 1; j < tempX[tempX.length - 1]; j++)
 			{ 
+				System.out.print(boardBody[level][j]+" ");
 				// if cell is captured and it is marked '-' means captured count
-				if (boardBody[level][j].equals(Board.CAPTURED) && mergedLevelValidation[level][j] == 1)
+				if ((boardBody[level][j].equals(Board.CAPTURED)||boardBody[level][j].equals(circleOne.circleOwner+Board.CAPTUREDLETTER)) && mergedLevelValidation[level][j] == 1)
 				{
 					count++;
+					System.out.println("in here counting");
 					//mark cells which is in circle ... so we can perform less finding circle + finding capture alg
 					trackingInCircle[level][j] = 1;
 				}
@@ -225,6 +229,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 					trackingInCircle[level][j] = 1;
 				}
 			}
+			System.out.println();
 		}
 		
 		return count;
@@ -254,7 +259,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 			tempXlevelArray = (int[]) circleOne.circleLevel[i][0];
 			tempYlevelArray = (int[]) circleOne.circleLevel[i][1];
 			fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 0, circleOne.circleOwner);
-			fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 1, circleOne.circleOwner);
+			fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, -1, circleOne.circleOwner);
 			
 		}
 		// put last level in
@@ -288,7 +293,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 			// put in boundary points of this level first
 			fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 0, circleOne.circleOwner);
 			// tempYlevelArray[0] == current level's y value
-			fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 2, circleOne.circleOwner);
+			fillLevelIntoValidation(levelValidation, tempYlevelArray[0], tempXlevelArray, 1, circleOne.circleOwner);
 		}
 		// put last level in
 		tempXlevelArray = (int[]) circleOne.circleLevel[0][0];
@@ -337,50 +342,71 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 	// following only for reading in board ... so we only determine 'captured' cells .
 	public void fillLevelIntoValidation(int[][] levelValidation, int levelIndex, int[] xPointArray, int conditionNumber, String whoseCircle)
 	{
+		String opponentPlayer;
+		if(whoseCircle.equals(Board.WHITE))
+		{
+			opponentPlayer=Board.BLACK;
+		}
+		else
+		{
+			opponentPlayer=Board.WHITE;
+		}
+		
 		if (conditionNumber == 0)
 		{
 			for (int i = 0; i < xPointArray.length; i++)
 			{
-				levelValidation[levelIndex][xPointArray[i]] = 1;
+				levelValidation[levelIndex][xPointArray[i]] = 2;
 			}
 		}
 		// top down decision to add cell into ceiling with comparing to previous level
-		if (conditionNumber == 1)
+		if (conditionNumber !=0)
 		{
 			// only go between this level's max and min x-boundary .
 			// System.out.println("topdown in here");
 			for (int i = xPointArray[0] + 1; i < xPointArray[xPointArray.length - 1]; i++)
 			{
+				// System.out.println (" sign : "+boardBody[levelIndex][i]+" check : "+boardBody[levelIndex][i].equals(Board.CAPTURED));
+				//captured free one
+				if (levelValidation[levelIndex][i] == 0 && levelValidation[levelIndex + conditionNumber][i] != 0 && boardBody[levelIndex][i].equals(Board.FREE))
+				{
+					//System.out.println("in here");
+					levelValidation[levelIndex][i] = 1;
+					board.setBoardCell(levelIndex, i, Board.CAPTURED);
+				}
+				
 				// skip this level's boundary x and if above x is ==1 and this board position marked captured ==> good
-				if (levelValidation[levelIndex][i] != 1 && levelValidation[levelIndex - 1][i] != 0 && boardBody[levelIndex][i].equals(Board.CAPTURED))
+				else if (levelValidation[levelIndex][i] == 0 && levelValidation[levelIndex + conditionNumber][i] != 0 && boardBody[levelIndex][i].equals(Board.CAPTURED))
 				{
 					levelValidation[levelIndex][i] = 1;
 				}
 				// meet self cell inside circle under ceiling ..still include it to ceiling but mark it as 2
-				if (levelValidation[levelIndex][i] != 1 && levelValidation[levelIndex - 1][i] != 0 && boardBody[levelIndex][i].equals(whoseCircle))
+				else if (levelValidation[levelIndex][i] == 0 && levelValidation[levelIndex + conditionNumber ][i] != 0 && boardBody[levelIndex][i].equals(whoseCircle))
 				{
 					levelValidation[levelIndex][i] = 2;
 				}
-				// System.out.println (" sign : "+boardBody[levelIndex][i]+" check : "+boardBody[levelIndex][i].equals(Board.CAPTURED));
+				
+				//meet self captured cell.
+				else if (levelValidation[levelIndex][i] == 0 && levelValidation[levelIndex + conditionNumber ][i] != 0 && boardBody[levelIndex][i].equals(whoseCircle+board.CAPTUREDLETTER))
+				{
+					levelValidation[levelIndex][i] = 2;
+					//un captured itself
+					board.setBoardCell(levelIndex, i, whoseCircle);
+				}
+				
+				//found opponent 's cell in captured area
+				
+				else if (levelValidation[levelIndex][i] == 0 && levelValidation[levelIndex + conditionNumber][i] != 0 && !boardBody[levelIndex][i].equals(whoseCircle))
+				{
+					//System.out.println("in here");
+					levelValidation[levelIndex][i] = 1;
+					//mark it as BC or WC
+					board.setBoardCell(levelIndex, i, opponentPlayer+Board.CAPTUREDLETTER);
+				}
+				
+				
 			}
 			// System.out.println();
-		}
-		// bottom up decision to add cell into ceiling with comparing to previous level
-		if (conditionNumber == 2)
-		{ // only go between this level's max and min x-boundary .
-			// System.out.println("bottomup in here");
-			for (int i = xPointArray[0] + 1; i < xPointArray[xPointArray.length - 1]; i++)
-			{
-				// skip this level's boundary x and if above x is ==1 and this board position marked captured ==> good
-				if (levelValidation[levelIndex][i] != 1 && levelValidation[levelIndex + 1][i] != 0 && boardBody[levelIndex][i].equals(Board.CAPTURED))
-				{
-					levelValidation[levelIndex][i] = 1;
-				}
-				if (levelValidation[levelIndex][i] != 1 && levelValidation[levelIndex + 1][i] != 0 && boardBody[levelIndex][i].equals(whoseCircle))
-				{
-					levelValidation[levelIndex][i] = 2;
-				}
-			}
 		}
 	}
 	
