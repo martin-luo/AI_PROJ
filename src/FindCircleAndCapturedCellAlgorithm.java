@@ -200,6 +200,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 	public int countCapturedNumber(BoardDataCircleStructure circleOne, int[][] mergedLevelValidation)
 	{
 		boardBody=board.getBoardBody();
+		String opponentPlayer=getOpponenetPlayer(circleOne.circleOwner);
 		int count = 0;
 		int level = 0;
 		// iterate number of levels,skip first and last level
@@ -214,12 +215,12 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 			System.out.println("Counting Debugging");
 			for (int j = tempX[0] + 1; j < tempX[tempX.length - 1]; j++)
 			{ 
-				System.out.print(boardBody[level][j]+" ");
+				System.out.print(boardBody[level][j]+" " +" opponnent: "+ opponentPlayer+Board.CAPTUREDLETTER+" merge : "+mergedLevelValidation[level][j]+" equality = "+boardBody[level][j].equals(opponentPlayer+Board.CAPTUREDLETTER));
 				// if cell is captured and it is marked '-' means captured count
-				if ((boardBody[level][j].equals(Board.CAPTURED)||boardBody[level][j].equals(circleOne.circleOwner+Board.CAPTUREDLETTER)) && mergedLevelValidation[level][j] == 1)
+				if ((boardBody[level][j].equals(Board.CAPTURED)||boardBody[level][j].equals(opponentPlayer+Board.CAPTUREDLETTER)) && mergedLevelValidation[level][j] == 1)
 				{
 					count++;
-					System.out.println("in here counting");
+					//System.out.println("in here counting");
 					//mark cells which is in circle ... so we can perform less finding circle + finding capture alg
 					trackingInCircle[level][j] = 1;
 				}
@@ -340,17 +341,23 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 	 */
 	
 	// following only for reading in board ... so we only determine 'captured' cells .
-	public void fillLevelIntoValidation(int[][] levelValidation, int levelIndex, int[] xPointArray, int conditionNumber, String whoseCircle)
+	
+	public String getOpponenetPlayer(String currentPlayer)
 	{
-		String opponentPlayer;
-		if(whoseCircle.equals(Board.WHITE))
+		if(currentPlayer.equals(Board.WHITE))
 		{
-			opponentPlayer=Board.BLACK;
+			return Board.BLACK;
 		}
 		else
 		{
-			opponentPlayer=Board.WHITE;
+			return Board.WHITE;
 		}
+	}
+	
+	public void fillLevelIntoValidation(int[][] levelValidation, int levelIndex, int[] xPointArray, int conditionNumber, String whoseCircle)
+	{
+		String opponentPlayer=getOpponenetPlayer(whoseCircle);
+		
 		
 		if (conditionNumber == 0)
 		{

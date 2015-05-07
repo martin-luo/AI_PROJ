@@ -71,7 +71,7 @@ public class Main
 				bing.oneBoard.updateBoard();
 				bing.printBoard(System.out);
 				System.out.println("Current Board State "+" Black Captured = "+bing.oneBoard.getBlackCaptured()+" White Captured = "+bing.oneBoard.getWhiteCaptured()+" Free Cell = "+bing.oneBoard.getFreeCell());
-				/*
+				
 				if((input=br.readLine())!=null)
 				{
 					inputArray=input.split(" ");
@@ -79,11 +79,11 @@ public class Main
 					pikachu.currentMoveRow=Integer.parseInt(inputArray[0]);
 					pikachu.currentMoveCol=Integer.parseInt(inputArray[1]);
 					lastMove=pikachu.makeMove();
-					pikachu.oneBoard.updateBoard();
 					bing.opponentMove(lastMove);
+					pikachu.oneBoard.updateBoard();
 					pikachu.printBoard(System.out);
-					System.out.println("Current Board State "+" Black Captured = "+bing.oneBoard.getBlackCaptured()+" White Captured = "+bing.oneBoard.getWhiteCaptured()+" Free Cell = "+bing.oneBoard.getFreeCell());
-				}*/
+					System.out.println("Current Board State "+" Black Captured = "+pikachu.oneBoard.getBlackCaptured()+" White Captured = "+pikachu.oneBoard.getWhiteCaptured()+" Free Cell = "+pikachu.oneBoard.getFreeCell());
+				}
 			}
 	 
 		}

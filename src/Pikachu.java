@@ -125,7 +125,7 @@ public class Pikachu implements Player, Piece
 		public boolean checkLegalMove(Move oneMove)
 		{
 			System.out.println("in check");
-			if(!oneBoard.getBoardBody()[oneMove.Row][oneMove.Col].equals(Board.FREE))
+			if(oneMove.Row<0||oneMove.Col<0||oneMove.Row>=oneBoard.getBoardDimension()||oneMove.Col>=oneBoard.getBoardDimension()||!oneBoard.getBoardBody()[oneMove.Row][oneMove.Col].equals(Board.FREE))
 			{
 				return false;
 			}
