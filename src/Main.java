@@ -38,32 +38,42 @@ public class Main
 	public static void main(String[] args)
 	{
 		/* searching algorithm testing*/
-		//Board newBoard = new Board();
-		
-		//newBoard.setFinderAlgorithm(new FindCircleAndCapturedCellAlgorithm(newBoard));
-		//newBoard.updateBoard();
-		//newBoard.doOutput();
+		Board newBoard = new Board();
+		newBoard.printboardBody(newBoard.boardBody);
+		newBoard.setFinderAlgorithm(new FindCircleAndCapturedCellAlgorithm(newBoard));
+		newBoard.updateBoard();
+		newBoard.doOutput();
 		//following is simple alg for doing output ...
 		/*
 		newBoard.setFinderAlgorithm(new SimpleBoardCountingAlgorithm(newBoard));
 		newBoard.updateBoard();
 		newBoard.doOutput();
 		*/
+		/*
 		Move lastMove=new Move();
 		Bingfengl bing=new Bingfengl();
-		Pikachu pikachu=new Pikachu();
+		Bingfengl pikachu=new Bingfengl();
 		bing.init(6, 1);
 		pikachu.init(6, 2);
+		
+		BoardGame game = new BoardGame(new Bingfengl(bing));
+		IterativeDeepeningAlphaBetaSearch decision = IterativeDeepeningAlphaBetaSearch.createFor(game, 0.0,1.0, 100);
+		int [] temp=null;
 		
 		try{
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	 
 			String input;
 			String[] inputArray=null;
+			
+			
+			
+			
 			while((input=br.readLine())!=null)
 			{
 				inputArray=input.split(" ");
 				System.out.println("===You are Palyer = "+bing.playerPiece+" Your Current Move is Row = "+inputArray[0]+" Col = "+inputArray[1]+"===");
+				//bing.setCurrentRowCol(inputArray[0], inputArray[1]);
 				bing.currentMoveRow=Integer.parseInt(inputArray[0]);
 				bing.currentMoveCol=Integer.parseInt(inputArray[1]);
 				lastMove=bing.makeMove();
@@ -74,8 +84,11 @@ public class Main
 				
 				if((input=br.readLine())!=null)
 				{
+					//temp=(int[])decision.makeDecision(new Bingfengl(pikachu));
 					inputArray=input.split(" ");
 					System.out.println("===You are Palyer = "+pikachu.playerPiece+" Your Current Move is Row = "+inputArray[0]+" Col = "+inputArray[1]+"===");
+					//pikachu.currentMoveRow=temp[0];
+					//pikachu.currentMoveCol=temp[1];
 					pikachu.currentMoveRow=Integer.parseInt(inputArray[0]);
 					pikachu.currentMoveCol=Integer.parseInt(inputArray[1]);
 					lastMove=pikachu.makeMove();
@@ -85,13 +98,14 @@ public class Main
 					System.out.println("Current Board State "+" Black Captured = "+pikachu.oneBoard.getBlackCaptured()+" White Captured = "+pikachu.oneBoard.getWhiteCaptured()+" Free Cell = "+pikachu.oneBoard.getFreeCell());
 				}
 			}
+			
 	 
 		}
 		
 		catch(Exception e)
 		{
 			e.printStackTrace();
-		}	
+		}	*/
 	}
 	
 }

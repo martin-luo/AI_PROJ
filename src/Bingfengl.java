@@ -14,6 +14,27 @@ public class Bingfengl implements Player, Piece
 		/* This funstion is called by the referee to initialise the player.
 		 *  Return 0 for successful initialization and -1 for failed one.
 		 */
+		Bingfengl()
+		{}
+		
+		public void setCurrentRowCol(int row,int col)
+		{
+			currentMoveRow=row;
+			currentMoveCol=col;
+		}
+		
+		Bingfengl(Bingfengl oneBingfengl)
+		{
+			oneBoard=new Board(oneBingfengl.oneBoard);
+			playerPiece=oneBingfengl.playerPiece;
+			currentMoveRow=oneBingfengl.currentMoveRow;
+			currentMoveCol=oneBingfengl.currentMoveCol;
+			//opponentCurrentMove=new Move();
+			//opponentCurrentMove.Col=oneBingfengl.opponentCurrentMove.Col;
+			//opponentCurrentMove.Row=oneBingfengl.opponentCurrentMove.Row;
+			//opponentCurrentMove.P=oneBingfengl.opponentCurrentMove.P;
+			opponentIllegalMoveFlag=oneBingfengl.opponentIllegalMoveFlag;
+		}
 		
 		public int init(int n, int p)
 		{
@@ -81,6 +102,18 @@ public class Bingfengl implements Player, Piece
 			setMoveOnBoardBody(opponentCurrentMove.Row, opponentCurrentMove.Col,opponentCurrentMove.P);
 			
 			return 0;
+		}
+		
+		public int getOpponentP()
+		{
+			if(playerPiece==Piece.WHITE)
+			{
+				return Piece.BLACK;
+			}
+			else
+			{
+				return Piece.WHITE;
+			}
 		}
 		
 		public void setMoveOnBoardBody(int row,int col,int p)

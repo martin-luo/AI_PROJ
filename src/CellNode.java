@@ -131,7 +131,7 @@ public class CellNode
 	public void fillValidAdjcentCell(String whoseCircle)
 	{
 		// 8 directions adj cell from current node .
-		int numberOfDirections = 8;
+		//int numberOfDirections = 8;
 		int tempDirectionX;
 		int tempDirectionY;
 		int tempX;
@@ -140,7 +140,7 @@ public class CellNode
 		//8 directions 
 		int[][] directionList=new int[][]{{-1,-1},{0,-1},{1,-1},{1,0},{1,1},{0,1},{-1,1},{-1,0}};
 		//iterate through 8 directions
-		for (int i=0;i<numberOfDirections;i++)
+		for (int i=0;i<directionList.length;i++)
 		{
 			tempDirectionX=directionList[i][0];
 			tempDirectionY=directionList[i][1];
@@ -151,6 +151,8 @@ public class CellNode
 				continue;
 			}
 			//8 direction which is same color as the starting cell
+			//System.out.println("tempX = "+tempX+"temp Y = "+tempY);
+			System.out.println(""+"current x = "+currentNodeX+"current y = "+currentNodeY+""+(boardBody[tempY][tempX].equals(whoseCircle))+" sign "+boardBody[tempY][tempX]);
 			if(boardBody[tempY][tempX].equals(whoseCircle))
 			{
 				// with respect to current node .. all its surrounding which is not exceed board limites will be added start from top left
@@ -158,6 +160,7 @@ public class CellNode
 				//and it should be same colour of starting one of 'circle'. 
 				validAdjCellX.add(tempX);
 				validAdjCellY.add(tempY);
+				System.out.println("current x = "+currentNodeX+"current y = "+currentNodeY+"tempX = "+tempX+"temp Y = "+tempY+" Sign= "+boardBody[tempX][tempY]);
 			}
 			
 		}

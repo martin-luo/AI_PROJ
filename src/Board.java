@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * <b>Class Declaration</b>
@@ -57,11 +58,12 @@ public class Board
 	public int blackCaptured = 0;
 	
 	/** The board. */
-	private String[][] boardBody = null;
+	public String[][] boardBody = null;
 	/** Used to track point is already in one circle path or not. */
 	public int[][] trackingInCircle = null;
 	/** Used to call the board update algorithms. */
 	public BoardUpdateAlgorithm updateAlgorithm = null;
+	public ArrayList<int[]> possibleMove=null;
 	
 	/**
 	 * Return the dimension of board.
@@ -175,6 +177,56 @@ public class Board
 		
 		
 	}
+	//copy a board
+	Board(Board oneBoard)
+	{
+		boardDimension = oneBoard.boardDimension;
+		freeCell = oneBoard.freeCell;
+		whiteCell= oneBoard.whiteCell;
+		blackCell= oneBoard.blackCell;
+		whiteCaptured = oneBoard.whiteCaptured;
+		blackCaptured = oneBoard.blackCaptured;
+		boardBody = oneBoard.boardBody.clone();
+		//trackingInCircle = oneBoard.trackingInCircle.clone();
+		updateAlgorithm = new FindCircleAndCapturedCellAlgorithm(this);
+		if(oneBoard.possibleMove!=null)
+		possibleMove = (ArrayList<int[]>) oneBoard.possibleMove.clone();
+		
+	}
+	
+	public ArrayList<int[]> getDummyFreeMove()
+	{
+		ArrayList<int[]> temp=new ArrayList<int[]>(); ;
+		for(int row=0;row<boardDimension;row++)
+		{
+			for(int col=0;col<boardDimension;col++)
+			{
+				if(isFreeCell(row,col))
+				{
+					temp.add(new int[]{row,col});
+				}
+			}
+		
+		}
+		possibleMove = temp;
+		return temp;
+	}
+	
+	public int[] getOnePossibleMove()
+	{
+		Random rand = new Random();
+		int  n = rand.nextInt(50) + 1;
+		int[] temp=null;
+		if (possibleMove!=null && possibleMove.size()!=0)
+		{
+			//so far pick a random one .
+			temp=possibleMove.remove(n%possibleMove.size());
+		}
+		return temp;
+	}
+
+	
+	
 	
 	/**
 	 * Choose the wanted board update algorithm.
@@ -367,14 +419,16 @@ public class Board
 				line = line.replace(" ", "").replace("\t", "");
 				parts = line.split("");
 				//System.out.println("part[0]"+parts[0]);
-				colCount = parts.length;
+				//take of -1 for submittsion
+				colCount = parts.length-1;
 				//System.out.println("colCount : " + colCount);
 				// If it's the first line of the board, make the prevYCount
 				// equal to yCount.
 				checkxNumber(colCount);
 				//System.out.println("" + line);
 				// need to skip first one ,split("") first one is ""
-				for (int i = 0; i < parts.length; i++)
+				//i=0 for submitsion 
+				for (int i = 1; i < parts.length; i++)
 				{
 					// System.out.println("i: "+i+" sign : "+parts[i]+"<-" +"level : "+tempStringArray.size());
 					// If the element is valid, add it to the temporary array,
