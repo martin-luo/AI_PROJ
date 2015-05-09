@@ -58,6 +58,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 	 */
 	public void doUpdateBoard()
 	{
+		System.out.println("at update top");
 		boardBody = board.getBoardBody();
 		BoardDataCircleStructure tempOneCircle = null;
 		collectionOfCircle = new ArrayList<BoardDataCircleStructure>();
@@ -71,12 +72,15 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 		for (int y = 0; y < boardDimension; y++)
 		{
 			// iterating cols
+			
 			for (int x = 0; x < boardDimension; x++)
 			{
 				// if encounter a cell which is belong to white or black , and it is not currently in the part of any circle .. we use it
 				// as start point to find cirlce
+				
 				if ((boardBody[y][x].equals(Board.WHITE) || boardBody[y][x].equals(Board.BLACK)) && trackingInCircle[y][x] == 0)
 				{
+					System.out.println("at iteration? inside ???");
 					tempOneCircle = new BoardDataCircleStructure(boardBody[y][x]);
 					// initial board data circle , parss in x ,y and black or white
 					// finding circle for current cell
@@ -84,7 +88,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 					//if circle found per form count capture alg
 					if (tempOneCircle.positionCells.size() > 0)
 					{
-						
+						System.out.println("circle found");
 						tempOneCircle.transformCellNodeToIntArray();
 						tempOneCircle.constructLevel();
 						//tempOneCircle.printCircleLevel();
@@ -101,8 +105,8 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 						}
 						collectionOfCircle.add(tempOneCircle);
 						AidUtility.printBoardDataCircleStructureCellNode(tempOneCircle);
-						//System.out.println("------tracking in circle");
-						//AidUtility.print2DintArray(trackingInCircle, boardDimension);
+						System.out.println("------tracking in circle");
+						AidUtility.print2DintArray(trackingInCircle, boardDimension);
 						
 					}
 				}
@@ -119,6 +123,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 					board.blackCell++;
 				}
 			}
+			System.out.println( "blackCaptured "+blackCaptured+" whiteCaptured "+whiteCaptured);
 			board.setBlackCaptured(blackCaptured);
 			board.setWhiteCaptured(whiteCaptured);
 			board.setFreeCell(freeCell);
@@ -139,6 +144,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 	
 	public void doFindCircle(BoardDataCircleStructure oneCircle, int startX, int startY, String whoseCircle)
 	{
+		//boardBody=board.getBoardBody();
 		// ArrayList<CellNode> arrayListOfCellNodes=new ArrayList<CellNode>();
 		// CellNode tempValidCell = null;
 		// -1 ---> original , 0 --> not visited, 1 ---> visited
@@ -191,7 +197,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 			// returned valid next cell won't be the current cell's prev cell
 			// so if returned something that is already in the path ....
 			// we can confirm that there will be another circle .
-			System.out.println("----Hello World --tracking in circle");
+			System.out.println("--- -Hello World --tracking in circle");
 			AidUtility.print2DintArray(trackingInCircle, boardDimension);
 			System.out.println("------currentTEMPX = "+currentTempX+" currentTempY = "+currentTempY+" prev x = "+prevTempX+" prev y = "+prevTempY);
 		}
@@ -229,7 +235,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 			tempY = (int[]) circleOne.circleLevel[i][1];
 			// from left to right but skip boarder
 			level = tempY[0];
-			System.out.println("Counting Debugging");
+			//System.out.println("Counting Debugging");
 			for (int j = tempX[0] + 1; j < tempX[tempX.length - 1]; j++)
 			{ 
 				//System.out.print(boardBody[level][j]+" " +" opponnent: "+ opponentPlayer+Board.CAPTUREDLETTER+" merge : "+mergedLevelValidation[level][j]+" equality = "+boardBody[level][j].equals(opponentPlayer+Board.CAPTUREDLETTER));
@@ -248,7 +254,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 //				}
 				if(mergedLevelValidation[level][j]==meetFree)
 				{
-					board.setBoardCell(level, i, Board.CAPTURED);
+					board.setBoardCell(level, j, Board.CAPTURED);
 					count++;
 				}
 				//for stdin part 1 only useless after that
@@ -262,14 +268,16 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 				}
 				else if(mergedLevelValidation[level][j]==meetSelfCaptured)
 				{
-					board.setBoardCell(level, i, circleOne.circleOwner);
+					board.setBoardCell(level, j, circleOne.circleOwner);
 				}
 				else if(mergedLevelValidation[level][j]==meetOpponent)
 				{
-					board.setBoardCell(level, i, opponentPlayer+Board.CAPTUREDLETTER);
+					System.out.println("meet opponenet ? ");
+					count++;
+					board.setBoardCell(level, j, opponentPlayer+Board.CAPTUREDLETTER);
 				}
 			}
-			System.out.println();
+			//System.out.println();
 		}
 		
 		return count;
@@ -357,6 +365,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 			for (int j = 0; j < boardDimension; j++)
 			{
 				// one not valid == all not valid .
+				//System.out.println("bu "+countTopDown[i][j]+" td "+countBottomUp[i][j]);
 				if (countTopDown[i][j] == 0 || countBottomUp[i][j] == 0)
 				{
 					continue;
@@ -385,8 +394,12 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 				}
 				// valid captured cell
 				resultCountValidation[i][j] = meetFree;
+				
 			}
 		}
+		//AidUtility.print2DintArray(countTopDown, 6);
+		//AidUtility.print2DintArray(countBottomUp, 6);
+		//AidUtility.print2DintArray(resultCountValidation, 6);
 		return resultCountValidation;
 	}
 	
@@ -418,7 +431,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 		{
 			for (int i = 0; i < xPointArray.length; i++)
 			{
-				levelValidation[levelIndex][xPointArray[i]] = 2;
+				levelValidation[levelIndex][xPointArray[i]] = meetSelf;
 			}
 		}
 		// top down decision to add cell into ceiling with comparing to previous level
@@ -432,7 +445,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 				//captured free one
 				if (levelValidation[levelIndex][i] == 0 && levelValidation[levelIndex + conditionNumber][i] != 0 && boardBody[levelIndex][i].equals(Board.FREE))
 				{
-					//System.out.println("in here");
+					System.out.println("in here see free");
 					levelValidation[levelIndex][i] = meetFree;
 					//board.setBoardCell(levelIndex, i, Board.CAPTURED);
 				}

@@ -152,7 +152,7 @@ public class CellNode
 			}
 			//8 direction which is same color as the starting cell
 			//System.out.println("tempX = "+tempX+"temp Y = "+tempY);
-			System.out.println(""+"current x = "+currentNodeX+"current y = "+currentNodeY+""+(boardBody[tempY][tempX].equals(whoseCircle))+" sign "+boardBody[tempY][tempX]);
+			//System.out.println(""+"current x = "+currentNodeX+"current y = "+currentNodeY+""+(boardBody[tempY][tempX].equals(whoseCircle))+" sign "+boardBody[tempY][tempX]);
 			if(boardBody[tempY][tempX].equals(whoseCircle))
 			{
 				// with respect to current node .. all its surrounding which is not exceed board limites will be added start from top left
@@ -160,7 +160,7 @@ public class CellNode
 				//and it should be same colour of starting one of 'circle'. 
 				validAdjCellX.add(tempX);
 				validAdjCellY.add(tempY);
-				System.out.println("current x = "+currentNodeX+"current y = "+currentNodeY+"tempX = "+tempX+"temp Y = "+tempY+" Sign= "+boardBody[tempX][tempY]);
+				//System.out.println("current x = "+currentNodeX+"current y = "+currentNodeY+"tempX = "+tempX+"temp Y = "+tempY+" Sign= "+boardBody[tempX][tempY]);
 			}
 			
 		}
