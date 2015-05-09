@@ -49,6 +49,8 @@ public class Board
 	
 	/** The number of free cell on the board. */
 	public int freeCell = 0;
+	public int whiteCell=0;
+	public int blackCell=0;
 	/** The number of cell captured by white player. */
 	public int whiteCaptured = 0;
 	/** The number of cell captured by black player. */

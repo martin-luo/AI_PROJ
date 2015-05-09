@@ -56,6 +56,18 @@ public class Bingfengl implements Player, Piece
 		 *  Return -1 if the move is illegal otherwise return 0
 		 */
 		
+		public String getPlayer()
+		{
+			if(playerPiece==1)
+			{
+				return Board.WHITE;
+			}
+			else
+			{
+				return Board.BLACK;
+			}
+		}
+		
 		public int opponentMove(Move m)
 		{
 			opponentCurrentMove = m;

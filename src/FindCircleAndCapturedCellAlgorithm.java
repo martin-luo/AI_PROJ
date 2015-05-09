@@ -100,9 +100,17 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 						
 					}
 				}
-				else if (boardBody[y][x].equals(Board.FREE))
+				if (boardBody[y][x].equals(Board.FREE))
 				{
 					freeCell += 1;
+				}
+				else if(boardBody[y][x].equals(Board.WHITE)||boardBody[y][x].equals(Board.WHITECAPTURED))
+				{
+					board.whiteCell++;
+				}
+				else if(boardBody[y][x].equals(Board.BLACK)||boardBody[y][x].equals(Board.BLACKCAPTURED))
+				{
+					board.blackCell++;
 				}
 			}
 			board.setBlackCaptured(blackCaptured);
@@ -215,7 +223,7 @@ public class FindCircleAndCapturedCellAlgorithm extends BoardUpdateAlgorithm
 			System.out.println("Counting Debugging");
 			for (int j = tempX[0] + 1; j < tempX[tempX.length - 1]; j++)
 			{ 
-				System.out.print(boardBody[level][j]+" " +" opponnent: "+ opponentPlayer+Board.CAPTUREDLETTER+" merge : "+mergedLevelValidation[level][j]+" equality = "+boardBody[level][j].equals(opponentPlayer+Board.CAPTUREDLETTER));
+				//System.out.print(boardBody[level][j]+" " +" opponnent: "+ opponentPlayer+Board.CAPTUREDLETTER+" merge : "+mergedLevelValidation[level][j]+" equality = "+boardBody[level][j].equals(opponentPlayer+Board.CAPTUREDLETTER));
 				// if cell is captured and it is marked '-' means captured count
 				if ((boardBody[level][j].equals(Board.CAPTURED)||boardBody[level][j].equals(opponentPlayer+Board.CAPTUREDLETTER)) && mergedLevelValidation[level][j] == 1)
 				{
