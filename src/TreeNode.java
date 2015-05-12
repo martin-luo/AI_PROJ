@@ -11,10 +11,12 @@ public class TreeNode
 	public ArrayList<TreeNode> children;
 	public Board board;
 	public double utilityValue;
+	public double parentUtilityVlaue;
 	public String myPlayer;
 	public String opponentPlayer;
 	public int depth;
 	public boolean visited;
+	
 	int[] nodeMove;
 	//this constructor is only for root node
 	TreeNode(Board board,String myPlayer,String opponentPlayer)
@@ -29,6 +31,7 @@ public class TreeNode
 		//nodeMove=board.getOnePossibleMove();
 		this.depth=0;
 		this.visited=false;
+		this.parentUtilityVlaue=-1;
 	}
 	//terminate when possiblemove is less than 2 
 	
@@ -43,19 +46,24 @@ public class TreeNode
 		this.myPlayer = parent.myPlayer;
 		this.opponentPlayer=parent.opponentPlayer;
 		board.getDummyFreeMove();
-		nodeMove=nodeMove.clone();
+		this.nodeMove=nodeMove.clone();
 		//nodeMove[0] == row , nodeMove[1] == col
 		if(nodeProperty==MINNODE)
 			this.board.setBoardCell(nodeMove[0], nodeMove[1],myPlayer);
 		else
 			this.board.setBoardCell(nodeMove[0],nodeMove[1],opponentPlayer);
+		
 		this.depth=parent.depth+1;
 		this.visited=false;
+		this.parentUtilityVlaue=-1;
+		this.board.updateAlgorithm.doUpdateBoard();
+		//this.board.printboardBody();
 		
 	}
 	//eval should be perform on opponennt node , and it is the value that i am going to win.
 	public void evaluation()
 	{
+		
 		if(nodeProperty==MINNODE)
 		{
 			utilityValue = 0;
