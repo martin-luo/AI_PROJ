@@ -22,7 +22,16 @@ public class testMinMax {
 		oneBingfengl.init(6,Piece.WHITE);
 		MinMaxAlgorithm prediction = new MinMaxAlgorithm();
 		
-		bestMove=prediction.getBestMove(oneBingfengl.oneBoard,3,3,Board.WHITE,Board.BLACK).clone();
+		prediction.makeBestMove(oneBingfengl.oneBoard,2,3,Board.WHITE,Board.BLACK);
+		if(prediction.getBestMove()==null)
+		{
+			bestMove=new int[]{-1,-1};
+		}
+		else
+		{
+			bestMove=prediction.getBestMove();
+		}
+		
 		System.out.println("best move row == "+bestMove[0]+"best move col == "+bestMove[1]);
 		
 		

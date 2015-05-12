@@ -438,7 +438,7 @@ public class Board
 				parts = line.split("");
 				//System.out.println("part[0]"+parts[0]);
 				//take of -1 for submittsion
-				colCount = parts.length-1;
+				colCount = parts.length;
 				//System.out.println("colCount : " + colCount);
 				// If it's the first line of the board, make the prevYCount
 				// equal to yCount.
@@ -446,7 +446,7 @@ public class Board
 				//System.out.println("" + line);
 				// need to skip first one ,split("") first one is ""
 				//i=0 for submitsion 
-				for (int i = 1; i < parts.length; i++)
+				for (int i = 0; i < parts.length; i++)
 				{
 					// System.out.println("i: "+i+" sign : "+parts[i]+"<-" +"level : "+tempStringArray.size());
 					// If the element is valid, add it to the temporary array,

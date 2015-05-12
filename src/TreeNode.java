@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class TreeNode 
@@ -16,6 +17,9 @@ public class TreeNode
 	public String opponentPlayer;
 	public int depth;
 	public boolean visited;
+	
+	//for debug
+	public static int index=0;
 	
 	int[] nodeMove;
 	//this constructor is only for root node
@@ -61,21 +65,42 @@ public class TreeNode
 		
 	}
 	//eval should be perform on opponennt node , and it is the value that i am going to win.
+	public static void evaluation(TreeNode currentTranverseNode)
+	{
+		int[] testUtilityValues=new int[]{4,2,1,3,6,7,8,1,100};
+		currentTranverseNode.utilityValue=testUtilityValues[index++];
+//		Random rand = new Random();
+//		int  n = rand.nextInt(100) + 1;
+//		if(nodeProperty==MINNODE)
+//		{
+//			utilityValue = 0;
+//		}
+		//return my chance to win
+//		if(myPlayer.equals(Board.WHITE))
+//		{
+//			utilityValue = board.whiteCell*2.9+100*board.whiteCaptured+n;
+//		}
+//		else
+//		{
+//			utilityValue = board.blackCell*2.9+100*board.blackCaptured+n;
+//		}
+	}
 	public void evaluation()
 	{
-		
-		if(nodeProperty==MINNODE)
-		{
-			utilityValue = 0;
-		}
+		Random rand = new Random();
+		int  n = rand.nextInt(100) + 1;
+//		if(nodeProperty==MINNODE)
+//		{
+//			utilityValue = 0;
+//		}
 		//return my chance to win
 		if(myPlayer.equals(Board.WHITE))
 		{
-			utilityValue = board.whiteCell*2.9+100*board.whiteCaptured;
+			utilityValue = board.whiteCell*2.9+100*board.whiteCaptured+n;
 		}
 		else
 		{
-			utilityValue = board.blackCell*2.9+100*board.blackCaptured;
+			utilityValue = board.blackCell*2.9+100*board.blackCaptured+n;
 		}
 
 	}
