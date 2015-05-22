@@ -16,8 +16,8 @@ import java.util.List;
  * @param <PLAYER>
  *            Type which is used for players in the game.
  */
-public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
-		implements AdversarialSearch<STATE, ACTION> {
+public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER> implements AdversarialSearch<STATE, ACTION>
+{
 
 	protected Game<STATE, ACTION, PLAYER> game;
 	protected double utilMax;
@@ -25,28 +25,27 @@ public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
 	protected int currDepthLimit;
 	private boolean maxDepthReached;
 	private long maxTime;
-	private boolean logEnabled=true;
+	private boolean logEnabled = true;
 
 	private int expandedNodes;
 	private int maxDepth;
 
 	/** Creates a new search object for a given game. */
-	public static <STATE, ACTION, PLAYER> IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER> createFor(
-			Game<STATE, ACTION, PLAYER> game, double utilMin, double utilMax,
-			int time) {
-		return new IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>(
-				game, utilMin, utilMax, time);
+	public static <STATE, ACTION, PLAYER> IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER> createFor(Game<STATE, ACTION, PLAYER> game, double utilMin, double utilMax, int time)
+	{
+		return new IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>(game, utilMin, utilMax, time);
 	}
 
-	public IterativeDeepeningAlphaBetaSearch(Game<STATE, ACTION, PLAYER> game,
-			double utilMin, double utilMax, int time) {
+	public IterativeDeepeningAlphaBetaSearch(Game<STATE, ACTION, PLAYER> game, double utilMin, double utilMax, int time)
+	{
 		this.game = game;
 		this.utilMin = utilMin;
 		this.utilMax = utilMax;
 		this.maxTime = time * 1000; // internal: ms instead of s
 	}
 
-	public void setLogEnabled(boolean b) {
+	public void setLogEnabled(boolean b)
+	{
 		logEnabled = b;
 	}
 
@@ -54,7 +53,8 @@ public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
 	 * Template method controlling the search.
 	 */
 	@Override
-	public ACTION makeDecision(STATE state) {
+	public ACTION makeDecision(STATE state)
+	{
 		List<ACTION> results = null;
 		double resultValue = Double.NEGATIVE_INFINITY;
 		PLAYER player = game.getPlayer(state);
@@ -64,7 +64,8 @@ public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
 		currDepthLimit = 0;
 		long startTime = System.currentTimeMillis();
 		boolean exit = false;
-		do {
+		do
+		{
 			incrementDepthLimit();
 			maxDepthReached = false;
 			List<ACTION> newResults = new ArrayList<ACTION>();
@@ -72,54 +73,60 @@ public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
 			double secondBestValue = Double.NEGATIVE_INFINITY;
 			if (logEnabled)
 				logText = new StringBuffer("depth " + currDepthLimit + ": ");
-			for (ACTION action : orderActions(state, game.getActions(state),
-					player, 0)) {
-				if (results != null
-						&& System.currentTimeMillis() > startTime + maxTime) {
+			for (ACTION action : orderActions(state, game.getActions(state), player, 0))
+			{
+				if (results != null && System.currentTimeMillis() > startTime + maxTime)
+				{
 					exit = true;
 					break;
 				}
-				double value = minValue(game.getResult(state, action), player,
-						Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 1);
+				double value = minValue(game.getResult(state, action), player, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 1);
 				if (logEnabled)
 					logText.append(action + "->" + value + " ");
-				if (value >= newResultValue) {
-					if (value > newResultValue) {
+				if (value >= newResultValue)
+				{
+					if (value > newResultValue)
+					{
 						secondBestValue = newResultValue;
 						newResultValue = value;
 						newResults.clear();
 					}
 					newResults.add(action);
-				} else if (value > secondBestValue) {
+				}
+				else if (value > secondBestValue)
+				{
 					secondBestValue = value;
 				}
 			}
 			if (logEnabled)
 				System.out.println(logText);
-			if (!exit || isSignificantlyBetter(newResultValue, resultValue)) {
+			if (!exit || isSignificantlyBetter(newResultValue, resultValue))
+			{
 				results = newResults;
 				resultValue = newResultValue;
 			}
-			if (!exit && results.size() == 1
-					&& this.isSignificantlyBetter(resultValue, secondBestValue))
+			if (!exit && results.size() == 1 && this.isSignificantlyBetter(resultValue, secondBestValue))
 				break;
 			System.out.println(logText);
-			System.out.println("exit = "+exit+" max = "+maxDepthReached+" has = "+hasSafeWinner(resultValue));
+			System.out.println("exit = " + exit + " max = " + maxDepthReached + " has = " + hasSafeWinner(resultValue));
 		} while (!exit && maxDepthReached && !hasSafeWinner(resultValue));
-		
+
 		return results.get(0);
 	}
 
-	public double maxValue(STATE state, PLAYER player, double alpha,
-			double beta, int depth) { // returns an utility value
+	public double maxValue(STATE state, PLAYER player, double alpha, double beta, int depth)
+	{ // returns an utility value
 		expandedNodes++;
 		maxDepth = Math.max(maxDepth, depth);
-		if (game.isTerminal(state) || depth >= currDepthLimit) {
+		if (game.isTerminal(state) || depth >= currDepthLimit)
+		{
 			return eval(state, player);
-		} else {
+		}
+		else
+		{
 			double value = Double.NEGATIVE_INFINITY;
-			for (ACTION action : orderActions(state, game.getActions(state),
-					player, depth)) {
+			for (ACTION action : orderActions(state, game.getActions(state), player, depth))
+			{
 				value = Math.max(value, minValue(game.getResult(state, action), //
 						player, alpha, beta, depth + 1));
 				if (value >= beta)
@@ -130,16 +137,19 @@ public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
 		}
 	}
 
-	public double minValue(STATE state, PLAYER player, double alpha,
-			double beta, int depth) { // returns an utility
+	public double minValue(STATE state, PLAYER player, double alpha, double beta, int depth)
+	{ // returns an utility
 		expandedNodes++;
 		maxDepth = Math.max(maxDepth, depth);
-		if (game.isTerminal(state) || depth >= currDepthLimit) {
+		if (game.isTerminal(state) || depth >= currDepthLimit)
+		{
 			return eval(state, player);
-		} else {
+		}
+		else
+		{
 			double value = Double.POSITIVE_INFINITY;
-			for (ACTION action : orderActions(state, game.getActions(state),
-					player, depth)) {
+			for (ACTION action : orderActions(state, game.getActions(state), player, depth))
+			{
 				value = Math.min(value, maxValue(game.getResult(state, action), //
 						player, alpha, beta, depth + 1));
 				if (value <= alpha)
@@ -152,7 +162,8 @@ public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
 
 	/** Returns some statistic data from the last search. */
 	@Override
-	public Metrics getMetrics() {
+	public Metrics getMetrics()
+	{
 		Metrics result = new Metrics();
 		result.set("expandedNodes", expandedNodes);
 		result.set("maxDepth", maxDepth);
@@ -164,7 +175,8 @@ public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
 	 * search step. This implementation increments the current depth limit by
 	 * one.
 	 */
-	protected void incrementDepthLimit() {
+	protected void incrementDepthLimit()
+	{
 		currDepthLimit++;
 	}
 
@@ -173,7 +185,8 @@ public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
 	 * situations where a clear best action exists. This implementation returns
 	 * always false.
 	 */
-	protected boolean isSignificantlyBetter(double newUtility, double utility) {
+	protected boolean isSignificantlyBetter(double newUtility, double utility)
+	{
 		return false;
 	}
 
@@ -183,7 +196,8 @@ public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
 	 * returns true if the given value (for the currently preferred action
 	 * result) is the highest or lowest utility value possible.
 	 */
-	protected boolean hasSafeWinner(double resultUtility) {
+	protected boolean hasSafeWinner(double resultUtility)
+	{
 		return false;
 	}
 
@@ -193,13 +207,14 @@ public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
 	 * terminal states and <code>(utilMin + utilMax) / 2</code> for non-terminal
 	 * states.
 	 */
-	protected double eval(STATE state, PLAYER player) {
-//		if (game.isTerminal(state)) {
-//			return game.getUtility(state, player);
-//		} else {
-//			maxDepthReached = true;
-//			return (utilMin + utilMax) / 2;
-//		}
+	protected double eval(STATE state, PLAYER player)
+	{
+		// if (game.isTerminal(state)) {
+		// return game.getUtility(state, player);
+		// } else {
+		// maxDepthReached = true;
+		// return (utilMin + utilMax) / 2;
+		// }
 		maxDepthReached = true;
 		return game.getUtility(state, player);
 	}
@@ -208,8 +223,8 @@ public class IterativeDeepeningAlphaBetaSearch<STATE, ACTION, PLAYER>
 	 * Primitive operation for action ordering. This implementation preserves
 	 * the original order (provided by the game).
 	 */
-	public List<ACTION> orderActions(STATE state, List<ACTION> actions,
-			PLAYER player, int depth) {
+	public List<ACTION> orderActions(STATE state, List<ACTION> actions, PLAYER player, int depth)
+	{
 		return actions;
 	}
 }

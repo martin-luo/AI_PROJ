@@ -5,7 +5,7 @@
  * 
  * @author Ruediger Lunde
  */
-public interface AdversarialSearch<STATE, ACTION> 
+public interface AdversarialSearch<STATE, ACTION>
 {
 
 	/** Returns the action which appears to be the best at the given state. */

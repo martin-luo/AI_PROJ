@@ -9,7 +9,8 @@
  * <p>
  * <b>Rules of Boardgame</b>
  * <ul>
- * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is '<i>BLACK</i>'</li>
+ * <li>Only two players , one is called '<i>WHITE</i>' ,the Other one is
+ * '<i>BLACK</i>'</li>
  * <li>Board has a size of N*N, which N is greater than 5 (i.e. N > 5)</li>
  * <li>Top left corner is (0,0), Bottom right coner is (N-1,N-1)</li>
  * <li>Edges does not count as part of captured territory</li>
@@ -37,22 +38,27 @@ public class CeilingDataStructure
 	int[] ceilingRowArray;
 	/** The array store the column of ceiling. */
 	int[] ceilingColArray;
-	
+
 	/**
 	 * This constructor take no argument and build nothing.
 	 */
 	CeilingDataStructure()
 	{
-		
+
 	}
-	
+
 	/**
-	 * This constructor initialize the instance of this class to the given value.
+	 * This constructor initialize the instance of this class to the given
+	 * value.
 	 * 
-	 * @param ceilingIndex the value the variable ceilingIndex will be set to.
-	 * @param ceilingRowArray the value the variable ceilingRowArray will be set to.
-	 * @param ceilingColArray the value the variable ceilingColArray will be set to.
-	 * @param rowPointArray the array contains the row point.
+	 * @param ceilingIndex
+	 *            the value the variable ceilingIndex will be set to.
+	 * @param ceilingRowArray
+	 *            the value the variable ceilingRowArray will be set to.
+	 * @param ceilingColArray
+	 *            the value the variable ceilingColArray will be set to.
+	 * @param rowPointArray
+	 *            the array contains the row point.
 	 */
 	CeilingDataStructure(int ceilingIndex, int[] ceilingRowArray, int[] ceilingColArray, int[] rowPointArray)
 	{
@@ -63,10 +69,15 @@ public class CeilingDataStructure
 	}
 
 	/**
-	 * Get a index which represent all same level point assume rowPointArray is sorted.
-	 * @param rowPointArray the array contains the row point.
-	 * @param checkFrom the specified position the array will be checked from.
-	 * @return a index which represent all same level point assume rowPointArray is sorted
+	 * Get a index which represent all same level point assume rowPointArray is
+	 * sorted.
+	 * 
+	 * @param rowPointArray
+	 *            the array contains the row point.
+	 * @param checkFrom
+	 *            the specified position the array will be checked from.
+	 * @return a index which represent all same level point assume rowPointArray
+	 *         is sorted
 	 */
 	public int getCeilingIndex(int[] rowPointArray, int checkFrom)
 	{
@@ -80,7 +91,7 @@ public class CeilingDataStructure
 			this.ceilingCurrentSize++;
 		}
 		// index will be one after ceiling row
-	
-		return ceilingIndex;	
+
+		return ceilingIndex;
 	}
 }

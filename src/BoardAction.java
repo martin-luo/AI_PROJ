@@ -1,4 +1,4 @@
-
-public class BoardAction {
+public class BoardAction
+{
 
 }

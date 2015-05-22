@@ -1,52 +1,52 @@
 public class SimpleBoardCountingAlgorithm extends BoardUpdateAlgorithm
-{	
-	Board board=null;
+{
+	Board board = null;
 	int whiteCaptured;
 	int blackCaptured;
 	int freeCell;
-	
+
 	/**
 	 * Used to initialize the SimpleBoardCountingAlgorithm obj
-	 * @param board 
+	 * 
+	 * @param board
 	 */
-	
 	SimpleBoardCountingAlgorithm(Board board)
 	{
-		this.board=board;
-		whiteCaptured=0;
-		blackCaptured=0;
-		freeCell=0;
+		this.board = board;
+		whiteCaptured = 0;
+		blackCaptured = 0;
+		freeCell = 0;
 	}
-	
+
 	/**
-	 * this function will run find circle and find captured cell and update the information of board
+	 * this function will run find circle and find captured cell and update the
+	 * information of board
 	 */
-	
 	public void doUpdateBoard()
 	{
 		countCell();
 	}
-	
+
 	/**
 	 * count cell use simple algorithm
 	 */
 	public void countCell()
 	{
 		System.out.println("Simple");
-		String[][] tempBoardBody=board.getBoardBody();
-		whiteCaptured=0;
-		blackCaptured=0;
-		freeCell=0;
+		String[][] tempBoardBody = board.getBoardBody();
+		whiteCaptured = 0;
+		blackCaptured = 0;
+		freeCell = 0;
 		for (int row = 0; row < tempBoardBody.length; row++)
 		{
 			int tempCapturedNumber = 0;
 			boolean metCaptured = false;
-			
+
 			for (int col = 0; col < tempBoardBody[0].length; col++)
 			{
-				if(tempBoardBody[row][col].equals(Board.FREE))
+				if (tempBoardBody[row][col].equals(Board.FREE))
 				{
-					freeCell+=1;
+					freeCell += 1;
 					continue;
 				}
 				if (tempBoardBody[row][col].equals(Board.CAPTURED))

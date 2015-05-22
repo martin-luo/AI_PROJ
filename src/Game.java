@@ -35,7 +35,8 @@ import java.util.List;
  * @param <PLAYER>
  *            Type which is used for players in the game.
  */
-public interface Game<STATE, ACTION, PLAYER> {
+public interface Game<STATE, ACTION, PLAYER>
+{
 
 	STATE getInitialState();
 
