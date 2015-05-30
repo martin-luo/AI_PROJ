@@ -10,7 +10,7 @@ Login ID : bingfengl
 
 *No Library used in part B . ^.^
 
-*Can use 1032k memory limit to run. (tested on dimefox,if it is slow
+*Can use 1281k memory limit to run for N=6 ,5m for N=7 . (tested on dimefox,if it is slow
 in different machine please relax the memory limit Thanks!)
 
 *since the submission system does not allowed to upload folders , 
@@ -235,14 +235,54 @@ of moveming will be assigned initialy utility value which is 0, which
 means such move will be picked at last and its children will be cutting
 off.
 
+===Code Structure===
 
+AidUtility.java
+	-Contains most array processing methods
+FindCircleAndCapturedCellAlgorithm.java
+	-The alogrithm to update board state (finding circle,count captures,
+	get evaluation function needed attributes)
 
+Bingfengl.java
+	-Player
 
+Board.java
+	-Stores board state
 
+MinMaxAlgorithm.java
+	-Alpha-beta minimax
 
+BoardDataCircleStructure.java
+	-Store circle path
 
+SimpleBoardCountingAlgorithm.java
+	-simple algorithm to count captures
 
+BoardUpdateAlgorithm.java
+	-Abstract Class for using different finding circle
+	and captures alg
 
+CeilingDataStructure.java
+	-data structure to count captures cells in circle path
 
+CellNode.java
+	-each single cell for circle path
 
+TreeNode.java
+	-node for minimax
 
+#for testing 
+Test_main.java
+TestArea.java
+testMinMax.java
+Main.java
+
+===Conclusion===
+
+This is really a challenging but intersting project we ever did in this university.
+It really bordern our ways of coding , it is a first time we use heuristics in our code 
+and we found it really exciting about making some heuristic which has very simple
+logics behind it but it actually makes our AI to approach the goal.
+
+Even though we did not completely finished what we were thinking to do, but this 
+challenging project did help us a lot at exploring the limits of our coding skills.

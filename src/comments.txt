@@ -4,322 +4,294 @@ Login ID : aluo1
 Student Name: Bingfeng liu
 Login ID : bingfengl
 
+===Notes===
+
+*The player class is called 'Bingfengl.java'
+
+*No Library used in part B . ^.^
+
+*Can use 1281k memory limit to run for N=6 ,5m for N=7 . (tested on dimefox,if it is slow
+in different machine please relax the memory limit Thanks!)
+
+*since the submission system does not allowed to upload folders , 
+the 'aiproj' package/folder which includes Player.java,Move.java,
+Piece.jave is needed to run this AI board game player(Bingfengl).
+
+*This subission included 'testArea.java' which is a main function
+it can be used to test AI by hand. Enter 'row col' ( terminal : 1 2)
+and hit enter to put your cell and hit enter again to ask AI to move.
+
+*killer heuristic is implemented but buggy so it is leaved unused
+due to lack of time, the logics behid this heuristic will be 
+explained later in this comments.txt
+
+*No machine learning is used due to lack of time
+
+===Introduction===
 
 This document is for COMP30024 for explaining the algorithms uesd to
-achieve project part A.
-
-There are two main algorithms invovled in this program in order to find out 
-the state of the board.
-
-The first algorithm is for finding the white/black 'circles' on the board.
-This algorithm is based on DFS and an heuristic of picking the next cell of 
-greatest degress in clockwise direction (i.e. to draw the widdest possible
-white/black cell circles).
-
-pseudo code: 
-
-currentCell = startCell;
-circleCellCollection.add(currentCell);
-
-while(circleCellCollection is not empty)
-{
-	nextCell = the 'valid' most clockwise cell of currentCell,
-					from its 8 adjacent cells
-	
-	//valid == same colour as startCell , and it is within board dimension
-
-	if (nextCell is empty)
-	{
-		circleCellCollection.remove(circleCellCollection.size()-1)
-		//removing the current cell 
-	}
-
-	if(nextCell is not visited and it is not in circleCellCollection)
-	{
-		circleCellCollection.add(next);
-	}
-}
-
-Code description:
-We will take in a cell first ,it is either black and white and then explores
-its 8 adjacent cell (top-right,top,top-left,left,right,bottom-left,
-bottom,bottom-right). Choose the valid and most clockwise adjacent cell
-in order to draw the biggest possible cirlce from this starting cell.
-
-If there is a valid adjacent cell then we add it to circle path , and 
-update current path to this 'new valid cell'.
-
-If there is not a valid adjacent cell we will pop the current cell out of
-our circle cell collection . and update current cell to the last cell
-in the 'circle cell collection'
-
-Time Complexity: 
-
--for finding one circle 
-	- Best Case O(n*8) (have found a circle)---> O(n) , 
-	where n is number of cells formed a circle ,
-	8 is the constant for checking each cell's '8' adjacent cells 
-
-	-Average Case (have found a circle) O(n*8+d*8*2) --->O(n), 
-	d is the number of cells that we checked
-	but they are not actually formed a circle.n*8 is the cost we get to 
-	find cells which invoving in a circle path .d*8*2 is the cost for
-	poping non-in-circle cell out of collection.
-
-	-Average Case (have not found a circle) O(d*8*2) --->O(d),in here
-	d is the number of cells we checked but they all dont form circle
-	we first add them in queue and check them ,then pop them out.
-
-
-	normally it wont be same as board dimension ,
-	so it can also be considered as a constant which can be ommited 
-
-	-Worse Case O(((n)/2*n)*8*2) --->O(mn) , if there is only one player , and 
-	he/she places pieces in a 'sneak form' that head at top left and tail
-	at bottom right of the board ,and there is one 'gap' in between. 
-	In here n is board dimension ,(n)/2 ---> sneak shape will occupy
-	half of the rows of the boatd , and n number of cols in each row.
-	(n)/2 will clearly smaller than n so it can be mark as a constant 'm'
-
-	This finding circle algorithm will take in 'mn' number of cells and
-	ends up with getting no circle ,so it will
-	pop cell out of circleCellCollection all the way back to start.
-	Each cell will be checked '2' times and each check will check its '8'
-	surrounding cells. 
-
-	sneak form : 
-    ----------->
-      row gap  |
-    <-----------
-    |
-    ----------->
-
-The second algorithm is used when we have found a sets of cells which formed
-a circle in order to count the captured cells in side the circle path. 
-In more simple word, this algorithm is used to count the captured cells 
-inside black/white circle.
-
-This algorithm will sort cells in circle path by row and col (i.e. cell 
-will be orders from top left to bottom right). By sorting with row and col 
-this 'circle ' will be divided into levels 
-
-BBBB ---> level 1
-B  B ---> level 2
-BBBB ---> level 3
-
-for counting captured cells inside circle, the previous 'level' is used as 
-indicator to determine whether if a cell in 'current level' is inside circle 
-or not.
-
-e.g. 
-
-BBBB ---> level 1
-BXXB ---> level 2 ---> use level 1 as indicator, 'XX' is under level 1 
-B  B ---> level 4
-BBBB ---> level 3      
-so XX must be inside circle and if they are marked '-'
-we can count it as captured for black . XX will be added 
-into 'level 2 indicator array' for determine 'level 4' captured cell
-
-Since we sorted the cells of forming circle , we can alwasy know where to 
-start checking at each level and where to end .
-
-BBBBBBBBB
-B       B
-B  BBB  B
-B  BXB  B
-BBBB BBBB
-
-if circle path is like above , simply use the algrithm mentioned above to scan
-it from top to bottom will failed by mistakenlly count X as captured 
-
-So the solution is use the captured cell counting algorithm to scan sorted
-circle path from top to bottom and from bottom to top , and then merge 
-the results .
-
-pseudo code: 
-
-function TopDown() :int [][]
-{
-	
-	int[boardDimension][boardDimension] TopDownResult=0;
-	//in this int array 0 means not captured
-	//will be marked as 1 in TopDownResult for all cell inside circle
-	cellInCircleColelction.sortByXandY();
-
-	circleLevelArray = cellInCircleColelction.constructLevel();
-
-	//ceilingArray --> store indicator cells for 'current' level to determine 
-	//captured cell 
-
-	ceilingArray.add(circleLevelArray[0])
-	//add first level in TopDownResult
-	parseTopDownResult(ceilingArray.get(0),TopDownResult,0)
-
-	for(int level=1; level <circleLevelArray.length-1;level++)
-	{
-		parseTopDownResult(ceilingArray.get(level),TopDownResult)
-		if(cells within the next level's col range are under last level's cell)
-		{
-			//add current level in TopDownResult
-			parseTopDownResult(AllCapturedPoint,TopDownResult,level)
-		}
-	}
-}
-function BottomUp() :int [][]
-{
-	reverse of TopDown;
-}
-
-function parseTopDownResult(AllCapturedPoint,TopDownResult,level)
-{
-	for(int i=0;i<AllCapturedPoint.length;i++)
-	{
-		TopDownResult[level][i]=1;
-	}
-}
-
-countCapturedCell(mergeResult(TopDown(),TopDown()));
-
-Code Description: 
-
-This algorithm will partition circle into levels by sorting cells of circle 
-with y and x . Iterating each level one by one from top to bottom and then 
-from bottom to top. The previous level is used as 'ceiling'/'indicator' 
-to help determine the cells in next level is in side circle or not.
-If the cells are captured inside the circle, it will be marked '1' 
-in result array. Finally the two result array generated from topDowm
-and bottomUp will be merged, only '1' present in both result array 
-in same cell position will be keeped . and This merged array will be 
-pass to count function to count how many cells are 'captured'.
-
-
-Note:We had tried our best to explain this 'captured' algorithm , it is really
-hard to explain it with our limited skill of wording. It can be explain more clearly
-with picture, but .txt is really hard to draw a picture.So we are Sorry about this. 
-
-
-Time Complexity:
--for processing one circle
-	- Best Case (O(n^2)) ---> this algorithm will check every cell within the
-	range of circle. So in here n is dimension of circle (its level and 
-	approximate number of cells in the each level )
-	Sorting algorithm also take n^2 , but in sorting this 'n' is number 
-	of cells formed the circle .. normally it will be smaller than 
-	the number of cells within the range of circle .
-
-	- Average Case (O(n^2)) ---> average case won't be to different from
-	best case, because no matter what situation , this algorithm will
-	scan all the cells inside the circle range.
-
-	-Worst Cse (O(n^2)) ---> worse case will occure when the cirlce which
-	encircles the whole board. in here n is the dimension of board.
-
-
-note: We ignore the constant '2' which is resulted by performing this 
-algorithm twice to scan circle from top to bottom and bottom to top .
+achieve project part B.
 
+The part B of this project is asked for a fully functioned AI program
+which can play a 'GO'-liked board game.
 
-So far the complexity of finding one circle and its captured cells are discussed
-What is the cost of checking the entire board with these two algorithms ? 
+The main algorithms used in this programs are 'circle finding','captured
+cells counting','alpha beta minimax with heuristic evaluations'.
 
-Put it all together: 
+The 'circle finding' and 'captured cells counting' algorithms are
+explained detaily in part A's comments.txt. In the short word they
+are used to keep track of the board state (e.g. which part is captured
+by who). 
 
-psudo code:
 
-for (each rows of board)
-{
-	for (each cols in curent row && this col is not in existed circle)
-	{
-		if (cell is either black or white)
-		{
-			doFindCircle()
-			//if a circle is found immediately perform captured cell alg
-			if(this circle is belong to white)
-			{
-				whiteCapturedNumber+=doFindCapturedCellInThisCircle();
-			}
-			else
-			{
-				blackCapturedNumber+=doFindCapturedCellInThisCircle();
-			}
-		}
+===Main algorithms and heuristics in Part B===
 
-		if(cell is free)
-		{
-			freeCellNumber++;
-		}
+To pick the best moves 'alpha beta minimax' is used, the main idea 
+behind minimax is really simple , it picks best move by populating 
+'all' (most ) of the possibe movements with evaluation functions 
+which estimate the possibility of winning the game for our player
+in each possible 'current' states.
 
-	}
+The alpha-beta minimax in this program is tunable which means that
+the branchs and depths can be set by passing in parameters ,so
+it has a possibility to expand different amount of nodes in different
+stages of the game , however due to the lack of time , the branches is
+set to be 3 and depth is 2. 
 
-}
+Unlike the normal use of alpha-beta minimax, even though only 3 branches
+are expanded in the minimax , but all of these 3 branches(moves) are picked
+from at most N*N possible moves (if N =6, each 3 brances are picked from
+36 possible moves, in the other word each node of each level of this
+minimiax is generated from another first level minimax tree)
 
-doOuput() 
+So the complexity of this 'minimax' is (N^2)*Branch^(depth)
 
-It is really hard to calculate best, average and worse case for checking entire
-board with these two alogrithms ,since their best,average and worse case 
-happened in contradictory situations. E.g. worse case for finding a circle 
-is encounting the 'sneak' shape, but 'sneak' shape does not form a circle ,
-so doCapturedCellAlgorithm will not execute ..
 
-Time Complexity:
+For the evaluation function, it is consisted with
+following values:
 
-	-Best Case O(n^2) ,  obviously best case will happened when there are no 
-	circles on the board, so both finding cirlce and count captured algorithms
-	won't going to execute, we will just simply loop through the entire board.
-	in here n is dimension of board.
+-connectedPathValue*A
 
-	-Average Case O(n^2+t*(d+c^2))---> O(n^2), let's said in average case we found some 
-	circles and perform finding circles and finding captured algorithm to them.
-	Still looping through entire board, and during some iterations we found 
-	a circle perform finding circle algorithm in its average manner so it is O(d)
-	number of cells in the circle , and we perform 'captured cell algorithm'
-	'c' is dimension of circle ,and it cost O(c^2) to find captured cells. t means
-	we perform t times of 'finding circle + finding captured cells'
+-nearlyCompleteCircleValue*B
 
-	-Worse Case (s(n^2)) ---> s in here is total cost of finding circle and finding
-	captured in the circle (d+c^2) , we assume we approximately find a circle 
-	for nearly each cells on the board (it is impossible ), this 's' will normally
-	smaller than n^2 so it is really a large constant ... Worse case is approximately
-	O(n^2).
+-criticalBlockValue*C
 
+-captured*D
 
-Optional algoirthm :
+-diag*E
 
-We also implemented a really simple algorithm to check the stat of board..
-it consists only 2 for loop , basically it just loop through every cell
-on the board and looking for '-' and next black/white cell after we meet
-'-', in this way we can also find out the captured cells for black or white.
+-opponenetCaptured*F;
 
-The biggest flaw of this algorithm is that it can be only used for Part A,
-it cant find circle and cells inside circle .. its complexity of time is always
-n^2 where n is dimension of board
+(A,B,C,D,E,F are the weight/constants for each values to determine
+how 'important' the 'value' is. E.g. if an AI which want to capture
+as many cells as possible and ignoring blocking opponent's circle
+the 'caputred' value can be assigned a huge constant)
 
-Structure of Code:
+connectedPathValue ==> 
 
-Main.java  ---> run program
+is really easy to get ,basically 
+it just count how many same player's cells are next to each other
 
-AidUtility.java ---> array printing and sorting function normally for debug
+nearlyCompleteCircleValue==>
 
-Board.java ---> store board information
-BoardDataCircleStructure.java ---> store circle information
+This value is estimated use the start point ,mid point and end
+point of a nearly formed circle path.
 
-BoardUpdateAlgorithm.java ---> board stat checking algorithm both inherit it
-so we can swap to easy algorithm and 'find circle and find capture ' alg
-to check out output 
 
-FindCircleAndCapturedCellAlgorithm.java ---> finding circle + finding captured
-CeilingDataStructure.java ---> store 'indicator'/'ceiling' array for captured alg
-CellNode.java ---> for finding circle alg to store cell's adjacent cells
+B B B
+B
+B B B
 
+above is the original path diagram 
 
-SimpleBoardCountingAlgorithm.java ---> simple algorithm to find captured cell
+B B S
+M
+B B E
 
+Firstly we calculate the mid point (C) of S E 
 
+B B S
+M   C
+B B E
 
-Libraries used : only the built in libraries are used e.g. Arraylist
+Secondly we calculate the mid point (D) of C and M
 
-Space complexity : O(n^2) ---> n == dimension of board 
+B B S
+M D
+B B E
+
+Finally we got a point which is in the middle of this nearly
+finished circle path ,and we start to keep expanding
+D's surrounding cells until its expanded surrounding area contained
+all the cells of this 'nearly/unfinished' circle path.
+
+(D will gradually increase its number of surrounding area ,see
+illustration below for the concept of expansion)
+
+X X X
+X D X
+X X X ===> first level expansion 
+
+
+X X X X X
+X X X X X
+X X D X X
+X X X X X
+X X X X X ===> second level expansion keep expanding untile D's 
+expansion area include the whole nearly finished circle path cells
+
+The expansion level values and number of cells in the path and the
+distance of start point and end point of this path are all used
+to estimate the value of this nearly finished circle (to determine
+how valuable is this nearly finished circle)
+
+
+criticalBlockValue ==> 
+
+this value is estimated with a heuristic. 
+This value is obtained when a circle is nearly complete but it 
+is blocked by one opponent cell
+
+  B
+B   B
+  W
+
+In the above case player 'White' will gain criticalBlockValue by
+blocking player 'Black' to form a circle .
+
+
+  M
+S   E
+  W
+
+The heuristic to get this value is that when the 'finding circle'
+algorithm trys to find whether if player 'Black' formed a circle
+or not ,it will trace the path from S(start point==>black cell) to 
+E (end point ===> black cell), these two cells' 8 surrounding cells
+will be expand, if they all found 'W' cell in their surrounding cells
+then we can say that W blocks B to form a circle, 
+W has a criticalBlockValue Now.
+
+  M
+S W E
+
+
+But only using S and E is not enough , the above cause will also
+be determined as W blocking the 'B' to form circle, but actually
+W is not blocking it,but stepping in the future captured 
+area of player 'Black' circle. Therefore 'M' is used to prevent
+this kind of situation,'M' is the mid point of the nearly formed
+circle path, if we found 'W' is in the surrounding of S and E , and 
+if 'W' has M as its one of its 8 direction surrounding, we can determine
+that 'White' cell in this case is not blocking the circle, so White player
+will not gain criticalBlockValue.   
+
+captured and OpponenetCaputred===>
+
+This value is basically how many cells are captured
+by 'W' and 'B' or other way around. It is basically
+obtained from part A's circle finding and captured cells
+counting algorithms
+
+diag ===>
+this value is easily obtained from expanding cells to see
+whether if its diagonal direction top-left, top-right,bottom-left
+,bottom-right contained the same player's cell.
+The reason for estimating the diag value for players is that
+it is more easy to form circle if player move diagonally ,it 
+will have big possibility to get atleast one cell captured.
+
+ B   B
+   B X B
+ B X B
+   B
+===> moving diagonally 
+
+===killer Heuristic===
+Note: it is implemented in this program but it is buggy so 
+it is not used to prune the minimax branch.
+
+However we still want to talk about the logics behind it.
+The idea behind our killer heuristic is that, if a cell (
+black or white) has contiguous surrounding cells of same colour
+we won't expand the branch of this minimax node.
+
+e.g.
+
+W W W
+W B
+
+- - -
+|B W
+|W W
+|
+
+| ===> board border 
+
+if we expand B , it has 4 contiguous same colour cells (in 
+here they are white cell), so it is pointless to put cell in here
+and so it is also pointless to explore its future states this kind 
+of moveming will be assigned initialy utility value which is 0, which
+means such move will be picked at last and its children will be cutting
+off.
+
+===Code Structure===
+
+AidUtility.java
+	-Contains most array processing methods
+FindCircleAndCapturedCellAlgorithm.java
+	-The alogrithm to update board state (finding circle,count captures,
+	get evaluation function needed attributes)
+
+Bingfengl.java
+	-Player
+
+Board.java
+	-Stores board state
+
+MinMaxAlgorithm.java
+	-Alpha-beta minimax
+
+BoardDataCircleStructure.java
+	-Store circle path
+
+SimpleBoardCountingAlgorithm.java
+	-simple algorithm to count captures
+
+BoardUpdateAlgorithm.java
+	-Abstract Class for using different finding circle
+	and captures alg
+
+CeilingDataStructure.java
+	-data structure to count captures cells in circle path
+
+CellNode.java
+	-each single cell for circle path
+
+TreeNode.java
+	-node for minimax
+
+#for testing 
+Test_main.java
+TestArea.java
+testMinMax.java
+Main.java
+
+===Conclusion===
+
+This is really a challenging but intersting project we ever did in this university.
+It really bordern our ways of coding , it is a first time we use heuristics in our code 
+and we found it really exciting about making some heuristic which has very simple
+logics behind it but it actually makes our AI to approach the goal.
+
+Even though we did not completely finished what we were thinking to do, but this 
+challenging project did help us a lot at exploring the limits of our coding skills.
+
+
+
+
+
+
 
 
 
